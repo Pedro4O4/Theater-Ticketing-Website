@@ -1,4 +1,4 @@
-<span style="font-size: 3em;">🎟️ Online Event Ticketing System 🎟️</span>
+<span style="font-size: 10vw;">🎟️ Online Event Ticketing System 🎟️</span>
 
 ## User Roles
 
