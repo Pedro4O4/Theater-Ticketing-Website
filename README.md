@@ -1,35 +1,42 @@
-🎟️ Online Event Ticketing System 🎟️
-Overview
-This project is a full-stack web application for an online event ticketing system. Users can browse, search, and purchase tickets for various events such as concerts, sports games, theater shows, and more. 🎭🏟️🎤
+<span style="font-size: 3em;">🎟️ Online Event Ticketing System 🎟️</span>
 
-User Roles
-There are three main user roles within the system:
+## User Roles
 
-👤 Standard User: Can browse events, book tickets, and view their booking history.
-🎟️ Event Posting User (Organizer): Can create, update, and delete their own events.
-🛠️ System Admin: Has full control over the system, including managing users and events.
-Project Features
-🌐 Homepage
-The homepage displays a list of upcoming events with essential details like event name, date, location, and price. Users can easily discover what events are happening soon.
-<div class="event">
-  <h2>🎭 Broadway Show: Phantom of the Opera</h2>
-  <p><strong>Date:</strong> May 5, 2025</p>
-  <p><strong>Location:</strong> Broadway Theater, NYC</p>
-  <p><strong>Price:</strong> $70</p>
-  <button>🎫 Book Now</button>
-</div>
-📝 Event Details Page
-Each event has its own dedicated page where users can read detailed information. For theater events, this might include a show description, the cast, and a booking option.
-<h1>🎭 Phantom of the Opera</h1>
-<p><strong>Location:</strong> Broadway Theater, NYC</p>
-<p><strong>Date:</strong> May 5, 2025</p>
-<p><strong>Description:</strong> A world-renowned musical telling the story of a mysterious phantom living under the opera house.</p>
-<p><strong>Ticket Availability:</strong> 200 Seats Left</p>
-<button>🎟️ Book Tickets</button>
-🎟️ Ticket Booking System
-Users can select how many tickets they want, view the number of available seats, and proceed to checkout.
-<form>
-  <label for="ticketQuantity">🎫 Number of Tickets:</label>
-  <input type="number" id="ticketQuantity" name="ticketQuantity" min="1" max="10">
-  <button type="submit">🛒 Proceed to Checkout</button>
-</form>
+The application caters to three distinct user roles:
+
+* **Standard User:**
+    * Browse and view upcoming events.
+    * Book tickets for desired events.
+    * Access their booking history.
+* **Event Posting User (Organizer):**
+    * Create new events.
+    * Update existing event details.
+    * Delete their own events.
+* **System Admin:**
+    * Full control over the platform.
+    * Manage user accounts.
+    * Oversee all events.
+
+## Project Features
+
+The application offers the following key features:
+
+* **Homepage:**
+    * Displays a dynamically updated list of upcoming events.
+    * Provides essential event details (name, date, location, price).
+* **Event Details Page:**
+    * Offers comprehensive information about selected events.
+    * Includes a seamless ticket booking interface.
+* **Ticket Booking System:**
+    * Allows users to select ticket quantities.
+    * Displays real-time ticket availability.
+    * Provides a secure and efficient checkout process.
+* **Search and Filter:**
+    * Enables users to find events using various criteria (name, category, date, location).
+* **User Dashboard:**
+    * Presents a personalized view of booked tickets and event history.
+* **Admin Panel:**
+    * Empowers event organizers to manage their events.
+    * Provides tools for adding, updating, and deleting events.
+* **Database Integration:**
+    * Utilizes MongoDB to store event details, booking information, and user data.
