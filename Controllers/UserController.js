@@ -1,41 +1,43 @@
 const userModel = require("../Models/User");
-const Bookingmodle = require("../Models/Booking");
-const Eventmodel = require("../Models/Event");
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secretKey = process.env.SECRET_KEY;
 const bcrypt = require("bcrypt");
-const userController = {
-        register: async (req, res) => {
-            try {
-                const { name, email, password } = req.body;
+const express = require("express");
+const UserController = {
+    register: async (req, res) => {
+        try {
+            const {name, email, password} = req.body;
 
-                // Hash the password
-                const hashedPassword = await bcrypt.hash(password, 10);
-
-                // Create and save the new user
-                const newUser = new userModel({ name, email, password: hashedPassword });
-                await newUser.save();
-
-                // Generate JWT token
-                const token = jwt.sign({ id: newUser._id, email: newUser.email }, secretKey, { expiresIn: "1h" });
-
-                // Respond with the token and user details
-                res.status(201).json({ message: "User registered successfully", user: newUser, token });
-            } catch (error) {
-                res.status(500).json({ message: "Error registering user", error });
+            // Check if user already exists
+            const existingUser = await userModel.findOne({email});
+            if (existingUser) {
+                return res.status(400).json({message: "User already exists"});
             }
 
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
 
+            // Create new user
+            const newUser = new userModel({
+                name,
+                email,
+                password: hashedPassword,
+            });
+            await newUser.save();
+
+            res.status(201).json({message: "User registered successfully", user: newUser});
+        } catch (error) {
+            res.status(500).json({message: "Error registering user", error});
+        }
     },
     login: async (req, res) => {
         try {
-            const { email, password } = req.body;
-
-            // Find user by email
-            const user = await userModel.findOne({ email });
+            const {email, password} = req.body;
+            const user = await userModel.findOne({email});
             if (!user) {
-                return res.status(404).json({ message: "User not found" });
+                return res.status(404).json({message: "User not found"});
             }
 
             // Compare passwords
@@ -44,10 +46,11 @@ const userController = {
             }
 
             // Generate JWT token
-            const token = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: "1h" });
-            res.status(200).json({ message: "Login successful", token });
+            const token = jwt.sign({id: user._id, email: user.email}, secretKey, {expiresIn: "1h"});
+            res.status(200).json({message: "Login successful", token});
+
         } catch (error) {
-            res.status(500).json({ message: "Error logging in", error });
+            res.status(500).json({message: "Error logging in", error});
         }
     },
     forgetPassword: async (req, res) => {
