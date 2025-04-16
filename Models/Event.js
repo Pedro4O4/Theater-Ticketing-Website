@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
     title: {
@@ -46,12 +46,14 @@ const eventSchema = new mongoose.Schema({
     },
     organizer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",  // Assuming you have a User model for organizers
+        ref: "User",
         required: true,
     },
-}, { timestamps: true });  // Automatically adds 'createdAt' and 'updatedAt' fields
+    status: {
+        type: String,
+        enum: ["approved", "pending", "declined"],
+        default: "pending",
+    },
+}, { timestamps: true });
 
-const Event = mongoose.model("Event", eventSchema);
-module.exports = Event;
-
-console.log("Hello task")
+module.exports = mongoose.model("Event", eventSchema);
