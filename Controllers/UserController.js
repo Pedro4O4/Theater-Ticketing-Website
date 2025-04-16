@@ -46,10 +46,21 @@ const UserController = {
             // Compare passwords
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
+                return res.status(401).json({message: "Invalid password"});
+
             }
 
             // Generate JWT token
             const token = jwt.sign({id: user._id, email: user.email}, secretKey, {expiresIn: "1h"});
+
+
+            // Set token in cookie
+            res.cookie('token', token, {
+                httpOnly: true,
+                maxAge: 3600000 // 1 hour in milliseconds
+            });
+
+
             res.status(200).json({message: "Login successful", token});
 
         } catch (error) {
