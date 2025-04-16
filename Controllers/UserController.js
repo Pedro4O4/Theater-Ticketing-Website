@@ -1,5 +1,7 @@
 
 const userModel = require("../Models/User");
+const Event = require("../Models/Event");
+const Booking = require("../Models/Booking");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -7,6 +9,7 @@ const secretKey = process.env.SECRET_KEY;
 const bcrypt = require("bcrypt");
 const express = require("express");
 const UserController = {
+
     register: async (req, res) => {
         try {
             const {name, email, password} = req.body;
@@ -56,15 +59,14 @@ const UserController = {
     },
     forgetPassword: async (req, res) => {
         try {
-            const {email} = req.body;
-
-            // Find user by email
+            const {email} = req.body;// Find user by email
+            const user = userModel
             if (!user) {
                 return res.status(404).json({message: "User not found"});
             }
 
             // Generate a reset token (valid for 15 minutes)
-            const resetToken = jwt.sign({id: user._id, email: user.email}, secretKey, {expiresIn: "15m"});
+            const resetToken = jwt.sign({id: user.id, email: user.email}, secretKey, {expiresIn: "15m"});
 
             // In a real-world app, you would send this token via email
             res.status(200).json({message: "Password reset token generated", resetToken});
@@ -83,7 +85,7 @@ const UserController = {
             }
 
             // Find the user to be deleted
-            const userToDelete = await User.findById(id);
+            const userToDelete = await userModel.findById(id);
             if (!userToDelete) {
                 return res.status(404).json({ message: "User not found" });
             }
@@ -91,10 +93,7 @@ const UserController = {
             // Check authorization
             const requestingUser = req.user;
 
-            // Only allow:
-            // 1. Admins to delete anyone
-            // 2. Users to delete themselves
-            // 3. Prevent deleting the last admin
+
             if (requestingUser.role !== 'System Admin' && requestingUser.id !== id) {
                 return res.status(403).json({
                     message: "Unauthorized: You can only delete your own account unless you're an admin"
@@ -103,7 +102,7 @@ const UserController = {
 
             // Prevent deleting the last admin
             if (userToDelete.role === 'System Admin') {
-                const adminCount = await User.countDocuments({ role: 'System Admin' });
+                const adminCount = await userModel.countDocuments({ role: 'System Admin' });
                 if (adminCount <= 1) {
                     return res.status(400).json({
                         message: "Cannot delete the last system admin"
@@ -112,7 +111,7 @@ const UserController = {
             }
 
             // Perform deletion
-            const deletedUser = await User.findByIdAndDelete(id);
+            const deletedUser = await userModel.findByIdAndDelete(id);
 
             // Prepare response (don't send sensitive data)
             const response = {
@@ -267,7 +266,7 @@ const UserController = {
             // Calculate analytics for each event
             const analytics = await Promise.all(events.map(async event => {
                 const bookings = await Booking.find({
-                    event: event._id,
+                    event: event.id,
                     status: { $ne: 'canceled' }
                 });
 
@@ -386,49 +385,8 @@ const UserController = {
                 error: process.env.NODE_ENV === 'development' ? error.message : undefined
             });
         }
-    },
-
-
-    updateUserPassword: async (req, res) => {
-        try {
-            const { currentPassword, newPassword } = req.body;
-            const userId = req.user.id;
-
-            // Find the user
-            const user = await userModel.findById(userId);
-            if (!user) {
-                return res.status(404).json({
-                    message: "User not found"
-                });
-            }
-
-            // Verify current password
-            const isMatch = await bcrypt.compare(currentPassword, user.password);
-            if (!isMatch) {
-                return res.status(401).json({
-                    message: "Current password is incorrect"
-                });
-            }
-
-            // Hash the new password
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(newPassword, salt);
-
-            // Save the updated user with new password
-            await user.save();
-
-            res.status(200).json({
-                message: "Password updated successfully"
-            });
-
-        } catch (error) {
-            console.error("Error updating password:", error);
-            res.status(500).json({
-                message: "Error updating password",
-                error: process.env.NODE_ENV === 'development' ? error.message : undefined
-            });
-        }
     }
+
 
 
 
