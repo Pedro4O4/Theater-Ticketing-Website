@@ -16,26 +16,26 @@ router.put('/:id', authorizationMiddleware('admin'), UserController.updateUserRo
 module.exports = router;
 
 // Protected routes
-router.get('/admin', authenticationMiddleware(), authorizationMiddleware('Admin'), (req, res) => {
+router.get('/admin',  authorizationMiddleware('Admin'), (req, res) => {
     res.status(200).json({ message: "Welcome Admin" });
 });
 
-router.get('/organizer', authenticationMiddleware, authorizationMiddleware('Organizer'), (req, res) => {
+router.get('/organizer', authorizationMiddleware('Organizer'), (req, res) => {
     res.status(200).json({ message: "Welcome Organizer" });
 });
 
-router.get('/user', authenticationMiddleware, authorizationMiddleware('User'), (req, res) => {
+router.get('/user',  authorizationMiddleware('User'), (req, res) => {
     res.status(200).json({ message: "Welcome User" });
 });
 
 
-        router.get('/profile', authenticationMiddleware, UserController.getUserProfile);
-        router.put('/profile', authenticationMiddleware, UserController.updateUserProfile);
+        router.get('/profile',  UserController.getUserProfile);
+        router.put('/profile',  UserController.updateUserProfile);
 
-        router.delete('/:id', authenticationMiddleware, authorizationMiddleware('System Admin'), UserController.DeleteUser);
-        router.get('/bookings', authenticationMiddleware, authorizationMiddleware('Standard User'), UserController.GetUserBookings);
-        router.get('/events', authenticationMiddleware, authorizationMiddleware('Organizer'), UserController.GetOrganizerEvents);
-        router.get('/events/analytics', authenticationMiddleware, authorizationMiddleware('Organizer'), UserController.GetOrganizerAnalytics);
+        router.delete('/:id', authorizationMiddleware('System Admin'), UserController.DeleteUser);
+        router.get('/bookings',  authorizationMiddleware('Standard User'), UserController.GetUserBookings);
+        router.get('/events',  authorizationMiddleware('Organizer'), UserController.GetOrganizerEvents);
+        router.get('/events/analytics', authorizationMiddleware('Organizer'), UserController.GetOrganizerAnalytics);
 
 
 
