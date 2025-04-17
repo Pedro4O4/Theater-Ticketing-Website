@@ -1,54 +1,63 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv');
 
+const express = require("express");
+const mongoose = require("mongoose");
+const cookieParser=require('cookie-parser')
+const cors = require("cors");
 
-
-// Import routes
-const userRoutes = require('./Routes/UserRouter');
-const eventRoutes = require('./Routes/EventRouter');
-const bookingRoutes = require('./Routes/BookingRouter');
-
-// Load environment variables
-dotenv.config();
-
-// Initialize Express app
 const app = express();
 
-// Middleware
+const UserRouters = require("./Routes/UserRouter");
+const EventRouters = require("./Routes/EventRouter");
+const BookingRouters = require("./Routes/BookingRouter");
+const authRouter = require("./Routes/auth");
+const authenticationMiddleware=require('./middleware/authenticationMiddleware')
+
+require('dotenv').config();
+
 app.use(express.json());
-app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 
-// Database connection
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-    .then(() => console.log('Connected to MongoDB successfully'))
-    .catch((err) => {
-        console.error('MongoDB connection error:');
-        console.error(err);
+app.use(cookieParser())
+
+app.use(
+    cors({
+        origin: process.env.ORIGIN,
+        methods: ["GET", "POST", "DELETE", "PUT"],
+        credentials: true,
+    })
+);
+
+
+
+
+app.use("/api/v1", authRouter);
+
+app.use(authenticationMiddleware);
+
+
+app.use("/api/v1/user", UserRouters);
+app.use("/api/v1/Event", EventRouters);
+app.use("/api/v1/Booking", BookingRouters);
+
+
+const db_name = process.env.DB_NAME;
+// * Cloud Connection
+// const db_url = `mongodb+srv://TestUser:TestPassword@cluster0.lfqod.mongodb.net/${db_name}?retryWrites=true&w=majority`;
+// * Local connection
+const db_url = `${process.env.DB_URL}/${db_name}`; // if it gives error try to change the localhost to 127.0.0.1
+
+// ! Mongoose Driver Connection
+
+
+
+mongoose
+    .connect(db_url)
+    .then(() => console.log("mongoDB connected"))
+    .catch((e) => {
+        console.log(e);
     });
-// Routes
-app.use('/api/users', userRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/bookings', bookingRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        success: false,
-        message: 'Server Error',
-        error: process.env.NODE_ENV === 'development' ? err.statusMessage : undefined
-    });
+app.use(function (req, res, next) {
+    return res.status(404).send("404");
 });
-
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-module.exports = app; // Export for testing
+app.listen(process.env.PORT, () => console.log("server started"));

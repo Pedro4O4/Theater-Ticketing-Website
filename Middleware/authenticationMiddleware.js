@@ -1,9 +1,5 @@
-const express = require('express');
-const bycrypt = require('bcrypt');
-const auth = express();
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_KEY
-const user = require('../Models/User');
 
 module.exports = function authenticationMiddleware(req, res, next) {
     const cookie = req.cookies;// if not working then last option req.headers.cookie then extract token
@@ -11,24 +7,22 @@ module.exports = function authenticationMiddleware(req, res, next) {
     // console.log(cookie);
 
     if (!cookie) {
-        return res.status(401).json({message: "No Cookie provided"});
+        return res.status(401).json({ message: "No Cookie provided" });
     }
     const token = cookie.token;
     if (!token) {
-        return res.status(405).json({message: "No token provided"});
+        return res.status(405).json({ message: "No token provided" });
     }
 
     jwt.verify(token, secretKey, (error, decoded) => {
         if (error) {
-            return res.status(403).json({message: "Invalid token"});
+            return res.status(403).json({ message: "Invalid token" });
         }
 
+        // Attach the decoded user ID to the request object for further use
+        //console.log(decoded.user)
 
-    auth.use(express.json());
-
-
-        req.user = decoded;
+        req.user = decoded.user;
         next();
     });
 };
-
