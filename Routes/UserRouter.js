@@ -36,9 +36,9 @@ router.get('/user', authenticationMiddleware, authorizationMiddleware('User'), (
         router.get('/bookings', authenticationMiddleware, authorizationMiddleware('Standard User'), UserController.GetUserBookings);
         router.get('/events', authenticationMiddleware, authorizationMiddleware('Organizer'), UserController.GetOrganizerEvents);
         router.get('/events/analytics', authenticationMiddleware, authorizationMiddleware('Organizer'), UserController.GetOrganizerAnalytics);
-r
-        module.exports = router;
 
 
 
+
+module.exports = router;
 
