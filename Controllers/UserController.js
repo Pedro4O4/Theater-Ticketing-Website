@@ -11,66 +11,83 @@ const UserController = {
 
     register: async (req, res) => {
         try {
-            const {name, email, password} = req.body;
+            const {name, email, password, profilePicture} = req.body;
 
             // Check if user already exists
-            const existingUser = await userModel.findOne({email});
+            const existingUser = await userModel.findOne({ email }, null, { lean: true });
             if (existingUser) {
-                return res.status(400).json({message: "User already exists"});
+                return res.status(409).json({message: "User already exists"});
             }
 
             // Hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Create new user
+            // Create new user with default role as 'standard' if not specified
             const newUser = new userModel({
                 name,
                 email,
                 password: hashedPassword,
+                profilePicture: profilePicture || "", // Include profile picture if provided
+                role: req.body.role || "Standard User" // Default to standard role if not specified
             });
             await newUser.save();
 
             res.status(201).json({message: "User registered successfully", user: newUser});
         } catch (error) {
-            res.status(500).json({message: "Error registering user", error});
+            console.error("Error registering user:", error);
+            res.status(500).json({message: "Error registering user"});
         }
     },
     login: async (req, res) => {
         try {
             const {email, password} = req.body;
-            const user = await userModel.findOne({email});
+
+            // Find the user by email
+
+            const user = await userModel.findOne({ email }, null, { lean: true });
             if (!user) {
                 return res.status(404).json({message: "User not found"});
             }
+            console.log("password: ", user.password);
 
             // Compare passwords
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
-                return res.status(401).json({message: "Invalid password"});
+                return res.status(405).json({message: "Incorrect password"});
 
             }
+            const currentDateTime = new Date();
+            const expiresAt = new Date(+currentDateTime + 1800000); // expire in 3 minutes
 
             // Generate JWT token
-            const token = jwt.sign({id: user._id, email: user.email}, secretKey, {expiresIn: "1h"});
+            const token = jwt.sign(
+                {user:{ id: user.id, email: user.email,role:user.role}},
+                secretKey, {expiresIn: 3*60*60});
 
 
             // Set token in cookie
-            res.cookie('token', token, {
-                httpOnly: true,
-                maxAge: 3600000 // 1 hour in milliseconds
-            });
-
-
-            res.status(200).json({message: "Login successful", token});
-
+            return res
+                .cookie("token", token, {
+                    expires: expiresAt,
+                    httpOnly: true,
+                    secure: true, // if not working on thunder client , remove it
+                    SameSite: "none",
+                })
+                .status(200)
+                .json({ message: "login successfully", user });
         } catch (error) {
-            res.status(500).json({message: "Error logging in", error});
+            console.error("Error logging in:", error);
+            res.status(500).json({ message: "Server error" });
         }
     },
     forgetPassword: async (req, res) => {
         try {
             const {email} = req.body;// Find user by email
-            const user = userModel
+            if (!email) {
+                return res.status(400).json({message: "Email is required"});
+            }
+
+            const user = await userModel.findOne({ email });
             if (!user) {
                 return res.status(404).json({message: "User not found"});
             }
@@ -86,7 +103,7 @@ const UserController = {
     },
     async getAllUsers(req, res) {
         try {
-            const users = await userModel.find().select('-password');
+            const users = await userModel.find();
             return res.status(200).json({ success: true, data: users });
         } catch (error) {
             console.error(error);
@@ -97,7 +114,7 @@ const UserController = {
     // Get single user by ID - Admin only
     async getUserById(req, res) {
         try {
-            const user = await userModel.findById(req.params.id).select('-password');
+            const user = await userModel.findById(req.params.id);
             if (!user) {
                 return res.status(404).json({ message: "User not found" });
             }
@@ -118,7 +135,7 @@ const UserController = {
             }
 
             // Validate role is one of the allowed types
-            const allowedRoles = ['standard', 'organizer', 'admin'];
+            const allowedRoles = ['Standard User', 'Organizer', 'System Admin'];
             if (!allowedRoles.includes(role)) {
                 return res.status(400).json({ message: "Invalid role" });
             }

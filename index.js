@@ -59,4 +59,4 @@ mongoose
 app.use(function (req, res, next) {
     return res.status(404).send("404");
 });
-app.listen(process.env.PORT, () => console.log("server started"));
+app.listen(process.env.PORT, () => console.log(`server started at port: ${process.env.PORT}`));
