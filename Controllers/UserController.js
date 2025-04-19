@@ -41,6 +41,7 @@ const UserController = {
     login: async (req, res) => {
         try {
             const {email, password} = req.body;
+            console.log("Login attempt:", { email, passwordLength: password?.length });
 
             // Find the user by email
 
@@ -103,7 +104,7 @@ const UserController = {
     },
     async getAllUsers(req, res) {
         try {
-            const users = await userModel.find();
+            const users = await userModel.find({email});
             return res.status(200).json({ success: true, data: users });
         } catch (error) {
             console.error(error);
