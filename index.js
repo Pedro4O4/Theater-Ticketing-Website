@@ -11,6 +11,7 @@ const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 const authRouter = require("./Routes/auth");
 const authenticationMiddleware=require('./middleware/authenticationMiddleware')
+const {Connection} = require("mongoose");
 
 require('dotenv').config();
 
@@ -41,21 +42,14 @@ app.use("/api/v1/Booking", BookingRouters);
 
 
 const db_name = process.env.DB_NAME;
-// * Cloud Connection
-const db_url = `mongodb+srv://TestUser:TestPassword@cluster0.lfqod.mongodb.net/${db_name}?retryWrites=true&w=majority`;
-// * Local connection
-
-// ! Mongoose Driver Connection
-
-
+const db_url = `mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/${db_name}?retryWrites=true&w=majority`;
 
 mongoose
     .connect(db_url)
-    .then(() => console.log("mongoDB connected"))
+    .then(() => console.log(`mongoDB connected to ${db_name}`))
     .catch((e) => {
-        console.log(e);
+        console.log("MongoDB connection error:", e.message);
     });
-
 app.use(function (req, res, next) {
     return res.status(404).send("404");
 });
