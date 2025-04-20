@@ -49,6 +49,12 @@ const eventSchema = new mongoose.Schema({
         ref: "User",  // Assuming you have a User model for organizers
         required: true,
     },
+    status: {
+        type: String,
+        enum: ["approved", "pending", "declined"],
+        default: "pending",
+        required: true,
+    },
 }, { timestamps: true });  // Automatically adds 'createdAt' and 'updatedAt' fields
 
 const Event = mongoose.model("Event", eventSchema);
