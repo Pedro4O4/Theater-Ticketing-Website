@@ -66,13 +66,18 @@ const UserController = {
                     expiresIn: 3 * 60 * 60,
                 }
             );
-
+            let newSession = new sessionModel({
+                userId: user._id,
+                token,
+                expiresAt: expiresAt,
+            });
+            await newSession.save();
             return res
                 .cookie("token", token, {
                     expires: expiresAt,
-                    httpOnly: true,
-                    secure: true, // if not working on thunder client , remove it
-                    SameSite: "none",
+                    withCredentials: true,
+                    httpOnly: false,
+                    SameSite:'none'
                 })
                 .status(200)
                 .json({ message: "login successfully", user });

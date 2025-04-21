@@ -21,7 +21,6 @@ exports.getAllEvents = async (req, res) => {
         res.status(200).json(events);
     } catch (err) {
         res.status(500).json({ message: "Failed to fetch all events." });
-=======
 // POST /api/v1/events
 const createEvent = async (req, res) => {
     try {
@@ -152,12 +151,5 @@ const updateEventStatus = async (req, res) => {
     }
 };
 
-module.exports = {
-    createEvent,
-    getApprovedEvents,
-    getAllEvents,
-    getEventById,
-    updateEvent,
-    deleteEvent,
-    updateEventStatus, // optional but recommended
-};
+            }
+        };
