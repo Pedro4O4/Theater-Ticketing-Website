@@ -11,8 +11,6 @@ const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 const authRouter = require("./Routes/auth");
 const authenticationMiddleware=require('./middleware/authenticationMiddleware')
-const {Connection} = require("mongoose");
-
 require('dotenv').config();
 
 app.use(express.json());
@@ -37,20 +35,29 @@ app.use(authenticationMiddleware);
 
 
 app.use("/api/v1/user", UserRouters);
-app.use("/api/v1/Event", EventRouters);
+//app.use("/api/v1/Event", EventRouters);
 app.use("/api/v1/Booking", BookingRouters);
 
 
 const db_name = process.env.DB_NAME;
-const db_url = `mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/${db_name}?retryWrites=true&w=majority`;
+const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/your_database_name?retryWrites=true&w=majority&appName=Cluster0';
 
-mongoose
-    .connect(db_url)
+mongoose.connect(db_url)
     .then(() => console.log(`mongoDB connected to ${db_name}`))
     .catch((e) => {
         console.log("MongoDB connection error:", e.message);
     });
 app.use(function (req, res, next) {
-    return res.status(404).send("404");
+    const error = new Error("404 - Not Found");
+    error.status = 404;
+    next(error);
 });
-app.listen(process.env.PORT, () => console.log("server started"));
+
+// Error-handling middleware
+
+app.use(cookieParser());
+
+app.listen(process.env.PORT, () => console.log("server started"))
+    .on('error', (err) => {
+        console.error("Server error:", err.message);
+    });

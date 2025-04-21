@@ -1,39 +1,26 @@
 {
-  "name": "pedroswe",
+  "name": "studentsexample",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "private": true,
   "author": "",
   "license": "ISC",
-  "description": "The application caters to three distinct user roles:",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
-    "cookie": "^1.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "express-validator": "^7.2.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0",
-    "mongoose": "^8.13.2",
-    "nodemon": "^3.1.9"
+    "mongoose": "^8.13.2"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Pedro4O4/masr7.git"
-  },
-  "keywords": [],
-  "bugs": {
-    "url": "https://github.com/Pedro4O4/masr7/issues"
-  },
-  "homepage": "https://github.com/Pedro4O4/masr7#readme",
   "devDependencies": {
-    "jest": "^29.7.0",
-    "supertest": "^7.1.0"
+    "nodemon": "^3.1.9"
   }
 }

@@ -22,7 +22,6 @@ const eventSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ["concert", "theater", "conference", "workshop", "festival", "sports"],
         required: true,
     },
     image: {
@@ -46,7 +45,7 @@ const eventSchema = new mongoose.Schema({
     },
     organizer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",  // Assuming you have a User model for organizers
+        ref: "User",
         required: true,
     },
 
@@ -56,9 +55,8 @@ const eventSchema = new mongoose.Schema({
         default: "pending",
         required: true,
     },
-}, { timestamps: true });  // Automatically adds 'createdAt' and 'updatedAt' fields
+}, { timestamps: true });
 
-const Event = mongoose.model("Event", eventSchema);
+const Event = mongoose.models.Event || mongoose.model("Event", eventSchema);
+
 module.exports = Event;
-
-console.log("Hello task")

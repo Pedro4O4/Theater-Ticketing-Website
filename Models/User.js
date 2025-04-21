@@ -5,23 +5,21 @@ const bcrypt = require('bcryptjs');  // For password hashing
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        trim: true,
+        minLength: 3,
+        maxLength: 30,
+        required: true
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
+    email:{
+        type:String,
+        required:true
     },
     profilePicture: {
         type: String,
         required: false,  // Optional field for profile picture
     },
-    password: {
-        type: String,
-        required: true,
+    password:{
+        type:String,
+        required:true
     },
     role: {
         type: String,
@@ -33,6 +31,7 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,  // Automatically sets the creation timestamp
     },
+
 });
 
 // Password hashing middleware
@@ -49,6 +48,6 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 };
 
 // Create the User model
-const User = mongoose.model('User', userSchema);
+const User =  mongoose.model('User', userSchema);
 
 module.exports = User;

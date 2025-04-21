@@ -1,4 +1,5 @@
-const express = require('express');
+
+/*const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const eventController = require('../Controllers/EventController');
@@ -47,4 +48,4 @@ router.get('/organizer/events',
 
 
 
-module.exports = router;
+module.exports = router;*/

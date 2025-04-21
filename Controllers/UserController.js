@@ -2,71 +2,71 @@
 const userModel = require("../Models/User");
 const Event = require("../Models/Event");
 const Booking = require("../Models/Booking");
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secretKey = process.env.SECRET_KEY;
 const bcrypt = require("bcrypt");
 const UserController = {
-
     register: async (req, res) => {
         try {
-            const {name, email, password, profilePicture} = req.body;
+            const { email, password, name, role } = req.body;
 
-            // Check if user already exists
-            const existingUser = await userModel.findOne({ email }, null, { lean: true });
+            // Check if the user already exists
+            const existingUser = await userModel.findOne({ email });
             if (existingUser) {
-                return res.status(409).json({message: "User already exists"});
+                return res.status(409).json({ message: "User already exists" });
             }
 
             // Hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Create new user with default role as 'standard' if not specified
+            // Create a new user
             const newUser = new userModel({
-                name,
                 email,
                 password: hashedPassword,
-                profilePicture: profilePicture || "", // Include profile picture if provided
-                role: req.body.role || "Standard User" // Default to standard role if not specified
+                name,
+                role,
             });
-            await newUser.save();
 
-            res.status(201).json({message: "User registered successfully", user: newUser});
+            // Save the user to the database
+             await newUser.save();
+            res.status(201).json({ message: "User registered successfully" });
         } catch (error) {
             console.error("Error registering user:", error);
-            res.status(500).json({message: "Error registering user"});
+            res.status(500).json({ message: "Server error" });
         }
     },
+
     login: async (req, res) => {
         try {
-            const {email, password} = req.body;
-            console.log("Login attempt:", { email, passwordLength: password?.length });
+            const { email, password } = req.body;
 
             // Find the user by email
-
-            const user = await userModel.findOne({ email }, null, { lean: true });
+            const user = await userModel.findOne({ email });
             if (!user) {
-                return res.status(404).json({message: "User not found"});
+                return res.status(404).json({ message: "email not found" });
             }
+
             console.log("password: ", user.password);
+            // Check if the password is correct
 
-            // Compare passwords
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (!isPasswordValid) {
-                return res.status(405).json({message: "Incorrect password"});
-
+            const passwordMatch = await bcrypt.compare(password, user.password);
+            if (!passwordMatch) {
+                return res.status(405).json({ message: "incorrect password" });
             }
+
             const currentDateTime = new Date();
             const expiresAt = new Date(+currentDateTime + 1800000); // expire in 3 minutes
-
-            // Generate JWT token
+            // Generate a JWT token
             const token = jwt.sign(
-                {user:{ id: user.id, email: user.email,role:user.role}},
-                secretKey, {expiresIn: 3*60*60});
+                { user: { userId: user._id, role: user.role } },
+                secretKey,
+                {
+                    expiresIn: 3 * 60 * 60,
+                }
+            );
 
-
-            // Set token in cookie
             return res
                 .cookie("token", token, {
                     expires: expiresAt,
@@ -81,6 +81,7 @@ const UserController = {
             res.status(500).json({ message: "Server error" });
         }
     },
+
     forgetPassword: async (req, res) => {
         try {
             const {email} = req.body;// Find user by email
@@ -94,7 +95,7 @@ const UserController = {
             }
 
             // Generate a reset token (valid for 15 minutes)
-            const resetToken = jwt.sign({id: user.id, email: user.email}, secretKey, {expiresIn: "15m"});
+            const resetToken = jwt.sign({id: user._id, email: user.email}, secretKey, {expiresIn: "15m"});
 
             // In a real-world app, you would send this token via email
             res.status(200).json({message: "Password reset token generated", resetToken});
@@ -473,10 +474,7 @@ const UserController = {
                 error: process.env.NODE_ENV === 'development' ? error.message : undefined
             });
         }
-    }
-
-
-
+    },
 
 
 }
