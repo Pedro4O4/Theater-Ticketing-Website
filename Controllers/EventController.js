@@ -1,42 +1,27 @@
 const Event = require('../Models/Event');
 const { validationResult } = require('express-validator');
 
+exports.getApprovedEvents = async (req, res) => {
+    try {
+        // Fetch only approved events for public access
+        const events = await Event.find({ status: "approved" });
+        res.status(200).json(events);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch approved events." });
+    }
+};
+
 exports.getAllEvents = async (req, res) => {
     try {
-        const { category, date, location, search } = req.query;
-        let query = {};
-
-        if (category) query.category = category;
-        if (location) query.location = { $regex: location, $options: 'i' };
-        if (search) {
-            query.$or = [
-                { title: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } }
-            ];
-        }
-        if (date) {
-            const searchDate = new Date(date);
-            query.date = {
-                $gte: new Date(searchDate.setHours(0, 0, 0)),
-                $lt: new Date(searchDate.setHours(23, 59, 59))
-            };
+        // Ensure only admins can access this route
+        if (req.user.role !== "System Admin") {
+            return res.status(403).json({ message: "Only admins can view all events." });
         }
 
-        const events = await Event.find(query)
-            .populate('organizer', 'name email')
-            .sort({ date: 1 });
-
-        res.status(200).json({
-            success: true,
-            count: events.length,
-            data: events
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error retrieving events',
-            error: error.message
-        });
+        const events = await Event.find(); // Fetch all events (approved, pending, declined)
+        res.status(200).json(events);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch all events." });
     }
 };
 

@@ -17,8 +17,9 @@ const validateEvent = [
 ];
 
 
-router.get('/', eventController.getAllEvents);
+router.get("/api/v1/events/all", eventController.getAllEvents);
 router.get('/:id', eventController.getEventById);
+router.get("/events", eventController.getApprovedEvents);
 
 router.use(authMiddleware);
 
@@ -43,5 +44,7 @@ router.get('/organizer/events',
     authorizationMiddleware(['Organizer']),
     eventController.getOrganizerEvents
 );
+
+
 
 module.exports = router;
