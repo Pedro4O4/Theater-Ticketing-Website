@@ -1,5 +1,4 @@
-const Event = require('../Models/Event');
-const { validationResult } = require('express-validator');
+const Event = require("../models/Event");
 
 exports.getApprovedEvents = async (req, res) => {
     try {
@@ -22,150 +21,143 @@ exports.getAllEvents = async (req, res) => {
         res.status(200).json(events);
     } catch (err) {
         res.status(500).json({ message: "Failed to fetch all events." });
-    }
-};
-
-exports.getEventById = async (req, res) => {
+=======
+// POST /api/v1/events
+const createEvent = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id)
-            .populate('organizer', 'name email');
-
-        if (!event) {
-            return res.status(404).json({
-                success: false,
-                message: 'Event not found'
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: event
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error retrieving event',
-            error: error.message
-        });
-    }
-};
-
-exports.createEvent = async (req, res) => {
-    try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                errors: errors.array()
-            });
-        }
-
-        const eventData = {
+        const newEvent = new Event({
             ...req.body,
-            organizer: req.user._id,
-            remainingTickets: req.body.totalTickets 
-        };
-
-        const event = await Event.create(eventData);
-
-        res.status(201).json({
-            success: true,
-            data: event
+            organizer: req.user._id, // assuming user is authenticated
         });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error creating event',
-            error: error.message
-        });
+
+        const savedEvent = await newEvent.save();
+        res.status(201).json(savedEvent);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to create event." });
     }
 };
 
-exports.updateEvent = async (req, res) => {
+// GET /api/v1/events
+const getApprovedEvents = async (req, res) => {
+    try {
+        const events = await Event.find({ status: "approved" });
+        res.status(200).json(events);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch approved events." });
+    }
+};
+
+// GET /api/v1/events/all
+const getAllEvents = async (req, res) => {
+    if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Only admins can view all events." });
+    }
+
+    try {
+        const events = await Event.find();
+        res.status(200).json(events);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch all events." });
+    }
+};
+
+// GET /api/v1/events/:id
+const getEventById = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ message: "Event not found." });
 
-        if (!event) {
-            return res.status(404).json({
-                success: false,
-                message: 'Event not found'
-            });
+        if (
+            event.status !== "approved" &&
+            req.user?.role !== "admin" &&
+            !event.organizer.equals(req.user?._id)
+        ) {
+            return res.status(403).json({ message: "Access denied." });
         }
 
-        if (event.organizer.toString() !== req.user._id.toString() && req.user.role !== 'System Admin') {
-            return res.status(403).json({
-                success: false,
-                message: 'Not authorized to update this event'
-            });
-        }
-
-        const updatedEvent = await Event.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
-
-        res.status(200).json({
-            success: true,
-            data: updatedEvent
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error updating event',
-            error: error.message
-        });
+        res.status(200).json(event);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch event." });
     }
 };
 
-exports.deleteEvent = async (req, res) => {
+// PUT /api/v1/events/:id
+const updateEvent = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const event = await Event.findById(id);
+        if (!event) return res.status(404).json({ message: "Event not found." });
+
+        const isOwner = event.organizer.equals(req.user._id);
+        const isAdmin = req.user.role === "admin";
+
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ message: "Unauthorized." });
+        }
+
+        if (req.body.status && !isAdmin) {
+            delete req.body.status;
+        }
+
+        Object.assign(event, req.body);
+        await event.save();
+
+        res.status(200).json(event);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to update event." });
+    }
+};
+
+// DELETE /api/v1/events/:id
+const deleteEvent = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ message: "Event not found." });
 
-        if (!event) {
-            return res.status(404).json({
-                success: false,
-                message: 'Event not found'
-            });
+        const isOwner = event.organizer.equals(req.user._id);
+        const isAdmin = req.user.role === "admin";
+
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ message: "Unauthorized." });
         }
 
-        if (event.organizer.toString() !== req.user._id.toString() && req.user.role !== 'System Admin') {
-            return res.status(403).json({
-                success: false,
-                message: 'Not authorized to delete this event'
-            });
-        }
-
-        await event.remove();
-
-        res.status(200).json({
-            success: true,
-            message: 'Event deleted successfully'
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error deleting event',
-            error: error.message
-        });
+        await event.deleteOne();
+        res.status(200).json({ message: "Event deleted successfully." });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to delete event." });
     }
 };
 
-exports.getOrganizerEvents = async (req, res) => {
-    try {
-        const events = await Event.find({ organizer: req.user._id })
-            .sort({ date: 1 });
+// PATCH /api/v1/events/:id/status (Admin only)
+const updateEventStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
 
-        res.status(200).json({
-            success: true,
-            count: events.length,
-            data: events
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error retrieving organizer events',
-            error: error.message
-        });
+    if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Only admins can update event status." });
     }
+
+    if (!["approved", "pending", "declined"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status value." });
+    }
+
+    try {
+        const event = await Event.findByIdAndUpdate(id, { status }, { new: true });
+        if (!event) return res.status(404).json({ message: "Event not found." });
+
+        res.status(200).json(event);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to update event status." });
+    }
+};
+
+module.exports = {
+    createEvent,
+    getApprovedEvents,
+    getAllEvents,
+    getEventById,
+    updateEvent,
+    deleteEvent,
+    updateEventStatus, // optional but recommended
 };
