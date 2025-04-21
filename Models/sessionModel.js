@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const userModel = require("./userModel");
+const userModel = require("./User");
 const schemaOptions = {
     strict: true,
     timestamps: true,

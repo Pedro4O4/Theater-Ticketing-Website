@@ -1,5 +1,5 @@
 const express = require("express");
-const {login, register, forgetPassword} = require("../Controllers/UserController");
+const {login, register, forgetPassword,verifyOtp} = require("../Controllers/UserController");
 const router = express.Router();// * login
 
 
@@ -13,5 +13,7 @@ router.post("/register", register);
 
 // * forget password
 router.put("/forgetPassword", forgetPassword);
+
+router.post("/verifyOtp", verifyOtp);
 
 module.exports = router;

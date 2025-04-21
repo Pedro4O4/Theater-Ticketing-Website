@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');  // For password hashing
-
-// Define the User Schema
-const userSchema = new mongoose.Schema({
+let userSchema = new mongoose.Schema({
     name: {
         type: String,
         minLength: 3,
@@ -31,6 +29,12 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,  // Automatically sets the creation timestamp
     },
+    resetOtp: {
+        type: Number,
+    },
+    resetOtpExpires: {
+        type: Date,
+    },
 
 });
 
@@ -47,7 +51,10 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
     return bcrypt.compare(enteredPassword, this.password);  // Compare entered password with hashed password
 };
 
-// Create the User model
-const User =  mongoose.model('User', userSchema);
 
+
+
+// Create the User model
+const User = mongoose.model('User', userSchema);
+// Export the User model
 module.exports = User;

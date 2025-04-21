@@ -1,11 +1,7 @@
-
-
-### User Login
-POST http://localhost:3000/api/v1/login
+### Forget Password
+POST http://localhost:3001/api/v1/forgetPassword
 Content-Type: application/json
 
 {
-
-  "email": "man3oom@gmail.com",
-  "password": "Mm@123456"
+  "email": "ayhaga@gmail.com"
 }

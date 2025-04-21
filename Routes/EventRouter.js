@@ -1,5 +1,5 @@
 
-/*const express = require('express');
+const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const eventController = require('../Controllers/EventController');
@@ -18,16 +18,16 @@ const validateEvent = [
 ];
 
 
-router.get("/api/v1/events/all", eventController.getAllEvents);
+router.get("/all", eventController.getAllEvents);
 router.get('/:id', eventController.getEventById);
 router.get("/events", eventController.getApprovedEvents);
 
 router.use(authMiddleware);
 
-router.post('/', 
+router.put('/:id',
     authorizationMiddleware(['Organizer', 'System Admin']),
     validateEvent,
-    eventController.createEvent
+    eventController.getEventById
 );
 
 router.put('/:id',
@@ -41,11 +41,6 @@ router.delete('/:id',
     eventController.deleteEvent
 );
 
-router.get('/organizer/events',
-    authorizationMiddleware(['Organizer']),
-    eventController.getOrganizerEvents
-);
 
 
-
-module.exports = router;*/
+module.exports = router;
