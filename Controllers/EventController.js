@@ -1,5 +1,27 @@
 const Event = require("../models/Event");
 
+exports.getApprovedEvents = async (req, res) => {
+    try {
+        // Fetch only approved events for public access
+        const events = await Event.find({ status: "approved" });
+        res.status(200).json(events);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch approved events." });
+    }
+};
+
+exports.getAllEvents = async (req, res) => {
+    try {
+        // Ensure only admins can access this route
+        if (req.user.role !== "System Admin") {
+            return res.status(403).json({ message: "Only admins can view all events." });
+        }
+
+        const events = await Event.find(); // Fetch all events (approved, pending, declined)
+        res.status(200).json(events);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch all events." });
+=======
 // POST /api/v1/events
 const createEvent = async (req, res) => {
     try {

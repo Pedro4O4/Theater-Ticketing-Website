@@ -49,6 +49,7 @@ const eventSchema = new mongoose.Schema({
         ref: "User",  // Assuming you have a User model for organizers
         required: true,
     },
+
     status: {
         type: String,
         enum: ["approved", "pending", "declined"],
