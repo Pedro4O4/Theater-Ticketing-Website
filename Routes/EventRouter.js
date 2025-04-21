@@ -17,7 +17,7 @@ const validateEvent = [
 ];
 
 
-router.get("/api/v1/events/all", eventController.getAllEvents);
+router.get("/all", eventController.getAllEvents);
 router.get('/:id', eventController.getEventById);
 router.get("/events", eventController.getApprovedEvents);
 
