@@ -42,7 +42,6 @@ const UserController = {
             res.status(500).json({ message: "Server error" });
         }
     },
-
     login: async (req, res) => {
         try {
             const { email, password } = req.body;
@@ -50,42 +49,51 @@ const UserController = {
             // Find the user by email
             const user = await userModel.findOne({ email });
             if (!user) {
-                return res.status(404).json({ message: "email not found" });
+                return res.status(404).json({ message: "Email not found" });
             }
 
-            console.log("password: ", user.password);
             // Check if the password is correct
-
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (!passwordMatch) {
-                return res.status(405).json({ message: "incorrect password" });
+                return res.status(401).json({ message: "Incorrect password" });
             }
 
-            const currentDateTime = new Date();
-            const expiresAt = new Date(+currentDateTime + 1800000); // expire in 3 minutes
             // Generate a JWT token
             const token = jwt.sign(
                 { user: { userId: user._id, role: user.role } },
                 secretKey,
-                {
-                    expiresIn: 3 * 60 * 60,
-                }
+                { expiresIn: "3h" } // Token valid for 3 hours
             );
-            let newSession = new sessionModel({
+
+            // Save the session in the database
+            const currentDateTime = new Date();
+            const expiresAt = new Date(+currentDateTime + 1800000); // 30 minutes
+            const newSession = new sessionModel({
                 userId: user._id,
                 token,
-                expiresAt: expiresAt,
+                expiresAt,
             });
             await newSession.save();
+
+            // Send the token as an HTTP-only cookie and in the response body
             return res
                 .cookie("token", token, {
                     expires: expiresAt,
-                    withCredentials: true,
-                    httpOnly: false,
-                    SameSite:'none'
+                    httpOnly: true, // Prevent access via JavaScript
+                    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+                    sameSite: "strict", // Prevent CSRF
                 })
                 .status(200)
-                .json({ message: "login successfully", user });
+                .json({
+                    message: "Login successful",
+                    token, // Include token in the response body
+                    user: {
+                        id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                    },
+                });
         } catch (error) {
             console.error("Error logging in:", error);
             res.status(500).json({ message: "Server error" });
@@ -194,7 +202,7 @@ const UserController = {
     // Get single user by ID - Admin only
     async getUserById(req, res) {
         try {
-            const user = await userModel.findById(req.params.id);
+            const user = await userModel.findById(id);
             if (!user) {
                 return res.status(404).json({ message: "User not found" });
             }

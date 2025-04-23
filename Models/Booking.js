@@ -1,16 +1,15 @@
-
 const mongoose = require("mongoose");
-
-
+const User = require("./User"); // Import the User model
+const Event = require("./Event"); // Import the Event model
 const bookingSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: User, // Reference the User model
         required: true,
     },
     event: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
+        ref: Event, // Reference the Event model
         required: true,
     },
     numberOfTickets: {
@@ -28,7 +27,7 @@ const bookingSchema = new mongoose.Schema({
         enum: ["pending", "confirmed", "canceled"],
         default: "pending",
     },
-}, { timestamps: true });  // Automatically adds 'createdAt' and 'updatedAt' fields
+}, { timestamps: true }); // Automatically adds 'createdAt' and 'updatedAt' fields
 
 const Booking = mongoose.model("Booking", bookingSchema);
 module.exports = Booking;

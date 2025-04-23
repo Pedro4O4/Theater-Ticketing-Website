@@ -35,7 +35,7 @@ app.use(authenticationMiddleware);
 
 
 app.use("/api/v1/user", UserRouters);
-//app.use("/api/v1/Event", EventRouters);
+app.use("/api/v1/Event", EventRouters);
 app.use("/api/v1/Booking", BookingRouters);
 
 const db_name = process.env.DB_NAME;

@@ -12,25 +12,23 @@ const BookingController = {
             }
 
             // Check ticket availability
-            if (event.remainingTickets < numberOfTickets) {
+            if (event.remainingTickets < numberOfTickets ) {
                 return res.status(400).json({ message: "Not enough tickets available" });
             }
 
             // Calculate total price
-            const totalPrice = numberOfTickets * event.ticketPrice;
-
             // Reduce available tickets
             event.remainingTickets -= numberOfTickets;
-            await event.save();
+            await Event.insertOne(event);
 
             // Create the booking
             const booking = new Bookingmodle({
                 user: req.user.id,
                 event: eventId,
                 numberOfTickets,
-                totalPrice
+
             });
-            await booking.save();
+            await Bookingmodle.insertOne(booking);
 
             res.status(201).json({ message: "Booking created successfully", booking });
         } catch (error) {
