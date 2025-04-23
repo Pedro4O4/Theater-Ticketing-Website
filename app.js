@@ -38,38 +38,8 @@ app.use("/api/v1/user", UserRouters);
 //app.use("/api/v1/Event", EventRouters);
 app.use("/api/v1/Booking", BookingRouters);
 
-const ItemSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    description: { type: String },
-    price: { type: Number, required: true },
-    createdAt: { type: Date, default: Date.now }
-});
-const Item = mongoose.model("Item", ItemSchema);
-// POST route to save data
-app.post("/api/v1/items", async (req, res) => {
-    try {
-        // Create a new instance of the model with the request body
-        const newItem = new Item(req.body);
-
-        // Save the document to the database
-        const savedItem = await newItem.save();
-
-        // Respond with the saved document
-        res.status(201).json({
-            message: "Item saved successfully",
-            data: savedItem
-        });
-    } catch (error) {
-        console.error("Error saving item:", error);
-        res.status(500).json({
-            message: "Error saving item",
-            error: error.message
-        });
-    }
-});
-
 const db_name = process.env.DB_NAME;
-const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/your_database_name?retryWrites=true&w=majority&appName=Cluster0';
+const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose.connect(db_url)
     .then(() => console.log(`mongoDB connected to ${db_name}`))
