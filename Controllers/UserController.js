@@ -19,7 +19,7 @@ const UserController = {
             const { email, password, name, role } = req.body;
 
             // Check if the user already exists
-            const existingUser = await userModel.findOne({ email });
+            const existingUser = await userModel.findOne({email });
             if (existingUser) {
                 return res.status(409).json({ message: "User already exists" });
             }
@@ -29,13 +29,13 @@ const UserController = {
 
             // Create a new user
             const newUser = new userModel({
+                 name,
                 email,
                 password: hashedPassword,
-                name,
-                role,
+                role
             });
 
-             await newUser.save();
+            await userModel.insertOne(newUser);
             res.status(201).json({ message: "User registered successfully" });
         } catch (error) {
             console.error("Error registering user:", error);

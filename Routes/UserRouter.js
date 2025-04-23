@@ -19,11 +19,11 @@ router.get('/admin',  authorizationMiddleware(['System Admin']), (req, res) => {
     res.status(200).json({ message: "Welcome Admin" });
 });
 
-router.get('/organizer', authorizationMiddleware('organiser'), (req, res) => {
+router.get('/organizer', authorizationMiddleware('Organiser'), (req, res) => {
     res.status(200).json({ message: "Welcome Organizer" });
 });
 
-router.get('/user',  authorizationMiddleware('User'), (req, res) => {
+router.get('/user',  authorizationMiddleware("Standard User"), (req, res) => {
     res.status(200).json({ message: "Welcome User" });
 });
 
