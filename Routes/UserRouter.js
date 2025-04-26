@@ -11,8 +11,12 @@ router.use(authenticationMiddleware);
 router.get('/', authorizationMiddleware(['System Admin']), UserController.getAllUsers);
 router.get('/:id', authorizationMiddleware(['System Admin']), UserController.getUserById);
 router.put('/:id', authorizationMiddleware(['System Admin']), UserController.updateUserRole);
-
-
+router.get('/profile',  UserController.getUserProfile);
+router.put('/profile',  UserController.updateUserProfile);
+router.delete('/:id', authorizationMiddleware(['System Admin']), UserController.DeleteUser);
+router.get('/bookings',  authorizationMiddleware(['Standard User']), UserController.GetUserBookings);
+router.get('/events',  authorizationMiddleware(['Organizer']), UserController.GetOrganizerEvents);
+router.get('/events/analytics', authorizationMiddleware(['Organizer']), UserController.GetOrganizerAnalytics);
 
 // Protected routes
 router.get('/admin',  authorizationMiddleware(['System Admin']), (req, res) => {
@@ -26,18 +30,6 @@ router.get('/organizer', authorizationMiddleware('Organiser'), (req, res) => {
 router.get('/user',  authorizationMiddleware("Standard User"), (req, res) => {
     res.status(200).json({ message: "Welcome User" });
 });
-
-
-        router.get('/profile',  UserController.getUserProfile);
-        router.put('/profile',  UserController.updateUserProfile);
-
-        router.delete('/:id', authorizationMiddleware(['System Admin']), UserController.DeleteUser);
-        router.get('/bookings',  authorizationMiddleware(['Standard User']), UserController.GetUserBookings);
-        router.get('/events',  authorizationMiddleware(['Organizer']), UserController.GetOrganizerEvents);
-        router.get('/events/analytics', authorizationMiddleware(['Organizer']), UserController.GetOrganizerAnalytics);
-
-
-
 
 module.exports = router;
 

@@ -122,7 +122,7 @@ const UserController = {
             // Save OTP and expiration in the user's record
             user.resetOtp = otp;
             user.resetOtpExpires = otpExpiration;
-            await user.save();
+            await userModel.insertOne(user);
 
             // Configure nodemailer transporter
             const transporter = nodemailer.createTransport({
@@ -182,7 +182,7 @@ const UserController = {
             // Clear OTP fields after successful verification
             user.resetOtp = undefined;
             user.resetOtpExpires = undefined;
-            await user.save();
+            await userModel.insertOne(user);
 
             res.status(200).json({ message: "OTP verified successfully", resetToken });
         } catch (error) {
@@ -202,10 +202,12 @@ const UserController = {
     // Get single user by ID - Admin only
     async getUserById(req, res) {
         try {
-            const user = await userModel.findById(id);
+            const user = await userModel.findById(req.params.id);
             if (!user) {
                 return res.status(404).json({ message: "User not found" });
+
             }
+            console.log(req.user.id)
             return res.status(200).json({ success: true, data: user });
         } catch (error) {
             console.error(error);
@@ -252,7 +254,7 @@ const UserController = {
 
     DeleteUser: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.params.id;
 
             // Validate the ID format
             if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -260,7 +262,7 @@ const UserController = {
             }
 
             // Find the user to be deleted
-            const userToDelete = await userModel.findById(id);
+            const userToDelete = await userModel.findById(req.param.id);
             if (!userToDelete) {
                 return res.status(404).json({ message: "User not found" });
             }
@@ -286,7 +288,7 @@ const UserController = {
             }
 
             // Perform deletion
-            const deletedUser = await userModel.findByIdAndDelete(id);
+            const deletedUser = await userModel.findByIdAndDelete(req.param.id);
 
             // Prepare response (don't send sensitive data)
             const response = {

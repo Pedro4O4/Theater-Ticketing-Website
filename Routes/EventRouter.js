@@ -2,20 +2,18 @@
 const express = require('express');
 const router = express.Router();
 const eventController = require('../Controllers/EventController');
-const authMiddleware = require('../Middleware/authenticationMiddleware');
+const authentication = require('../Middleware/authenticationMiddleware');
 const authorizationMiddleware = require('../Middleware/authorizationMiddleware');
 
 
-
-
-router.use(authMiddleware);
+router.use(authentication);
 
 router.post('/', authorizationMiddleware(['Organizer']), eventController.createEvent);
-router.get("/", eventController.getApprovedEvents);
+router.get("/", authorizationMiddleware(['Organizer', 'System Admin','Standard User']) ,eventController.getApprovedEvents);
 router.get("/all",authorizationMiddleware(['System Admin']), eventController.getAllEvents);
 
 
-router.get('/:id', eventController.getEventById);
+router.get('/:id',authorizationMiddleware(["Organizer" , 'System Admin',"Standard User"]), eventController.getEventById);
 
 router.put('/:id',
     authorizationMiddleware(['Organizer', 'System Admin']),

@@ -1,61 +1,56 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
-const cookieParser=require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 
+// Routers
 const UserRouters = require("./Routes/UserRouter");
 const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 const authRouter = require("./Routes/auth");
-const authenticationMiddleware=require('./middleware/authenticationMiddleware')
-require('dotenv').config();
 
+// Middleware
+const authenticationMiddleware = require('./middleware/authenticationMiddleware');
+
+// Middlewares setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(cors({
+    origin: process.env.ORIGIN,
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    credentials: true,
+}));
 
-app.use(cookieParser())
-
-app.use(
-    cors({
-        origin: process.env.ORIGIN,
-        methods: ["GET", "POST", "DELETE", "PUT"],
-        credentials: true,
-    })
-);
-
-
-
-
+// Routes
 app.use("/api/v1", authRouter);
-
+app.use("/api/v1/user", UserRouters);
+app.use("/api/v1/event", EventRouters);
+app.use("/api/v1/booking", BookingRouters);
 app.use(authenticationMiddleware);
 
-
-app.use("/api/v1/user", UserRouters);
-app.use("/api/v1/Event", EventRouters);
-app.use("/api/v1/Booking", BookingRouters);
-
+// MongoDB connection
 const db_name = process.env.DB_NAME;
 const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose.connect(db_url)
-    .then(() => console.log(`mongoDB connected to ${db_name}`))
+    .then(() => console.log(`MongoDB connected to ${db_name}`))
     .catch((e) => {
-        console.log("MongoDB connection error:", e.message);
+        console.error("MongoDB connection error:", e.message);
     });
+
+// 404 handler
 app.use(function (req, res, next) {
     const error = new Error("404 - Not Found");
     error.status = 404;
     next(error);
 });
 
-// Error-handling middleware
-
-
-app.listen(process.env.PORT, () => console.log("server started"))
+// Start server
+app.listen(process.env.PORT, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });

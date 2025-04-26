@@ -1,7 +1,16 @@
-### Forget Password
-POST http://localhost:3001/api/v1/forgetPassword
+### log in
+POST http://localhost:3000/api/v1/login
 Content-Type: application/json
 
 {
-  "email": "ayhaga@gmail.com"
+  "email" : "user@gmail.com",
+  "password": "123456abc"
+
 }
+
+
+
+### Create Event
+GET http://localhost:3000/api/v1/booking/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MDhiMjQ3OGRiNDQ3YTRmZmIzZmQxMCIsInJvbGUiOiJTeXN0ZW0gQWRtaW4ifSwiaWF0IjoxNzQ1NjcwMDY0LCJleHAiOjE3NDU2ODA4NjR9.aiJiN2LK2VgbXqC3AJLuho6g0nlrK4ynsd6BQ1_z6_g
