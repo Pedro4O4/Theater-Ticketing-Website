@@ -23,7 +23,7 @@ const BookingController = {
 
             // Create the booking
             const booking = new Bookingmodle({
-                user: req.user.id,
+                user: req.user, // Assuming user ID is available in req.user
                 event: eventId,
                 numberOfTickets,
 

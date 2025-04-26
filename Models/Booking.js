@@ -4,12 +4,12 @@ const Event = require("./Event"); // Import the Event model
 const bookingSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: User, // Reference the User model
+        ref: "User", // Reference the User model
         required: true,
     },
     event: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Event, // Reference the Event model
+        ref: "Event", // Reference the Event model
         required: true,
     },
     numberOfTickets: {
