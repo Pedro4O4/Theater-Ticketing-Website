@@ -1,5 +1,4 @@
 const Event = require('../Models/Event');
-const mongoose = require('mongoose');
 
 
 

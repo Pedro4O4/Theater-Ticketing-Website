@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const User = require("./User"); // Import the User model
-const Event = require("./Event"); // Import the Event model
 const bookingSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
