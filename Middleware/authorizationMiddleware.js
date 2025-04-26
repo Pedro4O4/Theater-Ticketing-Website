@@ -1,7 +1,8 @@
 module.exports = (requiredRole) => {
     return (req, res, next) => {
-        if (req.user.role !== requiredRole) {
-            return res.status(403).json({ message: "Access denied" });
+
+        if (!requiredRole.includes(req.user.role)) {
+            return res.status(403).json({ message: "hi denied" });
         }
         next();
     };
