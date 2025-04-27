@@ -15,6 +15,7 @@ const Event = require('../Models/Event');
 
              // Extract event details from the request body
              const {
+                 organizerId,
                  title,
                  description,
                  date,
@@ -27,6 +28,7 @@ const Event = require('../Models/Event');
 
              // Create a new event
              const newEvent = new Event({
+                 organizerId,
                  title,
                  description,
                  date,
@@ -36,8 +38,7 @@ const Event = require('../Models/Event');
                  totalTickets,
                  status,
                  remainingTickets: totalTickets,
-                    // Default status is "pending"
-                 organizer: req.user._id // Assuming the organizer's ID is available in req.user
+                 // Default status is "pending"
              });
 
              // Save the event to the database
