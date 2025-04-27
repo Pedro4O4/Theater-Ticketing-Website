@@ -191,7 +191,8 @@ const UserController = {
     },
     async getAllUsers(req, res) {
         try {
-            const users = await userModel.find({email});
+            const email = req.body;
+            const users = await userModel.find({email: email });
             return res.status(200).json({ success: true, data: users });
         } catch (error) {
             console.error(error);
@@ -254,43 +255,8 @@ const UserController = {
 
     DeleteUser: async (req, res) => {
         try {
-            const { id } = req.params.id;
+            const deletedUser = await userModel.findByIdAndDelete(req.params.id);
 
-            // Validate the ID format
-            if (!mongoose.Types.ObjectId.isValid(id)) {
-                return res.status(400).json({ message: "Invalid user ID format" });
-            }
-
-            // Find the user to be deleted
-            const userToDelete = await userModel.findById(req.param.id);
-            if (!userToDelete) {
-                return res.status(404).json({ message: "User not found" });
-            }
-
-            // Check authorization
-            const requestingUser = req.user;
-
-
-            if (requestingUser.role !== 'System Admin' && requestingUser.id !== id) {
-                return res.status(403).json({
-                    message: "Unauthorized: You can only delete your own account unless you're an admin"
-                });
-            }
-
-            // Prevent deleting the last admin
-            if (userToDelete.role === 'System Admin') {
-                const adminCount = await userModel.countDocuments({ role: 'System Admin' });
-                if (adminCount <= 1) {
-                    return res.status(400).json({
-                        message: "Cannot delete the last system admin"
-                    });
-                }
-            }
-
-            // Perform deletion
-            const deletedUser = await userModel.findByIdAndDelete(req.param.id);
-
-            // Prepare response (don't send sensitive data)
             const response = {
                 message: "User deleted successfully",
                 details: {
@@ -320,7 +286,6 @@ const UserController = {
 
     GetUserBookings: async (req, res) => {
         try {
-            const userId = req.user.id;
 
             // Validate user role
             if (req.user.role !== 'Standard User') {
@@ -329,9 +294,8 @@ const UserController = {
                 });
             }
 
-            const bookings = await Booking.find({ user: userId })
-                .populate('event', 'title date location ticketPrice')
-                .select('-user -__v');
+            const bookings = await Booking.findOne({ user: req.user.id })
+
 
             if (!bookings || bookings.length === 0) {
                 return res.status(404).json({

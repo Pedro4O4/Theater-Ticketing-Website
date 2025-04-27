@@ -1,40 +1,45 @@
 const Bookingmodle = require('../Models/Booking');
 const Event = require('../Models/Event');
 const BookingController = {
-    createBooking: async (req, res) => {
-        try {
-            const { eventId, numberOfTickets } = req.body;
 
-            // Find the event
-            const event = await Event.findById(eventId);
-            if (!event) {
-                return res.status(404).json({ message: "Event not found" });
+        createBooking: async (req, res) => {
+            try {
+                const {userId,eventId, numberOfTickets, totalPrice ,status} = req.body;
+
+                // Find the event
+                const event = await Event.findById(eventId);
+
+                if (!event) {
+                    return res.status(404).json({message: "Event not found"});
+                }
+
+
+                // Check ticket availability
+                if (event.remainingTickets < numberOfTickets) {
+                    return res.status(400).json({message: "Not enough tickets available"});
+                }
+
+
+                // Reduce available tickets
+                event.remainingTickets -= numberOfTickets;
+                await Event.findByIdAndUpdate(eventId, {remainingTickets: event.remainingTickets}, {new: true});
+                // Create the booking
+                const booking = new Bookingmodle({
+                    userId,
+                     eventId,
+                    numberOfTickets,
+                    totalPrice,
+                    status
+                });
+                await Bookingmodle.insertOne(booking);
+                res.status(201).json({message: "Booking created successfully", booking});
+            } catch (error) {
+                console.error("Error creating booking:", error);
+                res.status(500).json({message: "Error creating booking", error: error.message});
             }
+        },
 
-            // Check ticket availability
-            if (event.remainingTickets < numberOfTickets ) {
-                return res.status(400).json({ message: "Not enough tickets available" });
-            }
 
-            // Calculate total price
-            // Reduce available tickets
-            event.remainingTickets -= numberOfTickets;
-            await Event.insertOne(event);
-
-            // Create the booking
-            const booking = new Bookingmodle({
-                user: req.user, // Assuming user ID is available in req.user
-                event: eventId,
-                numberOfTickets,
-
-            });
-            await Bookingmodle.insertOne(booking);
-
-            res.status(201).json({ message: "Booking created successfully", booking });
-        } catch (error) {
-            res.status(500).json({ message: "Error creating booking", error });
-        }
-    },
     getBooking: async (req, res) => {
         try {
             const booking = await Bookingmodle.findById(req.params.id);
