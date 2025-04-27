@@ -3,14 +3,15 @@ POST http://localhost:3000/api/v1/login
 Content-Type: application/json
 
 {
-  "email" : "user@gmail.com",
+
+  "email" : "admin@gmail.com",
   "password": "123456abc"
 
 }
 
 
-
-### Create Event
-GET http://localhost:3000/api/v1/booking/
+### event
+DELETE http://localhost:3000/api/v1/user/6808ae68cf806608f061ed1e
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MDhiMjQ3OGRiNDQ3YTRmZmIzZmQxMCIsInJvbGUiOiJTeXN0ZW0gQWRtaW4ifSwiaWF0IjoxNzQ1NjcwMDY0LCJleHAiOjE3NDU2ODA4NjR9.aiJiN2LK2VgbXqC3AJLuho6g0nlrK4ynsd6BQ1_z6_g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MGQxNjc5YTA4ODU1OGJhM2M2NzBhYSIsInJvbGUiOiJTdGFuZGFyZCBVc2VyIn0sImlhdCI6MTc0NTc4NDExMSwiZXhwIjoxNzQ1Nzk0OTExfQ.6_gWHo2gyH79At8Q8V0ulyv9uRTi9R2_IDINdRG9K_4
+
