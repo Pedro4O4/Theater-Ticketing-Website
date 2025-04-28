@@ -4,14 +4,14 @@ Content-Type: application/json
 
 {
 
-  "email" : "admin@gmail.com",
+  "email" : "organizer@gmail.com",
   "password": "123456abc"
 
 }
 
 
 ### event
-DELETE http://localhost:3000/api/v1/user/6808ae68cf806608f061ed1e
+GET http://localhost:3000/api/v1/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MGQxNjc5YTA4ODU1OGJhM2M2NzBhYSIsInJvbGUiOiJTdGFuZGFyZCBVc2VyIn0sImlhdCI6MTc0NTc4NDExMSwiZXhwIjoxNzQ1Nzk0OTExfQ.6_gWHo2gyH79At8Q8V0ulyv9uRTi9R2_IDINdRG9K_4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MGQxNjliYTA4ODU1OGJhM2M2NzBhZCIsInJvbGUiOiJPcmdhbml6ZXIifSwiaWF0IjoxNzQ1ODQyODkwLCJleHAiOjE3NDU4NTM2OTB9.I36vC5SYC_FjSwYU94ah0lRQClyP_Y5IjBSXo8io-T0
 

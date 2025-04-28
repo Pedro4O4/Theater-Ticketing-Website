@@ -2,11 +2,9 @@
 const userModel = require("../Models/User");
 const Event = require("../Models/Event");
 const Booking = require("../Models/Booking");
-const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secretKey = process.env.SECRET_KEY;
-const sessionModel = require("../Models/sessionModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
@@ -68,12 +66,7 @@ const UserController = {
             // Save the session in the database
             const currentDateTime = new Date();
             const expiresAt = new Date(+currentDateTime + 1800000); // 30 minutes
-            const newSession = new sessionModel({
-                userId: user._id,
-                token,
-                expiresAt,
-            });
-            await newSession.save();
+
 
             // Send the token as an HTTP-only cookie and in the response body
             return res
@@ -86,13 +79,6 @@ const UserController = {
                 .status(200)
                 .json({
                     message: "Login successful",
-                    token, // Include token in the response body
-                    user: {
-                        id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        role: user.role,
-                    },
                 });
         } catch (error) {
             console.error("Error logging in:", error);
@@ -286,15 +272,11 @@ const UserController = {
 
     GetUserBookings: async (req, res) => {
         try {
+            console.log("hi")
 
-            // Validate user role
-            if (req.user.role !== 'Standard User') {
-                return res.status(403).json({
-                    message: "Unauthorized: Only standard users can access bookings"
-                });
-            }
-
-            const bookings = await Booking.findOne({ user: req.user.id })
+            const users =req.user.userId
+            console.log(users)
+            const bookings = await Booking.find({ 'userId': users })
 
 
             if (!bookings || bookings.length === 0) {
@@ -330,18 +312,10 @@ const UserController = {
 
     GetOrganizerEvents: async (req, res) => {
         try {
-            const organizerId = req.user.id;
+            console.log("hiiii")
+            const organizerId = req.user.userId;
+            const events = await Event.find({ organizerId })
 
-            // Validate user role
-            if (req.user.role !== 'Organizer') {
-                return res.status(403).json({
-                    message: "Unauthorized: Only organizers can access this endpoint"
-                });
-            }
-
-            const events = await Event.find({ organizer: organizerId })
-                .select('-organizer -__v')
-                .sort({ date: 1 }); // Sort by event date ascending
 
             if (!events || events.length === 0) {
                 return res.status(404).json({
@@ -381,7 +355,7 @@ const UserController = {
 
     GetOrganizerAnalytics: async (req, res) => {
         try {
-            const organizerId = req.user.id;
+            const organizerId = req.user.userId;
 
             // Validate user role
             if (req.user.role !== 'Organizer') {
@@ -445,7 +419,7 @@ const UserController = {
         }
     },  getUserProfile: async (req, res) => {
         try {
-            const user = await userModel.findById(req.user.id)
+            const user = await userModel.findById(req.user.userId)
                 .select('-password -__v'); // Exclude sensitive fields
 
             if (!user) {
@@ -468,7 +442,7 @@ const UserController = {
     updateUserProfile: async (req, res) => {
         try {
             const { name, email, profilePicture } = req.body;
-            const userId = req.user.id;
+            const userId = req.user.userId;
 
             // Find the user
             const user = await userModel.findById(userId);

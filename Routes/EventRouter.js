@@ -10,7 +10,6 @@ router.use(authentication);
 
 router.post('/', authorizationMiddleware(['Organizer']), eventController.createEvent);
 router.get("/", authorizationMiddleware(['Organizer', 'System Admin','Standard User']) ,eventController.getApprovedEvents);
-router.get("/all",authorizationMiddleware(['System Admin']), eventController.getAllEvents);
 
 
 router.get('/:id',authorizationMiddleware(["Organizer" , 'System Admin',"Standard User"]), eventController.getEventById);
@@ -24,6 +23,7 @@ router.delete('/:id',
     eventController.deleteEvent
 );
 
+router.get("/all",authorizationMiddleware(['System Admin']), eventController.getAllEvents);
 
 
 module.exports = router;

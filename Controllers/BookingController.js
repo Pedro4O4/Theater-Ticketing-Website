@@ -4,7 +4,7 @@ const BookingController = {
 
         createBooking: async (req, res) => {
             try {
-                const {userId,eventId, numberOfTickets, totalPrice ,status} = req.body;
+                const {eventId, numberOfTickets,status} = req.body;
 
                 // Find the event
                 const event = await Event.findById(eventId);
@@ -19,13 +19,13 @@ const BookingController = {
                     return res.status(400).json({message: "Not enough tickets available"});
                 }
 
-
+              totalPrice = numberOfTickets * event.ticketPrice
                 // Reduce available tickets
                 event.remainingTickets -= numberOfTickets;
                 await Event.findByIdAndUpdate(eventId, {remainingTickets: event.remainingTickets}, {new: true});
                 // Create the booking
                 const booking = new Bookingmodle({
-                    userId,
+                    userId : req.user.userId,
                      eventId,
                     numberOfTickets,
                     totalPrice,
@@ -42,6 +42,7 @@ const BookingController = {
 
     getBooking: async (req, res) => {
         try {
+            console.log("hi")
             const booking = await Bookingmodle.findById(req.params.id);
             if (!booking) {
                 return res.status(404).json({ message: "Booking not found" });
@@ -52,7 +53,10 @@ const BookingController = {
         }
     },deleteBooking: async (req, res) => {
         try {
+
             const booking = await Bookingmodle.findByIdAndDelete(req.params.id);
+
+
             if (!booking) {
                 return res.status(404).json({message: "Booking not found"});
             }

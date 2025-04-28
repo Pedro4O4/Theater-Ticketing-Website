@@ -19,17 +19,17 @@ router.get('/events',  authorizationMiddleware(['Organizer']), UserController.Ge
 router.get('/events/analytics', authorizationMiddleware(['Organizer']), UserController.GetOrganizerAnalytics);
 
 // Protected routes
-router.get('/admin',  authorizationMiddleware(['System Admin']), (req, res) => {
-    res.status(200).json({ message: "Welcome Admin" });
-});
+//router.get('/admin',  authorizationMiddleware(['System Admin']), (req, res) => {
+  //  res.status(200).json({ message: "Welcome Admin" });
+//});
 
-router.get('/organizer', authorizationMiddleware('Organiser'), (req, res) => {
-    res.status(200).json({ message: "Welcome Organizer" });
-});
+//router.get('/organizer', authorizationMiddleware('Organiser'), (req, res) => {
+   //res.status(200).json({ message: "Welcome Organizer" });
+///});
 
-router.get('/user',  authorizationMiddleware("Standard User"), (req, res) => {
-    res.status(200).json({ message: "Welcome User" });
-});
+//router.get('/user',  authorizationMiddleware("Standard User"), (req, res) => {
+ //   res.status(200).json({ message: "Welcome User" });
+//});
 
 module.exports = router;
 

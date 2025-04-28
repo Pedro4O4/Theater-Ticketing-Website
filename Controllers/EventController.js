@@ -5,6 +5,7 @@ const Event = require('../Models/Event');
  const eventcontroller = {
      createEvent: async (req, res) => {
          try {
+             console.log(req.user.userId)
              // Check if the user is authenticated and has the "Organizer" role
              if (!req.user || req.user.role !== 'Organizer') {
                  return res.status(403).json({
@@ -12,10 +13,8 @@ const Event = require('../Models/Event');
                      message: 'Unauthorized: Only organizers can create events'
                  });
              }
-
              // Extract event details from the request body
              const {
-                 organizerId,
                  title,
                  description,
                  date,
@@ -28,14 +27,14 @@ const Event = require('../Models/Event');
 
              // Create a new event
              const newEvent = new Event({
-                 organizerId,
+                 organizerId:req.user.userId,
                  title,
                  description,
                  date,
                  location,
                  category,
                  ticketPrice,
-                 totalTickets,
+                  totalTickets,
                  status,
                  remainingTickets: totalTickets,
                  // Default status is "pending"
@@ -60,6 +59,7 @@ const Event = require('../Models/Event');
      },
      getApprovedEvents: async (req, res) => {
          try {
+             console.log("approved events")
              const status = "approved"; // Default to "approved" if no status is provided
              // Fetch only approved events for public access
              const events = await Event.find({ status: status });
@@ -116,6 +116,7 @@ const Event = require('../Models/Event');
         }
     },
     updateEvent: async (req, res) => {
+         console.log("update event")
         try {
             const event = await Event.findById(req.params.id);
 
