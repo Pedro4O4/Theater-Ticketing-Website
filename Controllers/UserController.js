@@ -277,6 +277,15 @@ const UserController = {
             // Find all bookings created by the user
             const bookings = await Booking.find({"StandardId": userId});
 
+            if (!bookings || bookings.length === 0) {
+                return res.status(404).json({
+                    message: "No bookings found for this user",
+                    suggestions: [
+                        "Check if you have made any bookings",
+                        "Try exploring available events"
+                    ]
+                });
+            }
 
             return res.status(200).json({ success: true, data: bookings });
 
