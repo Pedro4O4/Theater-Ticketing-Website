@@ -8,16 +8,15 @@ const router = express.Router();
 router.use(authenticationMiddleware);
 
 // Admin-only routes
+router.get('/bookings',  authorizationMiddleware(['Standard User']), UserController.GetUserBookings);
+router.get('/events',authorizationMiddleware(['Organizer']), UserController.GetOrganizerEvents);
 router.get('/', authorizationMiddleware(['System Admin']), UserController.getAllUsers);
 router.get('/:id', authorizationMiddleware(['System Admin']), UserController.getUserById);
 router.put('/:id', authorizationMiddleware(['System Admin']), UserController.updateUserRole);
+router.delete('/:id', authorizationMiddleware(['System Admin']), UserController.DeleteUser);
+router.get('/events/analytics',authorizationMiddleware(['Organizer']), UserController.GetOrganizerAnalytics);
 router.get('/profile',  UserController.getUserProfile);
 router.put('/profile',  UserController.updateUserProfile);
-router.delete('/:id', authorizationMiddleware(['System Admin']), UserController.DeleteUser);
-router.get('/bookings',  authorizationMiddleware(['Standard User']), UserController.GetUserBookings);
-router.get('/events',  authorizationMiddleware(['Organizer']), UserController.GetOrganizerEvents);
-router.get('/events/analytics', authorizationMiddleware(['Organizer']), UserController.GetOrganizerAnalytics);
-
 // Protected routes
 //router.get('/admin',  authorizationMiddleware(['System Admin']), (req, res) => {
   //  res.status(200).json({ message: "Welcome Admin" });

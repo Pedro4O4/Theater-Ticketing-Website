@@ -269,37 +269,16 @@ const UserController = {
             });
         }
     },
-
     GetUserBookings: async (req, res) => {
         try {
-            console.log("hi")
+            const userId = req.user.userId; // Get the user ID from the request
+            console.log("Fetching bookings for user:", userId);
 
-            const users =req.user.userId
-            console.log(users)
-            const bookings = await Booking.find({ 'userId': users })
+            // Find all bookings created by the user
+            const bookings = await Booking.find({"StandardId": userId});
 
 
-            if (!bookings || bookings.length === 0) {
-                return res.status(404).json({
-                    message: "No bookings found for this user",
-                    suggestions: [
-                        "Check if you have made any bookings",
-                        "Try exploring available events"
-                    ]
-                });
-            }
-
-            res.status(200).json({
-                count: bookings.length,
-                bookings: bookings.map(booking => ({
-                    id: booking._id,
-                    event: booking.event,
-                    numberOfTickets: booking.numberOfTickets,
-                    totalPrice: booking.totalPrice,
-                    status: booking.status,
-                    bookedAt: booking.createdAt
-                }))
-            });
+            return res.status(200).json({ success: true, data: bookings });
 
         } catch (error) {
             console.error("Error fetching user bookings:", error);
@@ -309,13 +288,13 @@ const UserController = {
             });
         }
     },
-
     GetOrganizerEvents: async (req, res) => {
         try {
-            console.log("hiiii")
-            const organizerId = req.user.userId;
-            const events = await Event.find({ organizerId })
+            const organizerId = req.user.userId; // Get the organizer's ID from the request
 
+            // Fetch all events created by the organizer
+            const events = await Event.find({ organizerId })
+                .select('_id title description date location category image ticketPrice totalTickets remainingTickets status');
 
             if (!events || events.length === 0) {
                 return res.status(404).json({
@@ -327,23 +306,23 @@ const UserController = {
                 });
             }
 
+            // Return the events
             res.status(200).json({
                 count: events.length,
-                upcomingEvents: events.filter(e => e.date > new Date()).length,
-                pastEvents: events.filter(e => e.date <= new Date()).length,
                 events: events.map(event => ({
                     id: event._id,
                     title: event.title,
+                    description: event.description,
                     date: event.date,
                     location: event.location,
                     category: event.category,
+                    image: event.image,
                     ticketPrice: event.ticketPrice,
-                    ticketsAvailable: event.remainingTickets,
                     totalTickets: event.totalTickets,
+                    remainingTickets: event.remainingTickets,
                     status: event.status
                 }))
             });
-
         } catch (error) {
             console.error("Error fetching organizer events:", error);
             res.status(500).json({
@@ -352,7 +331,6 @@ const UserController = {
             });
         }
     },
-
     GetOrganizerAnalytics: async (req, res) => {
         try {
             const organizerId = req.user.userId;
@@ -365,7 +343,7 @@ const UserController = {
             }
 
             // Get all events for this organizer
-            const events = await Event.find({ organizer: organizerId })
+            const events = await Event.find({  organizerId })
                 .select('_id title totalTickets remainingTickets');
 
             if (!events || events.length === 0) {

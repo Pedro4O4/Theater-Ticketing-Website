@@ -25,7 +25,7 @@ const BookingController = {
                 await Event.findByIdAndUpdate(eventId, {remainingTickets: event.remainingTickets}, {new: true});
                 // Create the booking
                 const booking = new Bookingmodle({
-                    userId : req.user.userId,
+                    StandardId : req.user.userId,
                      eventId,
                     numberOfTickets,
                     totalPrice,
