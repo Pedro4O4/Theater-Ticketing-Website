@@ -9,6 +9,8 @@ const authorizationMiddleware = require('../Middleware/authorizationMiddleware')
 router.use(authentication);
 
 router.post('/', authorizationMiddleware(['Organizer']), eventController.createEvent);
+router.get("/all",authorizationMiddleware(['System Admin']), eventController.getAllEvents);
+
 router.get("/", authorizationMiddleware(['Organizer', 'System Admin','Standard User']) ,eventController.getApprovedEvents);
 
 
@@ -23,7 +25,6 @@ router.delete('/:id',
     eventController.deleteEvent
 );
 
-router.get("/all",authorizationMiddleware(['System Admin']), eventController.getAllEvents);
 
 
 module.exports = router;

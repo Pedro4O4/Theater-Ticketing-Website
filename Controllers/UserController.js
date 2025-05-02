@@ -98,6 +98,7 @@ const UserController = {
                 return res.status(404).json({message: "User not found"});
             }
 
+
             // Generate a random 6-digit OTP
             const otp = Math.floor(100000 + Math.random() * 900000);
             const otpExpiration = new Date(Date.now() + 15 * 60 * 1000); // OTP valid for 15 minutes
