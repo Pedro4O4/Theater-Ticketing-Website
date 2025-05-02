@@ -53,16 +53,26 @@ const BookingController = {
         }
     },deleteBooking: async (req, res) => {
         try {
-
-            const booking = await Bookingmodle.findByIdAndDelete(req.params.id);
-
+            const booking = await Bookingmodle.findById(req.params.id);
 
             if (!booking) {
-                return res.status(404).json({message: "Booking not found"});
+                return res.status(404).json({ message: "Booking not found" });
             }
-            res.status(200).json({message: "Booking deleted successfully"});
+
+            const event = await Event.findById(booking.eventId);
+            if (!event) {
+                return res.status(404).json({ message: "Event not found" });
+            }
+
+            event.remainingTickets += booking.numberOfTickets;
+            await Event.insertOne(event)
+
+            // Delete the booking
+            await Bookingmodle.findByIdAndDelete(req.params.id);
+
+            res.status(200).json({ message: "Booking deleted successfully" });
         } catch (error) {
-            res.status(500).json({message: "Error deleting booking", error});
+            res.status(500).json({ message: "Error deleting booking", error });
         }
     }
 }
