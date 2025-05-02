@@ -1,20 +1,9 @@
-### log in
+### Forget Password
 POST http://localhost:3000/api/v1/login
 Content-Type: application/json
 
 {
-
-  "email" : "user@gmail.com",
+  "email": "pedroOrganizer@gmail.com",
   "password": "123456abc"
-
 }
 
-
-### event
-POST http://localhost:3000/api/v1/booking
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MGQxNjliYTA4ODU1OGJhM2M2NzBhZCIsInJvbGUiOiJPcmdhbml6ZXIifSwiaWF0IjoxNzQ1ODQyODkwLCJleHAiOjE3NDU4NTM2OTB9.I36vC5SYC_FjSwYU94ah0lRQClyP_Y5IjBSXo8io-T0
-
-{
-  "eventId" : ""
-}

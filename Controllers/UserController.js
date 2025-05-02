@@ -47,45 +47,42 @@ const UserController = {
             // Find the user by email
             const user = await userModel.findOne({ email });
             if (!user) {
-                return res.status(404).json({ message: "Email not found" });
+                return res.status(404).json({ message: "email not found" });
             }
 
+            console.log("password: ", user.password);
             // Check if the password is correct
+
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (!passwordMatch) {
-                return res.status(401).json({ message: "Incorrect password" });
+                return res.status(405).json({ message: "incorect password" });
             }
 
+            const currentDateTime = new Date();
+            const expiresAt = new Date(+currentDateTime + 1800000); // expire in 3 minutes
             // Generate a JWT token
             const token = jwt.sign(
                 { user: { userId: user._id, role: user.role } },
                 secretKey,
-                { expiresIn: "3h" } // Token valid for 3 hours
+                {
+                    expiresIn: 3 * 60 * 60,
+                }
             );
 
-            // Save the session in the database
-            const currentDateTime = new Date();
-            const expiresAt = new Date(+currentDateTime + 1800000); // 30 minutes
-
-
-            // Send the token as an HTTP-only cookie and in the response body
             return res
                 .cookie("token", token, {
                     expires: expiresAt,
-                    httpOnly: true, // Prevent access via JavaScript
-                    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-                    sameSite: "strict", // Prevent CSRF
+                    httpOnly: true,
+                    secure: true, // if not working on thunder client , remove it
+                    SameSite: "none",
                 })
                 .status(200)
-                .json({
-                    message: "Login successful",
-                });
+                .json({ message: "login successfully", user });
         } catch (error) {
             console.error("Error logging in:", error);
             res.status(500).json({ message: "Server error" });
         }
     },
-
 
 
     forgetPassword: async (req, res) => {
