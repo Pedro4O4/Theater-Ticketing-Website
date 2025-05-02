@@ -7,7 +7,7 @@ Content-Type: application/json
   "password": "123456abc"
 }
 ### organizer
-GET http://localhost:3000/api/v1/event/6814b152a561f8a0825a2ab8
+DELETE http://localhost:3000/api/v1/booking/68152b933232d7c686835763
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MTRhYzRiODVlMWYyOThiYjgxMDEzOCIsInJvbGUiOiJTdGFuZGFyZCBVc2VyIn0sImlhdCI6MTc0NjE4NjE3MiwiZXhwIjoxNzQ2MTk2OTcyfQ.AZXFjPYlWsCkQBtLl9pP9Ge8vFPwz9QE6Q9im2hhfBg
 
