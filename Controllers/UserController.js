@@ -174,8 +174,8 @@ const UserController = {
     },
     async getAllUsers(req, res) {
         try {
-            const email = req.body;
-            const users = await userModel.find({email: email });
+
+            const users = await userModel.find();
             return res.status(200).json({ success: true, data: users });
         } catch (error) {
             console.error(error);
