@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secretKey = process.env.SECRET_KEY;
 const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
 
 const UserController = {
 
@@ -83,96 +82,57 @@ const UserController = {
             res.status(500).json({ message: "Server error" });
         }
     },
-
-
     forgetPassword: async (req, res) => {
         try {
-            const {email} = req.body;
-
-            if (!email) {
-                return res.status(400).json({message: "Email is required"});
-            }
-
-            const user = await userModel.findOne({email});
-            if (!user) {
-                return res.status(404).json({message: "User not found"});
-            }
-
-
-            // Generate a random 6-digit OTP
-            const otp = Math.floor(100000 + Math.random() * 900000);
-            const otpExpiration = new Date(Date.now() + 15 * 60 * 1000); // OTP valid for 15 minutes
-
-            // Save OTP and expiration in the user's record
-            user.resetOtp = otp;
-            user.resetOtpExpires = otpExpiration;
-            await userModel.insertOne(user);
-
-            // Configure nodemailer transporter
-            const transporter = nodemailer.createTransport({
-                service: "gmail", // Use your email service
-                auth: {
-                    user: process.env.EMAIL_USER, // Your email
-                    pass: process.env.EMAIL_PASS, // Your email password
-                },
-            });
-
-            const mailOptions = {
-                from: process.env.EMAIL_USER,
-                to: email,
-                subject: "Password Reset OTP",
-                text: `Your OTP for password reset is: ${otp}. It is valid for 15 minutes.`,
-            };
-
-            // Send email
-            await transporter.sendMail(mailOptions);
-
-            res.status(200).json({message: "OTP sent to your email"});
-        } catch (error) {
-            if (error.code === "EAUTH") {
-                res.status(500).json({
-                    message: "Authentication error with email service. Please check your email credentials.",
-                    error: error.message,
-                });
-            } else {
-                res.status(500).json({
-                    message: "Error generating OTP",
-                    error: error.message,
-                });
-            }
-        }
-    },
-    verifyOtp: async (req, res) => {
-        try {
-            const { email, otp } = req.body;
-
-            if (!email || !otp) {
-                return res.status(400).json({ message: "Email and OTP are required" });
-            }
+            const { email } = req.body;
 
             const user = await userModel.findOne({ email });
             if (!user) {
                 return res.status(404).json({ message: "User not found" });
             }
 
-            // Check if OTP is valid
-            if (user.resetOtp !== parseInt(otp) || user.resetOtpExpires < Date.now()) {
+            const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+            const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // Expires in 10 mins
+
+            user.otp = otp;
+            user.otpExpires = otpExpires;
+            await user.save();
+
+            // Send OTP via email (mocked for now)
+            console.log(`Send OTP to ${email}: ${otp}`);
+
+            res.status(200).json({ message: "OTP sent to your email." });
+        } catch (error) {
+            console.error("Error sending OTP:", error);
+            res.status(500).json({ message: "Server error" });
+        }
+    },
+
+    verifyOtp: async (req, res) => {
+        try {
+            const { email, otp, newPassword } = req.body;
+
+            const user = await userModel.findOne({ email });
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            if (user.otp !== otp || user.otpExpires < new Date()) {
                 return res.status(400).json({ message: "Invalid or expired OTP" });
             }
 
-            // Generate a reset token (valid for 15 minutes)
-            const resetToken = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: "15m" });
+            user.password = await bcrypt.hash(newPassword, 10);
+            user.otp = null;
+            user.otpExpires = null;
+            await user.save();
 
-            // Clear OTP fields after successful verification
-            user.resetOtp = undefined;
-            user.resetOtpExpires = undefined;
-            await userModel.insertOne(user);
-
-            res.status(200).json({ message: "OTP verified successfully", resetToken });
+            res.status(200).json({ message: "Password reset successfully" });
         } catch (error) {
-            res.status(500).json({ message: "Error verifying OTP", error });
+            console.error("Error resetting password:", error);
+            res.status(500).json({ message: "Server error" });
         }
     },
+
     async getAllUsers(req, res) {
         try {
 

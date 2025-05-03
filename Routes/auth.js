@@ -14,6 +14,6 @@ router.post("/register", register);
 // * forget password
 router.put("/forgetPassword", forgetPassword);
 
-router.post("/verifyOtp", verifyOtp);
+router.post("/verify-otp", verifyOtp);
 
 module.exports = router;

@@ -28,13 +28,8 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,  // Automatically sets the creation timestamp
     },
-    resetOtp: {
-        type: Number,
-    },
-    resetOtpExpires: {
-        type: Date,
-    },
-
+    otp: String,
+    otpExpires: Date,
 });
 
 

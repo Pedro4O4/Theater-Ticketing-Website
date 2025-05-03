@@ -1,13 +1,17 @@
-### Forget Password
 POST http://localhost:3000/api/v1/login
 Content-Type: application/json
 
 {
-  "email": "pedroUser@gmail.com",
-  "password": "123456abc"
+  "email": "ebram@gmail.com",
+  "password": "123456abcde"
 }
-### organizer
-DELETE http://localhost:3000/api/v1/booking/68152b933232d7c686835763
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6IjY4MTRhYzRiODVlMWYyOThiYjgxMDEzOCIsInJvbGUiOiJTdGFuZGFyZCBVc2VyIn0sImlhdCI6MTc0NjE4NjE3MiwiZXhwIjoxNzQ2MTk2OTcyfQ.AZXFjPYlWsCkQBtLl9pP9Ge8vFPwz9QE6Q9im2hhfBg
 
+### Reset Password
+POST http://localhost:3000/api/v1/verify-otp
+Content-Type: application/json
+
+{
+  "email": "ebram@gmail.com",
+  "otp": "121777",
+  "newPassword": "123456abcde"
+}
