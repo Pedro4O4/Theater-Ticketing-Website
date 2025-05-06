@@ -1,0 +1,17 @@
+### Forget Password
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{
+  "email": "3beet@gmail.com",
+  "password": "123456abc"
+}
+### organizer
+POST http://localhost:3000/api/v1/verify-otp
+Content-Type: application/json
+
+{
+  "email": "3beet@gmail.com",
+  "otp" : "271065",
+  "newPassword" : "123456abc"
+}
