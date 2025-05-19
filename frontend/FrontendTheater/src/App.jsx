@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthContext";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+import Layout from "./components/Layout";
+import './styles.css';
+import ForgotPasswordForm from "./components/ForgotPasswordForm.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/register" element={<RegisterForm />} />
+                    <Route path= "/forgot-password" element={<ForgotPasswordForm />} />
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<h1>Welcome to the Event Portal</h1>} />
+                        <Route path="users" element={<h1>Users Page</h1>} />
+                        <Route path="adm" element={<h1>Admin Page</h1>} />
+                        <Route path="org" element={<h1>Organizer Page</h1>} />
+                    </Route>
+                    <Route path="*" element={<Navigate to="/login" replace />} />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 
-export default App
+export default App;
