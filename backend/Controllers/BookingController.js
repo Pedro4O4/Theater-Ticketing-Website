@@ -8,8 +8,6 @@ const BookingController = {
 
                 // Find the event
                 const event = await Event.findById(eventId);
-                console.log("hi")
-                console.log("event");
 
                 if (!event) {
                     return res.status(404).json({message: "Event not found"});
