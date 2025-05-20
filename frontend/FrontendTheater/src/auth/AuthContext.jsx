@@ -1,69 +1,115 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+// src/auth/AuthContext.js
+import { createContext, useState, useEffect, useContext } from "react";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
+// Update this to match your backend - from your .env file I can see it's on port 5000
+const API_URL = "http://localhost:5000/api/v1";
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState();
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    // Fetch current user on app load
+    const [error, setError] = useState(null);
+
+    // Check if user is logged in from local storage
     useEffect(() => {
-        const fetchUser = async () => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
             try {
-                const res = await axios.get("http://localhost:5000/api/v1/users/profile", {
-                    withCredentials: true,
-                });
-                setUser(res.data);
-            } catch(e) {
-                console.log(e)
-                setUser(null);
-            } finally {
-                setLoading(false);
+                setUser(JSON.parse(storedUser));
+            } catch (e) {
+                localStorage.removeItem("user");
             }
-        };
-        fetchUser();
+        }
+        setLoading(false);
     }, []);
 
-    // Login function
-    const login = async (credentials) => {
+    const register = async (userData) => {
+        setLoading(true);
+        setError(null);
 
         try {
-            const response =  await axios.post("http://localhost:5000/api/v1/login", credentials, {
-                withCredentials: true,
+            console.log("Registering user:", userData);
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData),
+                credentials: 'include'
             });
-            if (response.data) {
-                setUser(response.data.user);
 
-                return true;
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Registration failed (${response.status})`);
             }
-            throw new Error(response.message);
+
+            const data = await response.json();
+            return { success: true, data };
         } catch (err) {
-            console.error(err);
+            console.error("Registration error:", err);
+            setError(err.message);
+            return { success: false, error: err.message };
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Logout function in case we have logout endpoint
-    const logout = async () => {
-        await axios.post(
-            "http://localhost:5000/api/v1/logout",
-            {},
-            {
-                withCredentials: true,
+    const login = async (credentials) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(credentials),
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Login failed (${response.status})`);
             }
-        );
-        setUser(null);
-        ;
+
+            const data = await response.json();
+            const userData = data.user || data;
+
+            setUser(userData);
+            localStorage.setItem("user", JSON.stringify(userData));
+            if (data.token) localStorage.setItem("token", data.token);
+
+            return { success: true, user: userData };
+        } catch (err) {
+            console.error("Login error:", err);
+            setError(err.message);
+            return { success: false, error: err.message };
+        } finally {
+            setLoading(false);
+        }
     };
 
-    if (loading) return <div>Loading...</div>;
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+    };
 
-    return (
-        <AuthContext.Provider value={{ user, login, logout ,loading}}>
-            {children}
-        </AuthContext.Provider>
-    );
+    // Helper properties for components
+    const isAuthenticated = !!user;
+    const isAdmin = user?.role === "admin";
+    const isOrganizer = user?.role === "organizer";
+
+    const value = {
+        user,
+        loading,
+        error,
+        login,
+        register,
+        logout,
+        isAuthenticated,
+        isAdmin,
+        isOrganizer
+    };
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export function useAuth() {
-    return useContext(AuthContext);
-}
+export const useAuth = () => useContext(AuthContext);
