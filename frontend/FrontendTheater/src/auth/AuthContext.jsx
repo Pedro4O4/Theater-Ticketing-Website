@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
         if (storedUser) {
             try {
                 setUser(JSON.parse(storedUser));
+                // eslint-disable-next-line no-unused-vars
             } catch (e) {
                 localStorage.removeItem("user");
             }

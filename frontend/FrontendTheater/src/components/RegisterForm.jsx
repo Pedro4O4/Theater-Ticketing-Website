@@ -85,7 +85,7 @@ const RegisterForm = () => {
         if (validateForm()) {
             try {
                 // Remove confirmPassword before sending to API
-                const { confirmPassword, ...registrationData } = formData;
+                const { confirmPassword: _confirmPassword, ...registrationData } = formData;
 
                 await register(registrationData);
                 setSuccess(true);
@@ -230,8 +230,9 @@ const RegisterForm = () => {
                                 value={formData.role}
                                 onChange={handleChange}
                             >
-                                <option value="user">Standard User</option>
-                                <option value="organizer">Event Organizer</option>
+                                <option value="Standard User">Standard User</option>
+                                <option value="Organizer">Event Organizer</option>
+                                <option value="System Admin">Admin</option>
                             </select>
                         </div>
                     </div>

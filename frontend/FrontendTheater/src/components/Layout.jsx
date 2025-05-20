@@ -1,5 +1,5 @@
 // src/components/Layout.jsx
-import { Link, Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import Navbar from "./shared/Navbar";
 import Footer from "./shared/Footer";
@@ -7,7 +7,7 @@ import Loader from "./shared/Loader";
 import { useState, useEffect } from "react";
 
 export default function Layout() {
-    const { currentUser, logout } = useAuth();
+    const { currentUser } = useAuth();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -18,6 +18,13 @@ export default function Layout() {
 
         return () => clearTimeout(timer);
     }, []);
+
+    // Redirect to AdminPage if user is an admin
+    // In Layout.jsx
+// Redirect to admin users page if user is an admin
+    if (currentUser?.role === "System Admin") {
+        return <Navigate to="/admin/users" replace />;
+    }
 
     if (loading) {
         return <Loader message="Loading page..." />;
@@ -35,4 +42,3 @@ export default function Layout() {
         </div>
     );
 }
-

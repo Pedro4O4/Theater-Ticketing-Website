@@ -50,7 +50,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(5000, () => console.log("Server started"))
+app.listen(process.env.PORT, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });
