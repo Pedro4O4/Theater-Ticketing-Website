@@ -76,7 +76,7 @@ export default function LoginForm() {
                 </div>
                 <div className="redirect-link">
                     Forgot your password? <Link to="/forgot-password">Reset Password</Link>
-                  </div>
+                </div>
             </div>
         </div>
     );

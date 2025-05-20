@@ -4,19 +4,26 @@ import { AuthProvider } from "./auth/AuthContext";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import Layout from "./components/Layout";
+import HomePage from "./components/HomePage";
 import './styles.css';
+import "./App.css";
 import ForgotPasswordForm from "./components/ForgotPasswordForm.jsx";
 
 function App() {
     return (
         <AuthProvider>
+            <div className="background-shapes">
+                <div className="shape shape-1"></div>
+                <div className="shape shape-2"></div>
+                <div className="shape shape-3"></div>
+            </div>
             <BrowserRouter>
                 <Routes>
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/register" element={<RegisterForm />} />
                     <Route path= "/forgot-password" element={<ForgotPasswordForm />} />
                     <Route path="/" element={<Layout />}>
-                        <Route index element={<h1>Welcome to the Event Portal</h1>} />
+                        <Route index element={<HomePage />} />
                         <Route path="users" element={<h1>Users Page</h1>} />
                         <Route path="adm" element={<h1>Admin Page</h1>} />
                         <Route path="org" element={<h1>Organizer Page</h1>} />
