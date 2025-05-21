@@ -1,131 +1,170 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-const RegisterForm = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        role: 'Standard User'
-    });
+import { Link } from 'react-router-dom';
+import './ForgotPasswordForm.css';
+const ForgotPasswordForm = () => {
+    const [email, setEmail] = useState('');
+    const [otp, setOtp] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [step, setStep] = useState(1);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const validateForm = () => {
-        if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError('All fields are required');
-            return false;
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
-            return false;
-        }
-
-        return true;
-    };
-
-    const handleSubmit = async (e) => {
+    const handleRequestOtp = async (e) => {
         e.preventDefault();
-
-        if (!validateForm()) return;
+        if (!email) {
+            setError('Email is required');
+            return;
+        }
 
         setLoading(true);
         setError('');
 
         try {
-            // Remove confirmPassword before sending
-            const { confirmedPassword:_confirmPassword, ...registrationData } = formData;
-
-            console.log('Sending registration data:', registrationData);
-
-            // Make API call to register endpoint
-            const response = await axios.post(
-                'http://localhost:5000/api/v1/register',
-                registrationData,
-                { withCredentials: true }
+            const response = await axios.put(
+                'http://localhost:3000/api/v1/forgetPassword',
+                { email }
             );
 
-            console.log('Registration successful:', response.data);
-
-            // Navigate to login page after successful registration
-            navigate('/login');
+            setSuccess(response.data.message || 'Verification code sent to your email');
+            setStep(2);
         } catch (err) {
-            console.error('Registration failed:', err.response?.data || err.message);
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+            console.error('Error:', err.response?.data || err.message);
+            setError(err.response?.data?.message || 'Failed to send OTP. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+
+        if (!otp || !newPassword || !confirmPassword) {
+            setError('All fields are required');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/api/v1/verify-otp',
+                { email, otp, newPassword }
+            );
+
+            setSuccess(response.data.message || 'Password reset successfully');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        } catch (err) {
+            console.error('Error:', err.response?.data || err.message);
+            setError(err.response?.data?.message || 'Failed to reset password. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="register-form">
-            <h2>Create Account</h2>
+        <div className="login-container">
+            <div className="login-card">
+                <h2 className="login-title">Reset Password</h2>
+                {step === 1 ? (
+                    <p className="redirect-link">
+                        Enter your email address to receive a verification code.
+                    </p>
+                ) : (
+                    <p className="redirect-link">
+                        Enter the verification code sent to your email and your new password.
+                    </p>
+                )}
 
-            {error && <div className="error-message">{error}</div>}
+                {error && <div className="error-message">{error}</div>}
+                {success && <div className="success-message">{success}</div>}
 
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Full Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
+                {step === 1 ? (
+                    <form onSubmit={handleRequestOtp}>
+                        <div className="form-group">
+                            <label htmlFor="email" className="form-label">Email Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                className="form-input"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="btn-primary"
+                            disabled={loading}
+                        >
+                            {loading ? 'Sending...' : 'Send Reset Code'}
+                        </button>
+                    </form>
+                ) : (
+                    <form onSubmit={handleResetPassword}>
+                        <div className="form-group">
+                            <label htmlFor="otp" className="form-label">Verification Code</label>
+                            <input
+                                type="text"
+                                id="otp"
+                                className="form-input"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="newPassword" className="form-label">New Password</label>
+                            <input
+                                type="password"
+                                id="newPassword"
+                                className="form-input"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="confirmPassword" className="form-label">Confirm New Password</label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                className="form-input"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="btn-primary"
+                            disabled={loading}
+                        >
+                            {loading ? 'Resetting...' : 'Reset Password'}
+                        </button>
+                    </form>
+                )}
+
+                <div className="redirect-link">
+                    <Link to="/login">Return to Login</Link>
                 </div>
-
-                <div className="form-group">
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label>Confirm Password</label>
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    className="register-button"
-                    disabled={loading}
-                >
-                    {loading ? 'Registering...' : 'Register'}
-                </button>
-            </form>
+            </div>
         </div>
     );
 };
 
-export default RegisterForm;
+export default ForgotPasswordForm;
