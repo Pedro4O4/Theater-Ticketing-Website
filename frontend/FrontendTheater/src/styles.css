@@ -1,65 +1,92 @@
-/* src/styles.css */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Base styles for forms */
+.login-card, .forgot-password-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: all 0.3s ease;
 }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-    color: #1f2937;
-    background-color: #f9fafb;
-    line-height: 1.5;
+.login-card:hover, .forgot-password-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 16px;
+/* Form inputs */
+input, select {
+    transition: all 0.3s;
 }
 
-.section {
-    padding: 40px 0;
+input:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
-.section-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin-bottom: 24px;
-    text-align: center;
+/* Button styles */
+.btn-primary {
+    background-image: linear-gradient(135deg, #4f46e5, #2563eb);
+    border: none;
+    transition: all 0.3s ease;
 }
 
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #2563eb;
-    font-size: 18px;
+.btn-primary:hover:not(:disabled) {
+    background-image: linear-gradient(135deg, #4338ca, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
-.error-message {
-    background-color: #fee2e2;
-    border: 1px solid #fecaca;
-    border-radius: 4px;
-    color: #b91c1c;
-    padding: 12px 16px;
-    margin-bottom: 16px;
+/* Animation for the form elements */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.success-message {
-    background-color: #dcfce7;
-    border: 1px solid #bbf7d0;
-    border-radius: 4px;
-    color: #15803d;
-    padding: 12px 16px;
-    margin-bottom: 16px;
+form > div {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+form > div:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+form > div:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+/* Links styling */
+a {
+    transition: all 0.2s;
+}
+
+a:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+/* Alert messages */
+.bg-red-100, .bg-green-100 {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
