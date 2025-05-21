@@ -1,0 +1,92 @@
+/* Base styles for forms */
+.login-card, .forgot-password-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: all 0.3s ease;
+}
+
+.login-card:hover, .forgot-password-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Form inputs */
+input, select {
+    transition: all 0.3s;
+}
+
+input:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* Button styles */
+.btn-primary {
+    background-image: linear-gradient(135deg, #4f46e5, #2563eb);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-image: linear-gradient(135deg, #4338ca, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Animation for the form elements */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+form > div {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+form > div:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+form > div:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+/* Links styling */
+a {
+    transition: all 0.2s;
+}
+
+a:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+/* Alert messages */
+.bg-red-100, .bg-green-100 {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

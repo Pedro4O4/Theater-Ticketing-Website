@@ -1,0 +1,177 @@
+/* src/components/LoginForm.css */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 20px;
+}
+
+.login-card {
+    background-color: lightsteelblue;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 255);
+    width: 100%;
+    max-width: 450px;
+    transition: all 0.3s ease;
+}
+
+.login-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+    color: white;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    background: linear-gradient(135deg, #93c5fd, #60a5fa);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.redirect-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.redirect-link a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.redirect-link a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Error message styling to match register form */
+.error-message {
+    background-color: #fee2e2;
+    border-left: 4px solid #ef4444;
+    color: #b91c1c;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.error-box {
+    background-color: #fee2e2;
+    border-left: 4px solid #ef4444;
+    color: #b91c1c;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* Success message styling to match register form */
+.success-message {
+    background-color: #dcfce7;
+    border-left: 4px solid #22c55e;
+    color: #166534;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+.redirect-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.redirect-link div {
+    margin: 0.5rem 0;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+.redirect-links-container {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.redirect-link-item {
+    text-align: center;
+    font-size: 0.95rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.redirect-link-item a {
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: underline;
+    transition: all 0.2s ease;
+}
+
+.redirect-link-item a:hover {
+    color: #e0e0e0;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
