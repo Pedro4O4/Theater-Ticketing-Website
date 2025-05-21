@@ -1,9 +1,14 @@
 ### Forget Password
-POST http://localhost:5000/api/v1/login
+POST http://localhost:3000/api/v1/login
 Content-Type: application/json
 
 {
 
-  "email": "eb@gmail.com",
+  "email": "Admin2@gmail.com",
   "password": "123456abc"
 }
+
+### L
+GET http://localhost:5174/api/v1/login
+Content-Type: application/json
+Authorization:  Bearer token
