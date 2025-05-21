@@ -6,9 +6,17 @@ Content-Type: application/json
 
   "email": "Admin2@gmail.com",
   "password": "123456abc"
+
 }
 
 ### L
-GET http://localhost:3000/api/v1/user
+POST http://localhost:3000/api/v1/verify-otp
 Content-Type: application/json
+
+{
+  "email": "Admin2@gmail.com",
+   "otp": "828872",
+  "newPassword": "123456abc"
+
+}
 

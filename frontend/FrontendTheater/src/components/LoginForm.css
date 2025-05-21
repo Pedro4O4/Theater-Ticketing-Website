@@ -134,3 +134,44 @@
     margin-bottom: 1.5rem;
     font-size: 0.95rem;
 }
+.redirect-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.redirect-link div {
+    margin: 0.5rem 0;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+.redirect-links-container {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.redirect-link-item {
+    text-align: center;
+    font-size: 0.95rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.redirect-link-item a {
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: underline;
+    transition: all 0.2s ease;
+}
+
+.redirect-link-item a:hover {
+    color: #e0e0e0;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}

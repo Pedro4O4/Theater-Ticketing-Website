@@ -81,8 +81,9 @@ export default function LoginForm() {
                     </button>
                 </form>
 
-                <div className="register-link">
-                    Don't have an account? <Link to="/register">Register</Link>
+                <div className="redirect-link">
+                    <div>Don't have an account? <Link to="/register">Register</Link></div>
+                    <div className="mt-2">Forgot your password? <Link to="/forgot-password">Reset Password</Link></div>
                 </div>
             </div>
         </div>
