@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
 import LoginForm from "./components/LoginForm";
@@ -8,29 +7,36 @@ import HomePage from "./components/HomePage";
 import './styles.css';
 import "./App.css";
 import ForgotPasswordForm from "./components/ForgotPasswordForm.jsx";
+import AdminUsersPage from "./components/AdminComponent/AdminUsersPage.jsx";
+import { ProtectedRoute } from "./auth/ProtectedRoute";
 
 function App() {
     return (
         <AuthProvider>
-            <div className="background-shapes">
-                <div className="shape shape-1"></div>
-                <div className="shape shape-2"></div>
-                <div className="shape shape-3"></div>
-            </div>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/login" element={<LoginForm />} />
-                    <Route path="/register" element={<RegisterForm />} />
-                    <Route path= "/forgot-password" element={<ForgotPasswordForm />} />
-                    <Route path="/" element={<Layout />}>
-                        <Route index element={<HomePage />} />
-                        <Route path="users" element={<h1>Users Page</h1>} />
-                        <Route path="adm" element={<h1>Admin Page</h1>} />
-                        <Route path="org" element={<h1>Organizer Page</h1>} />
-                    </Route>
-                    <Route path="*" element={<Navigate to="/login" replace />} />
-                </Routes>
-            </BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<RegisterForm />} />
+                <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+                <Route path="/" element={<Layout />}>
+                    <Route index element={<HomePage />} />
+                    <Route path="users" element={
+                        <ProtectedRoute requiredRole="Standard User">
+                            <h1>Users Page</h1>
+                        </ProtectedRoute>
+                    } />
+                    <Route path="admin/users" element={
+                        <ProtectedRoute requiredRole="System Admin">
+                            <AdminUsersPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="org" element={
+                        <ProtectedRoute requiredRole="Organizer">
+                            <h1>Organizer Page</h1>
+                        </ProtectedRoute>
+                    } />
+                </Route>
+                <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
         </AuthProvider>
     );
 }

@@ -24,6 +24,7 @@ app.use(cors({
     origin: process.env.CLIENT_ORIGIN,
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // Routes
@@ -51,7 +52,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(process.env.PORT, () => console.log("Server started"))
+app.listen(3000, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });

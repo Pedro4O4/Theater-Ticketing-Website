@@ -14,7 +14,7 @@ export default function Layout() {
                     <Link to="/events" className="hover:underline">Events</Link>
                     {user?.role === "Standard User" && <Link to="/users" className="hover:underline">Users</Link>}
                     {user?.role === "Organizer" && <Link to="/org" className="hover:underline">Organizer Dashboard</Link>}
-                    {user?.role === "System Admin" && <Link to="/adm" className="hover:underline">Admin Panel</Link>}
+                    {user?.role === "System Admin" && <Link to="/admin/users" className="hover:underline">Admin Panel</Link>}
                     <button onClick={logout} className="bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600">Logout</button>
                 </nav>
             </header>

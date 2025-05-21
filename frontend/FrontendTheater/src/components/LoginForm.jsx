@@ -1,50 +1,89 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
 export default function LoginForm() {
-    const { login } = useAuth();
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    });
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const [form, setForm] = useState({ email: "", password: "" });
+    const { login } = useAuth();
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(form);
-        if (success) navigate("/");
+        setLoading(true);
+        setError("");
+
+        try {
+            const result = await login(formData);
+
+            if (result.success) {
+                // Redirect based on user role
+                if (result.user.role === "System Admin") {
+                    console.log("Successfully logged in admin");
+                    console.log(result.user.role);
+                    navigate("/admin/users");
+                } else if (result.user.role === "Organizer") {
+                    navigate("/org");
+                } else {
+                    navigate("/");
+                }
+            } else {
+                setError(result.error);
+            }
+        } catch (err) {
+            setError("An unexpected error occurred");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-20 space-y-4">
-            <h1>Welcome Please Login</h1>
-            <br/>
-            <label>Email  </label>
-            <br/>
-            <input
-                type="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="border p-2 w-full"
-            />
-            <br/>
-            <p>password </p>
-            <input
-                type="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="border p-2 w-full"
-            />
-            <br/>
-            <br/>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-                Login
-            </button>
-            <br/>
+        <div className="login-container">
+            <div className="login-card">
+                <h1 className="login-title">Login</h1>
+                {error && <div className="error-message">{error}</div>}
 
-            <button onClick={()=>navigate('/register')} className="bg-blue-600 text-white px-4 py-2 rounded">
-                Register
-            </button>
-        </form>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
+                    </button>
+                </form>
+
+                <div className="register-link">
+                    Don't have an account? <Link to="/register">Register</Link>
+                </div>
+            </div>
+        </div>
     );
 }

@@ -82,6 +82,13 @@ const UserController = {
             res.status(500).json({ message: "Server error" });
         }
     },
+    logout: async (req, res) => {
+        try {
+            // logic to remove cookies
+        } catch (e) {
+            res.send(e);
+        }
+    },
     forgetPassword: async (req, res) => {
         try {
             const { email } = req.body;
