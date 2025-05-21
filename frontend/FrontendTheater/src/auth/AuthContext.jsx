@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
             }
         );
         setUser(null);
-        ;
+
     };
 
     if (loading) return <div>Loading...</div>;
@@ -82,6 +82,7 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
     return useContext(AuthContext);
 }
