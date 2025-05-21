@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import "./LoginForm.css";
 
 export default function LoginForm() {
-    const { login } = useAuth();
-    const navigate = useNavigate();
-    const [form, setForm] = useState({ email: "", password: "" });
-    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,15 +22,25 @@ export default function LoginForm() {
         setError("");
 
         try {
-            const success = await login(form);
-            if (success) {
-                navigate("/");
+            const result = await login(formData);
+
+            if (result.success) {
+                // Redirect based on user role
+                if (result.user.role === "System Admin") {
+                    console.log("Successfully logged in admin");
+                    console.log(result.user.role);
+                    navigate("/admin/users");
+                } else if (result.user.role === "Organizer") {
+                    navigate("/org");
+                } else {
+                    navigate("/");
+                }
             } else {
-                setError("Login failed. Please check your credentials.");
+                setError(result.error);
             }
-            // eslint-disable-next-line no-unused-vars
         } catch (err) {
-            setError("An error occurred. Please try again.");
+            setError("An unexpected error occurred");
+            console.error(err);
         } finally {
             setLoading(false);
         }
@@ -33,49 +49,39 @@ export default function LoginForm() {
     return (
         <div className="login-container">
             <div className="login-card">
-                <h1 className="login-title">Welcome Back</h1>
-
-                {error && <div className="error-box">{error}</div>}
+                <h1 className="login-title">Login</h1>
+                {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label className="form-label">Email</label>
+                        <label>Email</label>
                         <input
                             type="email"
-                            placeholder="Enter your email"
-                            value={form.email}
-                            onChange={(e) => setForm({ ...form, email: e.target.value })}
-                            className="form-input"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
                             required
                         />
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Password</label>
+                        <label>Password</label>
                         <input
                             type="password"
-                            placeholder="Enter your password"
-                            value={form.password}
-                            onChange={(e) => setForm({ ...form, password: e.target.value })}
-                            className="form-input"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
                             required
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        className="btn-primary"
-                        disabled={loading}
-                    >
-                        {loading ? "Signing In..." : "Sign In"}
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
 
-                <div className="redirect-link">
-                    Don't have an account? <Link to="/register">Sign Up</Link>
-                </div>
-                <div className="redirect-link">
-                    Forgot your password? <Link to="/forgot-password">Reset Password</Link>
+                <div className="register-link">
+                    Don't have an account? <Link to="/register">Register</Link>
                 </div>
             </div>
         </div>

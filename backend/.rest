@@ -3,11 +3,12 @@ POST http://localhost:3000/api/v1/login
 Content-Type: application/json
 
 {
+
   "email": "Admin2@gmail.com",
   "password": "123456abc"
 }
 
-### Login
-GET localhost:3000/api/v1/user
+### L
+GET http://localhost:3000/api/v1/user
 Content-Type: application/json
-Authorization: Bearer <token>
+

@@ -1,77 +1,167 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import api from '../../services/api';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../auth/AuthContext';
+import UserRow from './UserRow';
+import './AdminUsersPage.css';
+import UpdateUserRoleModal from './UpdateUserRoleModal';
+import ConfirmationDialog from "./ConfirmationDialog.jsx";
 
-export default function AdminUsersPage() {
+const AdminUsersPage = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const { user } = useAuth();
 
-    // In your useEffect
+    // State for edit functionality
+    const [editingUser, setEditingUser] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+
+    // State for delete confirmation
+    const [deleteUserId, setDeleteUserId] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                // This should match your backend route exactly
-                const response = await api.get('/user');
-                setUsers(response.data);
-            } catch (err) {
-                setError(`Failed to fetch users: ${err.response?.data?.message || err.message}`);
-            } finally {
-                setLoading(false);
-            }
-        };
+        if (!user) {
+            console.log("No user found in auth context");
+            navigate('/login');
+            return;
+        }
+
+        if (user.role !== 'System Admin') {
+            console.log("User is not an admin");
+            navigate('/');
+            return;
+        }
 
         fetchUsers();
-    }, []);
+    }, [navigate, user]);
 
-    async function handleDelete(id) {
+    const fetchUsers = async () => {
         try {
-            const response = await api.delete(`/user/${id}`);
-            alert(response.data);
-            // Refresh the user list after deletion
-            setUsers(users.filter(user => user._id !== id));
-        } catch (error) {
-            alert(`Error deleting user: ${error.message}`);
+            console.log("Fetching users...");
+            const response = await axios.get('http://localhost:3000/api/v1/user', {
+                withCredentials: true
+            });
+
+            console.log("API Response:", response);
+
+            if (response.data && Array.isArray(response.data)) {
+                setUsers(response.data);
+            } else if (response.data && response.data.users && Array.isArray(response.data.users)) {
+                setUsers(response.data.users);
+            } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+                setUsers(response.data.data);
+            } else {
+                console.error("Unexpected API response format:", response.data);
+                setError("Unexpected data format from API");
+            }
+        } catch (err) {
+            console.error("Error fetching users:", err);
+            if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+                navigate('/login');
+            } else {
+                const errorMessage = err.response?.data?.message || err.message;
+                setError(errorMessage);
+            }
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
-    if (loading) return <div className="text-center p-10">Loading users...</div>;
+    // Define handleUpdateRole to update local state after role update
+    const handleUpdateRole = (userId, updatedData) => {
+        // Update local state with the new role
+        setUsers(users.map(u => {
+            const userIdField = u._id || u.userId;
+            return userIdField === userId ? { ...u, ...updatedData } : u;
+        }));
+    };
 
-    if (error) return (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-4" role="alert">
-            <strong className="font-bold">Error:</strong>
-            <span className="block sm:inline"> {error}</span>
-        </div>
-    );
+    // Handle opening the edit modal
+    const handleEditClick = (user) => {
+        setEditingUser(user);
+        setIsEditing(true);
+    };
+
+    // Handle deletion click - show confirmation dialog
+    const handleDeleteClick = (userId) => {
+        setDeleteUserId(userId);
+        setShowDeleteConfirm(true);
+    };
+
+    // Handle confirmed deletion
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:3000/api/v1/user/${deleteUserId}`, {
+                withCredentials: true
+            });
+
+            // Remove from local state
+            setUsers(users.filter(u => (u._id || u.userId) !== deleteUserId));
+            setShowDeleteConfirm(false);
+        } catch (err) {
+            console.error("Error deleting user:", err);
+            alert(`Error deleting user: ${err.response?.data?.message || err.message}`);
+        }
+    };
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-6">All Users</h1>
+        <div className="admin-container">
+            <h1 className="admin-heading">All Users</h1>
 
-            {users.length === 0 ? (
-                <div className="text-center p-4">No users found</div>
-            ) : (
-                <ul className="bg-white shadow-md rounded-lg p-4">
-                    {users.map(user => (
-                        <li key={user._id || user.userId} className="flex justify-between items-center mb-4 pb-2 border-b last:border-b-0">
-                            <div>
-                                <span className="font-semibold">{user.name || 'N/A'}</span> -
-                                <span className="text-gray-600 mx-2">{user.email}</span> -
-                                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">{user.role}</span>
-                                <Link to={`/admin/users/${user._id || user.userId}`} className="text-blue-500 ml-4 underline">
-                                    View
-                                </Link>
-                            </div>
-                            <button
-                                onClick={() => handleDelete(user._id || user.userId)}
-                                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                            >
-                                Delete
-                            </button>
-                        </li>
+            {loading && <p className="admin-message">Loading users...</p>}
+            {error && <p className="admin-message admin-error">Error: {error}</p>}
+
+            {!loading && !error && users.length > 0 && (
+                <table className="admin-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Full Name</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {users.map((userData) => (
+                        <UserRow
+                            key={userData._id || userData.userId}
+                            user={userData}
+                            onEdit={handleEditClick}
+                            onDelete={handleDeleteClick}
+                        />
                     ))}
-                </ul>
+                    </tbody>
+                </table>
             )}
+
+            {!loading && !error && users.length === 0 && (
+                <p className="admin-message">No users found in the system.</p>
+            )}
+
+            {/* Using the UpdateUserRoleModal component */}
+            <UpdateUserRoleModal
+                isOpen={isEditing}
+                user={editingUser}
+                onClose={() => setIsEditing(false)}
+                onUpdate={handleUpdateRole}
+            />
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmationDialog
+                isOpen={showDeleteConfirm}
+                title="Confirm Delete"
+                message="Are you sure you want to delete this user? This action cannot be undone."
+                confirmText="Yes, Delete"
+                cancelText="Cancel"
+                onConfirm={confirmDelete}
+                onCancel={() => setShowDeleteConfirm(false)}
+            />
         </div>
     );
-}
+};
+
+export default AdminUsersPage;
