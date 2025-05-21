@@ -5,7 +5,9 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState();
+    const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
+
     // Fetch current user on app load
     useEffect(() => {
         const fetchUser = async () => {
@@ -14,14 +16,23 @@ export const AuthProvider = ({ children }) => {
                     withCredentials: true,
                 });
                 setUser(res.data);
+                setAuthenticated(true);
             } catch(e) {
                 console.log(e)
                 setUser(null);
+                setAuthenticated(false);
             } finally {
                 setLoading(false);
             }
         };
-        fetchUser();
+
+        // Check if user was previously authenticated
+        const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+        if (isAuthenticated) {
+            fetchUser();
+        } else {
+            setLoading(false);
+        }
     }, []);
 
     // Login function
@@ -36,6 +47,7 @@ export const AuthProvider = ({ children }) => {
             if (response.data && response.data.user) {
                 // Store user data in context
                 setUser(response.data.user);
+                setAuthenticated(true);
                 console.log(response.data);
 
                 // Since token is stored in HTTP-only cookie, we don't need to store it in localStorage
@@ -60,23 +72,33 @@ export const AuthProvider = ({ children }) => {
             };
         }
     };
-    // Logout function in case we have logout endpoint
-    const logout = async () => {
-        await axios.post(
-            "http://localhost:3000/api/v1/logout",
-            {},
-            {
-                withCredentials: true,
-            }
-        );
-        setUser(null);
 
+    // Logout function
+    const logout = async () => {
+        try {
+            await axios.post('http://localhost:3000/api/v1/logout', {}, {
+                withCredentials: true
+            });
+
+            // Clear user from context
+            setUser(null);
+            setAuthenticated(false);
+            localStorage.removeItem('isAuthenticated');
+
+            return { success: true };
+        } catch (error) {
+            console.error("Logout error:", error);
+            return {
+                success: false,
+                error: error.response?.data?.message || "Error logging out"
+            };
+        }
     };
 
     if (loading) return <div>Loading...</div>;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout ,loading}}>
+        <AuthContext.Provider value={{ user, authenticated, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
