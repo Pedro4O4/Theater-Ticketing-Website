@@ -41,7 +41,7 @@
 }
 
 .admin-table th {
-    background-color: #f5f5f5;
+    background-color: black;
     font-weight: 600;
     color: #333;
 }
@@ -140,4 +140,17 @@
 .admin-modal p {
     margin-bottom: 20px;
     line-height: 1.5;
+}
+/* Confirmation dialog message styling */
+.confirmation-dialog .dialog-message {
+    color: #000000;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Make sure all text in confirmation dialogs is black by default */
+.confirmation-dialog p,
+.confirmation-dialog div {
+    color: #000000;
 }

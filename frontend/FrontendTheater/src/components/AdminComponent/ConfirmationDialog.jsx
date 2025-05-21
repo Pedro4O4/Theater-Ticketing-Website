@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './ConfirmationDialog.css'
+
 const ConfirmationDialog = ({
                                 isOpen,
                                 title,
@@ -14,9 +15,9 @@ const ConfirmationDialog = ({
 
     return (
         <div className="admin-modal-overlay">
-            <div className="admin-modal">
+            <div className="admin-modal confirmation-dialog">
                 <h2>{title}</h2>
-                <p>{message}</p>
+                <p className="dialog-message">{message}</p>
                 <div className="button-container">
                     <button className="admin-button" onClick={onConfirm}>
                         {confirmText || 'Confirm'}

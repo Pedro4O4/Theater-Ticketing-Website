@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './UserRow.css';
+import './ConfirmationDialog.css'
+import './UpdateUserRoleModal.css'
 
 const UserRow = ({ user, onEdit, onDelete }) => {
     const userId = user._id || user.userId;
