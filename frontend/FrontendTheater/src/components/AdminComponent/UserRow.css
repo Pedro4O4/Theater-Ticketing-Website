@@ -1,0 +1,103 @@
+/* UserRow.css - Specific styles for user rows in the admin table */
+
+.user-row {
+    position: relative;
+}
+
+.user-row:nth-child(even) {
+    background-color: #f9f9fa;
+}
+
+.user-row:hover {
+    background-color: #f0f4f8;
+}
+
+.user-row td {
+    padding: 14px 16px;
+    transition: all 0.2s ease;
+}
+
+.user-row .user-name {
+    font-weight: 500;
+    color: #343a40;
+}
+
+.user-row .user-email {
+    color: #495057;
+    font-size: 0.9em;
+}
+
+.user-row .user-id {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+/* Role Badge Styling */
+.role-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.role-badge.system-admin {
+    background-color: #ffe3e3;
+    color: #e03131;
+    border: 1px solid #ffc9c9;
+}
+
+.role-badge.organizer {
+    background-color: #d3f9d8;
+    color: #2b8a3e;
+    border: 1px solid #b2f2bb;
+}
+
+.role-badge.standard-user {
+    background-color: #e9ecef;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+/* Action button styling */
+.action-cell {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.action-button {
+    margin-left: 8px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: all 0.2s ease;
+}
+
+.edit-button {
+    background-color: #339af0;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #1c7ed6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-button {
+    background-color: #fa5252;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #e03131;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

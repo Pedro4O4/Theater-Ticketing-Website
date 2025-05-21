@@ -9,6 +9,6 @@ Content-Type: application/json
 }
 
 ### L
-GET http://localhost:5174/api/v1/login
+GET http://localhost:3000/api/v1/user
 Content-Type: application/json
-Authorization:  Bearer token
+
