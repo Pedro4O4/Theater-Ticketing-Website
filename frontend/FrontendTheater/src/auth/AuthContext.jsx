@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/api/v1/users/profile", {
+                const res = await axios.get("http://localhost:3000/api/v1/user/profile", {
                     withCredentials: true,
                 });
                 setUser(res.data);
@@ -26,22 +26,40 @@ export const AuthProvider = ({ children }) => {
 
     // Login function
     const login = async (credentials) => {
-
         try {
-            const response =  await axios.post("http://localhost:3000/api/v1/login", credentials, {
-                withCredentials: true,
+            console.log("before post login");
+            const response = await axios.post("http://localhost:3000/api/v1/login", credentials, {
+                withCredentials: true, // This is crucial for cookies to be sent/received
             });
-            if (response.data) {
-                setUser(response.data.user);
+            console.log("after post login");
 
-                return true;
+            if (response.data && response.data.user) {
+                // Store user data in context
+                setUser(response.data.user);
+                console.log(response.data);
+
+                // Since token is stored in HTTP-only cookie, we don't need to store it in localStorage
+                // Instead, mark that the user is authenticated in localStorage
+                localStorage.setItem('isAuthenticated', 'true');
+
+                return {
+                    success: true,
+                    user: response.data.user
+                };
             }
-            throw new Error(response.message);
+
+            return {
+                success: false,
+                error: "Login failed"
+            };
         } catch (err) {
             console.error(err);
+            return {
+                success: false,
+                error: err.response?.data?.message || "Login failed"
+            };
         }
     };
-
     // Logout function in case we have logout endpoint
     const logout = async () => {
         await axios.post(
@@ -52,7 +70,7 @@ export const AuthProvider = ({ children }) => {
             }
         );
         setUser(null);
-        ;
+
     };
 
     if (loading) return <div>Loading...</div>;
@@ -64,6 +82,7 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
     return useContext(AuthContext);
 }
