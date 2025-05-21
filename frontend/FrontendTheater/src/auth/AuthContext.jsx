@@ -1,115 +1,110 @@
-// src/auth/AuthContext.js
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
 
-const AuthContext = createContext(null);
-// Update this to match your backend - from your .env file I can see it's on port 5000
-const API_URL = "http://localhost:5000/api/v1";
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState();
+    const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    // Check if user is logged in from local storage
+    // Fetch current user on app load
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
+        const fetchUser = async () => {
             try {
-                setUser(JSON.parse(storedUser));
-            } catch (e) {
-                localStorage.removeItem("user");
+                const res = await axios.get("http://localhost:3000/api/v1/user/profile", {
+                    withCredentials: true,
+                });
+                setUser(res.data);
+                setAuthenticated(true);
+            } catch(e) {
+                console.log(e)
+                setUser(null);
+                setAuthenticated(false);
+            } finally {
+                setLoading(false);
             }
+        };
+
+        // Check if user was previously authenticated
+        const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+        if (isAuthenticated) {
+            fetchUser();
+        } else {
+            setLoading(false);
         }
-        setLoading(false);
     }, []);
 
-    const register = async (userData) => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            console.log("Registering user:", userData);
-            const response = await fetch(`${API_URL}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData),
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Registration failed (${response.status})`);
-            }
-
-            const data = await response.json();
-            return { success: true, data };
-        } catch (err) {
-            console.error("Registration error:", err);
-            setError(err.message);
-            return { success: false, error: err.message };
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    // Login function
     const login = async (credentials) => {
-        setLoading(true);
-        setError(null);
-
         try {
-            const response = await fetch(`${API_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(credentials),
-                credentials: 'include'
+            console.log("before post login");
+            const response = await axios.post("http://localhost:3000/api/v1/login", credentials, {
+                withCredentials: true, // This is crucial for cookies to be sent/received
             });
+            console.log("after post login");
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Login failed (${response.status})`);
+            if (response.data && response.data.user) {
+                // Store user data in context
+                setUser(response.data.user);
+                setAuthenticated(true);
+                console.log(response.data);
+
+                // Since token is stored in HTTP-only cookie, we don't need to store it in localStorage
+                // Instead, mark that the user is authenticated in localStorage
+                localStorage.setItem('isAuthenticated', 'true');
+
+                return {
+                    success: true,
+                    user: response.data.user
+                };
             }
 
-            const data = await response.json();
-            const userData = data.user || data;
-
-            setUser(userData);
-            localStorage.setItem("user", JSON.stringify(userData));
-            if (data.token) localStorage.setItem("token", data.token);
-
-            return { success: true, user: userData };
+            return {
+                success: false,
+                error: "Login failed"
+            };
         } catch (err) {
-            console.error("Login error:", err);
-            setError(err.message);
-            return { success: false, error: err.message };
-        } finally {
-            setLoading(false);
+            console.error(err);
+            return {
+                success: false,
+                error: err.response?.data?.message || "Login failed"
+            };
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+    // Logout function
+    const logout = async () => {
+        try {
+            await axios.post('http://localhost:3000/api/v1/logout', {}, {
+                withCredentials: true
+            });
+
+            // Clear user from context
+            setUser(null);
+            setAuthenticated(false);
+            localStorage.removeItem('isAuthenticated');
+
+            return { success: true };
+        } catch (error) {
+            console.error("Logout error:", error);
+            return {
+                success: false,
+                error: error.response?.data?.message || "Error logging out"
+            };
+        }
     };
 
-    // Helper properties for components
-    const isAuthenticated = !!user;
-    const isAdmin = user?.role === "admin";
-    const isOrganizer = user?.role === "organizer";
+    if (loading) return <div>Loading...</div>;
 
-    const value = {
-        user,
-        loading,
-        error,
-        login,
-        register,
-        logout,
-        isAuthenticated,
-        isAdmin,
-        isOrganizer
-    };
-
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ user, authenticated, login, logout, loading }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// eslint-disable-next-line react-refresh/only-export-components
+export function useAuth() {
+    return useContext(AuthContext);
+}

@@ -82,6 +82,22 @@ const UserController = {
             res.status(500).json({ message: "Server error" });
         }
     },
+    logout: async (req, res) => {
+        try {
+            // Clear the JWT token cookie with the same settings used when creating it
+            return res
+                .clearCookie('token', {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
+                })
+                .status(200)
+                .json({ message: "Logged out successfully" });
+        } catch (error) {
+            console.error("Error during logout:", error);
+            res.status(500).json({ message: "Server error" });
+        }
+    },
     forgetPassword: async (req, res) => {
         try {
             const { email } = req.body;

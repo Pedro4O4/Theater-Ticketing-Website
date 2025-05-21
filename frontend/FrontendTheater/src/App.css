@@ -2,7 +2,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+  background:white;
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   min-height: 100vh;
@@ -10,9 +10,9 @@ body {
 }
 
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
+  0% { background-position: 0 50%; }
   50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  100% { background-position: 0 50%; }
 }
 
 #root {
@@ -76,7 +76,7 @@ body {
 .card, .login-card, .forgot-password-card {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
