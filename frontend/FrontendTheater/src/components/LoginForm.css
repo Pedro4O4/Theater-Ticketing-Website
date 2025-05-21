@@ -4,15 +4,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f5f7fa;
+    background-color: white;
     padding: 20px;
 }
 
 .login-card {
-    background-color: white;
+    background-color: lightsteelblue;
     padding: 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 255);
     width: 100%;
     max-width: 450px;
     transition: all 0.3s ease;
@@ -22,7 +22,7 @@
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 1.75rem;
-    color: #1e3a8a;
+    color: white;
     text-align: center;
 }
 
@@ -103,10 +103,32 @@
     text-decoration: underline;
 }
 
+/* Error message styling to match register form */
+.error-message {
+    background-color: #fee2e2;
+    border-left: 4px solid #ef4444;
+    color: #b91c1c;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
 .error-box {
     background-color: #fee2e2;
     border-left: 4px solid #ef4444;
     color: #b91c1c;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* Success message styling to match register form */
+.success-message {
+    background-color: #dcfce7;
+    border-left: 4px solid #22c55e;
+    color: #166534;
     padding: 0.8rem 1rem;
     border-radius: 6px;
     margin-bottom: 1.5rem;

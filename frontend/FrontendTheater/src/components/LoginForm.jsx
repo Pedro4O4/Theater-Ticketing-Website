@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import './LoginForm.css'
 
 export default function LoginForm() {
     const [formData, setFormData] = useState({
