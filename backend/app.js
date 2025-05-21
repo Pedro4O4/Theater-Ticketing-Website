@@ -7,10 +7,11 @@ require('dotenv').config();
 const app = express();
 
 // Routers
+const authRouter = require("./Routes/auth");
+
 const UserRouters = require("./Routes/UserRouter");
 const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
-const authRouter = require("./Routes/auth");
 
 // Middleware
 const authenticationMiddleware = require('./middleware/authenticationMiddleware');
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.ORIGIN,
+    origin: process.env.CLIENT_ORIGIN,
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
 }));
@@ -50,7 +51,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(5000, () => console.log("Server started"))
+app.listen(process.env.PORT, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });

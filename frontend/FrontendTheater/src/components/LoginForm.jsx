@@ -1,83 +1,50 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import "./LoginForm.css";
 
 export default function LoginForm() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [form, setForm] = useState({ email: "", password: "" });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setError("");
-
-        try {
-            const success = await login(form);
-            if (success) {
-                navigate("/");
-            } else {
-                setError("Login failed. Please check your credentials.");
-            }
-            // eslint-disable-next-line no-unused-vars
-        } catch (err) {
-            setError("An error occurred. Please try again.");
-        } finally {
-            setLoading(false);
-        }
+        const success = await login(form);
+        if (success) navigate("/");
     };
 
     return (
-        <div className="login-container">
-            <div className="login-card">
-                <h1 className="login-title">Welcome Back</h1>
+        <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-20 space-y-4">
+            <h1>Welcome Please Login</h1>
+            <br/>
+            <label>Email  </label>
+            <br/>
+            <input
+                type="email"
+                placeholder="Email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="border p-2 w-full"
+            />
+            <br/>
+            <p>password </p>
+            <input
+                type="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                className="border p-2 w-full"
+            />
+            <br/>
+            <br/>
+            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+                Login
+            </button>
+            <br/>
 
-                {error && <div className="error-box">{error}</div>}
-
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label className="form-label">Email</label>
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={form.email}
-                            onChange={(e) => setForm({ ...form, email: e.target.value })}
-                            className="form-input"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                            type="password"
-                            placeholder="Enter your password"
-                            value={form.password}
-                            onChange={(e) => setForm({ ...form, password: e.target.value })}
-                            className="form-input"
-                            required
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="btn-primary"
-                        disabled={loading}
-                    >
-                        {loading ? "Signing In..." : "Sign In"}
-                    </button>
-                </form>
-
-                <div className="redirect-link">
-                    Don't have an account? <Link to="/register">Sign Up</Link>
-                </div>
-                <div className="redirect-link">
-                    Forgot your password? <Link to="/forgot-password">Reset Password</Link>
-                </div>
-            </div>
-        </div>
+            <button onClick={()=>navigate('/register')} className="bg-blue-600 text-white px-4 py-2 rounded">
+                Register
+            </button>
+        </form>
     );
 }

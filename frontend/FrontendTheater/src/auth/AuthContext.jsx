@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/v1/users/profile", {
+                const res = await axios.get("http://localhost:3000/api/v1/users/profile", {
                     withCredentials: true,
                 });
                 setUser(res.data);
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (credentials) => {
 
         try {
-            const response =  await axios.post("http://localhost:5000/api/v1/login", credentials, {
+            const response =  await axios.post("http://localhost:3000/api/v1/login", credentials, {
                 withCredentials: true,
             });
             if (response.data) {
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     // Logout function in case we have logout endpoint
     const logout = async () => {
         await axios.post(
-            "http://localhost:5000/api/v1/logout",
+            "http://localhost:3000/api/v1/logout",
             {},
             {
                 withCredentials: true,
