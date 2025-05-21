@@ -85,7 +85,6 @@ export default function RegisterForm() {
                             className="form-input"
                         >
                             <option value="Standard User">Standard User</option>
-                            <option value="System Admin">Admin</option>
                             <option value="Organizer">Organizer</option>
                         </select>
                     </div>
