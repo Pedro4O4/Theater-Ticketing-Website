@@ -13,6 +13,8 @@ import "./App.css";
 import ForgotPasswordForm from "./components/ForgotPasswordForm.jsx";
 import AdminUsersPage from "./components/AdminComponent/AdminUsersPage.jsx";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
+import UserBookingsPage from "./components/booking/UserBookingsPage";
+import EventDetails from "./components/EventDetails";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -41,6 +43,12 @@ function App() {
                         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
                         <Route path="/" element={<Layout />}>
                             <Route index element={<HomePage />} />
+                            <Route path="events/:id" element={<EventDetails />} />
+                            <Route path="bookings" element={
+                                <ProtectedRoute requiredRole="Standard User">
+                                    <UserBookingsPage />
+                                </ProtectedRoute>
+                            } />
                             <Route path="users" element={
                                 <ProtectedRoute requiredRole="Standard User">
                                     <h1>Users Page</h1>
