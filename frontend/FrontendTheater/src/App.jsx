@@ -4,15 +4,21 @@ import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import Layout from "./components/Layout";
-import HomePage from "./components/HomePage";
 import Navbar from "./components/shared/Navbar";
 import Footer from "./components/shared/Footer";
 import Loader from "./components/shared/Loader";
-import './styles.css';
-import "./App.css";
 import ForgotPasswordForm from "./components/ForgotPasswordForm.jsx";
 import AdminUsersPage from "./components/AdminComponent/AdminUsersPage.jsx";
+import AdminEventsPage from "./components/Event Components/AdminEventsPage.jsx";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
+import EventList from "./components/Event Components/EventList.jsx";
+import EventForm from "./components/Event Components/EventForm.jsx";
+import EventAnalytics from "./components/Event Components/EventAnalytics.jsx";
+import MyEventsPage from "./components/Event Components/MyEventPage.jsx";
+import EditEventPage from "./components/Event Components/EditEventPage.jsx";
+import EventDetailsPage from "./components/Event Components/EventDetailPage.jsx";
+import './styles.css';
+import "./App.css";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -36,27 +42,67 @@ function App() {
                 <Navbar />
                 <div className="main-content">
                     <Routes>
+                        {/* Auth routes */}
                         <Route path="/login" element={<LoginForm />} />
                         <Route path="/register" element={<RegisterForm />} />
                         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+
                         <Route path="/" element={<Layout />}>
-                            <Route index element={<HomePage />} />
-                            <Route path="users" element={
-                                <ProtectedRoute requiredRole="Standard User">
-                                    <h1>Users Page</h1>
+                            {/* Redirect root to events */}
+                            <Route index element={<Navigate to="/events" replace />} />
+
+                            {/* IMPORTANT: More specific routes first */}
+                            <Route path="events/create" element={
+                                <ProtectedRoute requiredRole="Organizer">
+                                    <EventForm />
                                 </ProtectedRoute>
                             } />
+
+                            <Route path="events/edit/:id" element={
+                                <ProtectedRoute requiredRole="Organizer">
+                                    <EditEventPage />
+                                </ProtectedRoute>
+                            } />
+
+                            <Route path="events/analytics/:id" element={
+                                <ProtectedRoute requiredRole="Organizer">
+                                    <EventAnalytics />
+                                </ProtectedRoute>
+                            } />
+
+                            {/* General route AFTER more specific ones */}
+                            <Route path="events/:id" element={
+                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                    <EventDetailsPage />
+                                </ProtectedRoute>
+                            } />
+
+                            <Route path="events" element={
+                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                    <EventList />
+                                </ProtectedRoute>
+                            } />
+
+                            <Route path="my-events" element={
+                                <ProtectedRoute requiredRole="Organizer">
+                                    <MyEventsPage />
+                                </ProtectedRoute>
+                            } />
+
+                            {/* Admin routes */}
                             <Route path="admin/users" element={
                                 <ProtectedRoute requiredRole="System Admin">
                                     <AdminUsersPage />
                                 </ProtectedRoute>
                             } />
-                            <Route path="org" element={
-                                <ProtectedRoute requiredRole="Organizer">
-                                    <h1>Organizer Page</h1>
+
+                            <Route path="admin/events" element={
+                                <ProtectedRoute requiredRole="System Admin">
+                                    <AdminEventsPage />
                                 </ProtectedRoute>
                             } />
                         </Route>
+
                         <Route path="*" element={<Navigate to="/login" replace />} />
                     </Routes>
                 </div>

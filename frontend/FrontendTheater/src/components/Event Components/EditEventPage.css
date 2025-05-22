@@ -1,0 +1,257 @@
+/* EditEventPage.css - Global Event Component Styling */
+
+/* Layout & Container Styles */
+.event-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.page-title {
+    font-size: 28px;
+    color: #333;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Grid Layout for Event Cards */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* Event Card Styling */
+.event-card-with-actions {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+}
+
+.event-card-with-actions:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Event Card Content */
+.event-card {
+    padding: 20px;
+}
+
+.event-card h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #222;
+}
+
+.event-card p {
+    color: #666;
+    margin: 8px 0;
+}
+
+.event-card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Actions Button Container */
+.event-actions {
+    display: flex;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-top: 1px solid #eee;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Button Styling */
+.event-button, .create-event-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.event-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+}
+
+.event-button:hover {
+    background-color: #2980b9;
+}
+
+.create-event-button {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px 20px;
+    font-size: 15px;
+}
+
+.create-event-button:hover {
+    background-color: #219653;
+}
+
+.cancel-button {
+    background-color: #e74c3c;
+}
+
+.cancel-button:hover {
+    background-color: #c0392b;
+}
+
+/* Edit Form Styling */
+.event-form {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Status Messages */
+.loading, .error-message, .no-events-message {
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.loading {
+    background-color: #f8f9fa;
+    color: #777;
+}
+
+.error-message {
+    background-color: #fdecea;
+    color: #e74c3c;
+}
+
+.no-events-message {
+    background-color: #f5f6fa;
+    padding: 60px 20px;
+    color: #7f8c8d;
+}
+
+.no-events-message p {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+/* Detail Page Styling */
+.event-detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.event-detail-header {
+    margin-bottom: 25px;
+}
+
+.event-detail-header h1 {
+    font-size: 32px;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.event-detail-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.event-detail-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.back-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .event-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .event-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .event-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-grid {
+        grid-template-columns: 1fr;
+    }
+}

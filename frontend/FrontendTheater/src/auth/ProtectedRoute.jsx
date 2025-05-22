@@ -9,9 +9,18 @@ export const ProtectedRoute = ({ children, requiredRole }) => {
         return <Navigate to="/login" replace />;
     }
 
-    // If a specific role is required and user doesn't have it
-    if (requiredRole && user.role !== requiredRole) {
-        return <Navigate to="/" replace />;
+    // Handle role validation
+    if (requiredRole) {
+        // If requiredRole is an array, check if the user's role is in the array
+        if (Array.isArray(requiredRole)) {
+            if (!requiredRole.includes(user.role)) {
+                return <Navigate to="/events" replace />;
+            }
+        }
+        // If requiredRole is a string, check if it matches the user's role
+        else if (user.role !== requiredRole) {
+            return <Navigate to="/events" replace />;
+        }
     }
 
     return children;
