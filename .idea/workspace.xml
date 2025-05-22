@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1714d46e-3113-44d3-8087-a6c4fe3d9319" name="Changes" comment="booking and event details">
+      <change beforePath="$PROJECT_DIR$/frontend/FrontendTheater/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/FrontendTheater/src/App.jsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package.json" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Adhamayoub5&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Pedro4O4/masr7.git&quot;,
+    &quot;accountId&quot;: &quot;030e1d51-a675-44b1-8481-8c99fd539256&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2ttFINyF8mYKrpVs8gcKo2Jk8Kz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.Event.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.EventController.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.EventRouter.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.UserController.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.app.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.connection.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Adham&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Adham/WebstormProjects/masr7&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-WS-243.24978.60" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1714d46e-3113-44d3-8087-a6c4fe3d9319" name="Changes" comment="" />
+      <created>1741163383559</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741163383559</updated>
+      <workItem from="1741163384851" duration="3827000" />
+      <workItem from="1744564121340" duration="2891000" />
+      <workItem from="1744622780544" duration="6000" />
+      <workItem from="1744649556560" duration="3069000" />
+      <workItem from="1744738735543" duration="2701000" />
+      <workItem from="1744742739759" duration="823000" />
+      <workItem from="1744808248894" duration="2973000" />
+      <workItem from="1745175148889" duration="3507000" />
+      <workItem from="1745180084003" duration="3676000" />
+      <workItem from="1747771638465" duration="454000" />
+      <workItem from="1747772103225" duration="1907000" />
+      <workItem from="1747774036224" duration="63000" />
+      <workItem from="1747857812568" duration="1387000" />
+      <workItem from="1747862740685" duration="1467000" />
+      <workItem from="1747873821072" duration="1316000" />
+      <workItem from="1747876495497" duration="373000" />
+    </task>
+    <task id="LOCAL-00001" summary="i added console">
+      <option name="closed" value="true" />
+      <created>1741164553319</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1741164553319</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added new attribute in event model">
+      <option name="closed" value="true" />
+      <created>1745181053747</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745181053747</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updating event controller as the apis changed">
+      <option name="closed" value="true" />
+      <created>1745181863548</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1745181863548</updated>
+    </task>
+    <task id="LOCAL-00004" summary="booking and event details">
+      <option name="closed" value="true" />
+      <created>1747876867444</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1747876867444</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="master" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/Adham" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="i added console" />
+    <MESSAGE value="added new attribute in event model" />
+    <MESSAGE value="updating event controller as the apis changed" />
+    <MESSAGE value="booking and event details" />
+    <option name="LAST_COMMIT_MESSAGE" value="booking and event details" />
+  </component>
+</project>
