@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import Homepage from './homepagedesign/Homepage.jsx';
 import { AuthProvider } from "./auth/AuthContext";
 import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
@@ -23,7 +24,8 @@ import "./App.css";
 import UpdateProfilePage from "./components/UserComponent/UpdateProfilePage.jsx";
 import UserBookingPage from "./components/Booking Component/UserBookingPage";
 import BookingDetails from "./components/Booking Component/BookingDetails";
-
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import './styles.css';
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -52,8 +54,11 @@ function App() {
                         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
 
                         <Route path="/" element={<Layout />}>
+                            <Route index element={<Homepage />} />
+                            <Route path="home" element={<Homepage />} />
                             {/* Redirect root to events */}
                             <Route index element={<Navigate to="/events" replace />} />
+                            <Route path="events" element={<EventList />} />
 
                             {/* IMPORTANT: More specific routes first */}
                             <Route path="my-events/new" element={
