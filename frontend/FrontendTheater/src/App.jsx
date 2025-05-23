@@ -54,19 +54,19 @@ function App() {
                             <Route index element={<Navigate to="/events" replace />} />
 
                             {/* IMPORTANT: More specific routes first */}
-                            <Route path="events/create" element={
+                            <Route path="my-events/new" element={
                                 <ProtectedRoute requiredRole="Organizer">
                                     <EventForm />
                                 </ProtectedRoute>
                             } />
 
-                            <Route path="events/edit/:id" element={
+                            <Route path="my-events/:id/edit" element={
                                 <ProtectedRoute requiredRole="Organizer">
                                     <EditEventPage />
                                 </ProtectedRoute>
                             } />
 
-                            <Route path="events/analytics/:id" element={
+                            <Route path="my-events/analytics" element={
                                 <ProtectedRoute requiredRole="Organizer">
                                     <EventAnalytics />
                                 </ProtectedRoute>

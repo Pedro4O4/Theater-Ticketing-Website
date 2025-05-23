@@ -99,6 +99,8 @@ const ProfilePage = () => {
                     <h3>Organizer Tools</h3>
                     <div className="quick-links">
                         <Link to="/my-events">My Events</Link>
+                        <Link to="/my-events/new">Create Event</Link>
+                        <Link to="/my-events/analytics">Event Analytics</Link>
                     </div>
                 </div>
             )}
