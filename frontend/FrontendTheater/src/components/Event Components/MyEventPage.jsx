@@ -76,7 +76,7 @@ const MyEventsPage = () => {
                 <div className="no-events">
                     <h2>You haven't created any events yet</h2>
                     <p>Create your first event to start selling tickets and managing registrations.</p>
-                    <Link to="/events/create" className="event-button">
+                    <Link to="/my-events/new" className="event-button">
                         Create Your First Event
                     </Link>
                 </div>
