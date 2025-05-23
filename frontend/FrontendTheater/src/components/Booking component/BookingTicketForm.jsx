@@ -1,101 +1,90 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+// frontend/FrontendTheater/src/components/Booking Components/BookTicketForm.jsx
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../auth/AuthContext';
-import './BookTicketForm.css';
+import axios from 'axios';
+import './BookingStyles.css';
 
-const BookTicketForm = ({ event, onClose }) => {
+const BookTicketForm = ({ event, onBookingComplete }) => {
     const [quantity, setQuantity] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const { token } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const totalPrice = event.ticketPrice * quantity;
+    const maxTickets = event?.tickCount || 0;
+    const ticketPrice = event?.ticketPrice || 0;
+    const totalPrice = quantity * ticketPrice;
 
     const handleQuantityChange = (e) => {
         const value = parseInt(e.target.value);
-        if (value > 0 && value <= event.remainingTickets) {
-            setQuantity(value);
-        }
+        if (value <= 0) setQuantity(1);
+        else if (value > maxTickets) setQuantity(maxTickets);
+        else setQuantity(value);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setError('');
+        setIsLoading(true);
+        setError(null);
 
         try {
             const response = await axios.post(
-                'http://localhost:3000/bookings',
+                'http://localhost:3000/api/v1/booking',
                 {
                     eventId: event._id,
-                    numberOfTickets: quantity,
-                    totalPrice: totalPrice
+                    quantity,
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                { withCredentials: true }
             );
 
-            if (response.status === 201) {
-                onClose();
+            if (onBookingComplete) {
+                onBookingComplete(response.data);
+            } else {
                 navigate('/bookings');
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to book tickets. Please try again.');
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="book-ticket-form">
-            <h2>Book Tickets for {event.title}</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="quantity">Number of Tickets:</label>
-                    <input
-                        type="number"
-                        id="quantity"
-                        min="1"
-                        max={event.remainingTickets}
-                        value={quantity}
-                        onChange={handleQuantityChange}
-                        required
-                    />
-                    <span className="tickets-remaining">
-                        {event.remainingTickets} tickets remaining
-                    </span>
-                </div>
+        <div className="booking-form">
+            <h3>Book Tickets</h3>
 
-                <div className="price-summary">
-                    <p>Price per ticket: ${event.ticketPrice}</p>
-                    <p className="total-price">Total: ${totalPrice}</p>
-                </div>
+            {maxTickets === 0 ? (
+                <p className="sold-out">Sold Out</p>
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="quantity">Quantity ({maxTickets} available):</label>
+                        <input
+                            type="number"
+                            id="quantity"
+                            value={quantity}
+                            onChange={handleQuantityChange}
+                            min="1"
+                            max={maxTickets}
+                            disabled={isLoading}
+                        />
+                    </div>
 
-                {error && <div className="error-message">{error}</div>}
+                    <div className="price-summary">
+                        <p>Price per ticket: ${ticketPrice.toFixed(2)}</p>
+                        <p className="total-price">Total: ${totalPrice.toFixed(2)}</p>
+                    </div>
 
-                <div className="form-actions">
-                    <button
-                        type="button"
-                        className="cancel-button"
-                        onClick={onClose}
-                        disabled={loading}
-                    >
-                        Cancel
-                    </button>
+                    {error && <div className="error-message">{error}</div>}
+
                     <button
                         type="submit"
                         className="book-button"
-                        disabled={loading || event.remainingTickets === 0}
+                        disabled={isLoading || maxTickets === 0}
                     >
-                        {loading ? 'Booking...' : 'Book Tickets'}
+                        {isLoading ? 'Processing...' : 'Book Now'}
                     </button>
-                </div>
-            </form>
+                </form>
+            )}
         </div>
     );
 };

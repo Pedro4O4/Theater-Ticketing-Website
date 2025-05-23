@@ -3,6 +3,10 @@ import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import './EventDetailPage.css';
+import BookTicketForm from '../Booking Component/BookingTicketForm.jsx';
+import BookingTicketForm from "../Booking Component/BookingTicketForm.jsx";
+
+
 
 const EventDetailsPage = () => {
     const { id } = useParams();
@@ -137,9 +141,29 @@ const EventDetailsPage = () => {
             </div>
 
             <div className="event-actions">
+                {/* Book tickets option */}
+                <div className="booking-container">
+                    <BookingTicketForm
+                        event={{
+                            _id: event._id,
+                            availableSeats: event.remainingTickets || 0,
+                            price: event.ticketPrice || 0,
+                            title: event.title
+                        }}
+                        onBookingComplete={() => navigate('/bookings')}
+                    />
+                </div>
+
                 <button className="back-button" onClick={() => navigate('/events')}>
                     Back to Events
                 </button>
+
+                {/* Add edit button if user is organizer/admin */}
+                {canEdit && (
+                    <Link to={`/my-events/${id}/edit`} className="edit-button">
+                        Edit Event
+                    </Link>
+                )}
             </div>
         </div>
     );
