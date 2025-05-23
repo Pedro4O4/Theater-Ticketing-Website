@@ -90,7 +90,8 @@ const MyEventsPage = () => {
                 <h1 className="page-title">My Events</h1>
                 <div className="organizer-buttons">
                     <Link to="/events" className="view-events-button">View All Events</Link>
-                    <Link to="/events/create" className="create-event-button">Create New Event</Link>
+                    <Link to="/my-events/new" className="create-event-button">Create New Event</Link>
+                    <Link to="/my-events/analytics" className="analytics-button">Analytics</Link>
                 </div>
             </div>
 
@@ -101,7 +102,7 @@ const MyEventsPage = () => {
                             <EventCard event={event} />
                             <div className="event-actions">
                                 <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
-                                <Link to={`/events/analytics/${event.id || event._id}`} className="event-button">Analytics</Link>
+                                <Link to={`/my-events/${event.id || event._id}/edit`} className="event-button">Edit</Link>
                                 <button onClick={() => handleDelete(event.id || event._id)} className="event-button cancel-button">
                                     Delete
                                 </button>
@@ -114,7 +115,7 @@ const MyEventsPage = () => {
                     <div className="no-events">
                         <h2>You haven't created any events yet</h2>
                         <p>Create your first event to start selling tickets and managing registrations.</p>
-                        <Link to="/events/create" className="event-button">
+                        <Link to="/my-events/new" className="event-button">
                             Create Your First Event
                         </Link>
                     </div>

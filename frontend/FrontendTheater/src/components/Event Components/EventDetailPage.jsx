@@ -86,11 +86,7 @@ const EventDetailsPage = () => {
         <div className="event-details-container">
             <div className="event-details-header">
                 <h1>{event.title}</h1>
-                {canEdit && (
-                    <Link to={`/events/edit/${id}`} className="edit-button">
-                        Edit Event
-                    </Link>
-                )}
+
             </div>
 
             <div className="event-details-content">

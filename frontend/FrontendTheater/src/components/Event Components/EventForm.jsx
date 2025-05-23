@@ -90,7 +90,7 @@ const EventForm = () => {
                 });
             }
 
-            navigate('/events');
+            navigate('/my-events');
         } catch (err) {
             setError('Failed to save event. ' + (err.response?.data?.message || err.message));
         } finally {
@@ -215,7 +215,7 @@ const EventForm = () => {
                 </div>
 
                 <div className="form-actions">
-                    <button type="button" onClick={() => navigate('/events')} className="cancel-button">
+                    <button type="button" onClick={() => navigate('/my-events')} className="cancel-button">
                         Cancel
                     </button>
                     <button type="submit" className="submit-button" disabled={loading}>

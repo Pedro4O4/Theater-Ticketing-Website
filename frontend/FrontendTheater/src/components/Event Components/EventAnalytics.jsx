@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import './EventAnalytics.css'; // Updated import
+import './EventAnalytics.css';
 
 const EventAnalytics = () => {
     const [analytics, setAnalytics] = useState(null);
@@ -40,17 +40,34 @@ const EventAnalytics = () => {
         }
     };
 
-    // Prepare data for event comparison chart
+    // Prepare data for event comparison chart - ensure we have valid data
     const prepareEventComparisonData = () => {
-        if (!analytics?.events) return [];
-        return analytics.events.map(event => ({
-            name: event.eventTitle,
-            value: event.ticketsSold
-        }));
-    }
+        if (!analytics?.events || !analytics.events.length) return [];
 
-    // COLORS for pie chart
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#83a6ed', '#8dd1e1'];
+        return analytics.events
+            .filter(event => event.ticketsSold > 0) // Only include events with sales
+            .map(event => ({
+                name: event.eventTitle,
+                value: event.ticketsSold
+            }));
+    };
+
+    // Get performance class based on percentage
+    const getPerformanceClass = (percentage) => {
+        if (percentage >= 80) return 'performance-high';
+        if (percentage >= 50) return 'performance-medium';
+        return 'performance-low';
+    };
+
+    // Get revenue class based on value
+    const getRevenueClass = (revenue) => {
+        if (revenue >= 1000) return 'revenue-high';
+        if (revenue >= 500) return 'revenue-medium';
+        return 'revenue-low';
+    };
+
+    // COLORS for pie chart - enhanced color palette
+    const COLORS = ['#4C51BF', '#22D3EE', '#FBBF24', '#DB2777', '#8B5CF6', '#10B981', '#F472B6'];
 
     if (loading) {
         return <div className="loading">Loading analytics data...</div>;
@@ -59,6 +76,10 @@ const EventAnalytics = () => {
     if (error) {
         return <div className="error-message">{error}</div>;
     }
+
+    // Check if we have valid data for the pie chart
+    const pieChartData = prepareEventComparisonData();
+    const hasPieData = pieChartData.length > 0;
 
     return (
         <div className="analytics-container">
@@ -107,32 +128,41 @@ const EventAnalytics = () => {
                         </ResponsiveContainer>
                     </div>
 
-                    <div className="chart-container">
-                        <h2>Sales Distribution</h2>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={prepareEventComparisonData()}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                                    outerRadius={100}
-                                    fill="#8884d8"
-                                    dataKey="value"
-                                >
-                                    {prepareEventComparisonData().map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+                    {hasPieData && (
+                        <div className="chart-container">
+                            <h2>Sales Distribution</h2>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart>
+                                    <Pie
+                                        data={pieChartData}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={true}
+                                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                        outerRadius={100}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                        animationBegin={0}
+                                        animationDuration={1500}
+                                    >
+                                        {pieChartData.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={COLORS[index % COLORS.length]}
+                                                stroke="#ffffff"
+                                                strokeWidth={2}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip formatter={(value) => [`${value} tickets`, 'Sold']} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
 
                     <div className="chart-container">
                         <h2>Events Performance</h2>
-                        <div className="events-table">
+                        <div className="events-table enhanced-table">
                             <table>
                                 <thead>
                                 <tr>
@@ -146,11 +176,21 @@ const EventAnalytics = () => {
                                 <tbody>
                                 {analytics.events.map(event => (
                                     <tr key={event.eventId}>
-                                        <td>{event.eventTitle}</td>
+                                        <td className="event-title-cell">{event.eventTitle}</td>
                                         <td>{event.ticketsSold}</td>
                                         <td>{event.ticketsAvailable}</td>
-                                        <td>{event.percentageSold}%</td>
-                                        <td>${event.revenue?.toFixed(2)}</td>
+                                        <td className={getPerformanceClass(event.percentageSold)}>
+                                            <div className="progress-container">
+                                                <div
+                                                    className="progress-bar"
+                                                    style={{width: `${Math.min(100, event.percentageSold)}%`}}
+                                                ></div>
+                                                <span>{event.percentageSold}%</span>
+                                            </div>
+                                        </td>
+                                        <td className={getRevenueClass(event.revenue)}>
+                                            ${event.revenue?.toFixed(2)}
+                                        </td>
                                     </tr>
                                 ))}
                                 </tbody>
