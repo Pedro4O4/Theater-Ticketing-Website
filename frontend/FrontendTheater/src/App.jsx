@@ -24,8 +24,11 @@ import "./App.css";
 import UpdateProfilePage from "./components/UserComponent/UpdateProfilePage.jsx";
 import UserBookingPage from "./components/Booking Component/UserBookingPage";
 import BookingDetails from "./components/Booking Component/BookingDetails";
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import BookingTicketForm from "./components/Booking Component/BookingTicketForm.jsx";
+// Remove this line
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import './styles.css';
+
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -123,13 +126,23 @@ function App() {
                             } />
 
                             <Route path="bookings" element={
-                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                <ProtectedRoute requiredRole={["Standard User"]}>
                                     <UserBookingPage />
                                 </ProtectedRoute>
                             } />
 
                             <Route path="bookings/:id" element={
-                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                <ProtectedRoute requiredRole={["Standard User"]}>
+                                    <BookingDetails />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="bookings/new" element={
+                                <ProtectedRoute requiredRole={["Standard User"]}>
+                                    <BookingTicketForm />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="bookings/new" element={
+                                <ProtectedRoute requiredRole={["Standard User"]}>
                                     <BookingDetails />
                                 </ProtectedRoute>
                             } />
