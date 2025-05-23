@@ -172,7 +172,7 @@ const BookingDetails = () => {
                 </div>
 
                 <div className="booking-actions">
-                    <Link to="/user/bookings" className="back-button">Back to My Bookings</Link>
+                    <Link to="/bookings" className="back-button">Back to My Bookings</Link>
                     {eventData._id && (
                         <Link to={`/events/${eventData._id}`} className="view-event-btn">View Event Page</Link>
                     )}
