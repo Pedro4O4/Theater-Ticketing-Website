@@ -20,6 +20,7 @@ import EventDetailsPage from "./components/Event Components/EventDetailPage.jsx"
 import './styles.css';
 import "./App.css";
 import './index.css'
+import UserBookingsPage from "./components/Booking component/UserBookingPage.jsx";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -58,7 +59,11 @@ function App() {
                                     <EventForm />
                                 </ProtectedRoute>
                             } />
-
+                            <Route path="bookings" element={
+                                <ProtectedRoute requiredRole="Standard User">
+                                    <UserBookingsPage />
+                                </ProtectedRoute>
+                            } />
                             <Route path="/my-events/:id/edit" element={
                                 <ProtectedRoute requiredRole="Organizer">
                                     <EditEventPage />
