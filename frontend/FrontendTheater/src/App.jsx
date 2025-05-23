@@ -21,6 +21,8 @@ import EventDetailsPage from "./components/Event Components/EventDetailPage.jsx"
 import './styles.css';
 import "./App.css";
 import UpdateProfilePage from "./components/UserComponent/UpdateProfilePage.jsx";
+import UserBookingPage from "./components/Booking Component/UserBookingPage";
+import BookingDetails from "./components/Booking Component/BookingDetails";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -112,6 +114,18 @@ function App() {
                             <Route path="admin/events" element={
                                 <ProtectedRoute requiredRole="System Admin">
                                     <AdminEventsPage />
+                                </ProtectedRoute>
+                            } />
+
+                            <Route path="bookings" element={
+                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                    <UserBookingPage />
+                                </ProtectedRoute>
+                            } />
+
+                            <Route path="bookings/:id" element={
+                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                    <BookingDetails />
                                 </ProtectedRoute>
                             } />
 
