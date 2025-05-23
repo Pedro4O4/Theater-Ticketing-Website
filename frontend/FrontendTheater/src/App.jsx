@@ -10,7 +10,8 @@ import Loader from "./components/shared/Loader";
 import ForgotPasswordForm from "./components/ForgotPasswordForm.jsx";
 import AdminUsersPage from "./components/AdminComponent/AdminUsersPage.jsx";
 import AdminEventsPage from "./components/Event Components/AdminEventsPage.jsx";
-import  {ProtectedRoute}  from "./auth/ProtectedRoute";
+import { ProtectedRoute } from "./auth/ProtectedRoute";
+import ProfilePage from './components/UserComponent/ProfilePage';
 import EventList from "./components/Event Components/EventList.jsx";
 import EventForm from "./components/Event Components/EventForm.jsx";
 import EventAnalytics from "./components/Event Components/EventAnalytics.jsx";
@@ -19,8 +20,6 @@ import EditEventPage from "./components/Event Components/EditEventPage.jsx";
 import EventDetailsPage from "./components/Event Components/EventDetailPage.jsx";
 import './styles.css';
 import "./App.css";
-import './index.css'
-import UserBookingsPage from "./components/Booking component/UserBookingPage.jsx";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -54,24 +53,19 @@ function App() {
                             <Route index element={<Navigate to="/events" replace />} />
 
                             {/* IMPORTANT: More specific routes first */}
-                            <Route path="my-events/new" element={
+                            <Route path="events/create" element={
                                 <ProtectedRoute requiredRole="Organizer">
                                     <EventForm />
                                 </ProtectedRoute>
                             } />
-                            <Route path="bookings" element={
-                                <ProtectedRoute requiredRole="Standard User">
-                                    <UserBookingsPage />
-                                </ProtectedRoute>
-                            } />
-                            <Route path="/my-events/:id/edit" element={
+
+                            <Route path="events/edit/:id" element={
                                 <ProtectedRoute requiredRole="Organizer">
                                     <EditEventPage />
                                 </ProtectedRoute>
                             } />
 
-                            // Add this route to App.jsx
-                            <Route path="my-events/analytics" element={
+                            <Route path="events/analytics/:id" element={
                                 <ProtectedRoute requiredRole="Organizer">
                                     <EventAnalytics />
                                 </ProtectedRoute>
@@ -108,6 +102,13 @@ function App() {
                                     <AdminEventsPage />
                                 </ProtectedRoute>
                             } />
+                            <Route path="profile" element={
+                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                    <ProfilePage />
+                                </ProtectedRoute>
+                            } />
+
+                            {/* Catch-all route */}
                         </Route>
 
                         <Route path="*" element={<Navigate to="/login" replace />} />
