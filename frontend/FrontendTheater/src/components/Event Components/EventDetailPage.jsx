@@ -141,18 +141,7 @@ const EventDetailsPage = () => {
             </div>
 
             <div className="event-actions">
-                {/* Book tickets option */}
-                <div className="booking-container">
-                    <BookingTicketForm
-                        event={{
-                            _id: event._id,
-                            availableSeats: event.remainingTickets || 0,
-                            price: event.ticketPrice || 0,
-                            title: event.title
-                        }}
-                        onBookingComplete={() => navigate('/bookings')}
-                    />
-                </div>
+
 
                 <button className="back-button" onClick={() => navigate('/events')}>
                     Back to Events

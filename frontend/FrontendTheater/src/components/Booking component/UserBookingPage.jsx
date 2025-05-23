@@ -1,18 +1,16 @@
-// frontend/FrontendTheater/src/components/Booking Components/UserBookingsPage.jsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../auth/AuthContext';
 import ConfirmationDialog from '../AdminComponent/ConfirmationDialog';
-import './BookingStyles.css';
+import './UserBookingPage.css';
 
 const UserBookingsPage = () => {
     const [bookings, setBookings] = useState([]);
+    const [eventDetails, setEventDetails] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [deleteBookingId, setDeleteBookingId] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const { user } = useAuth();
 
     useEffect(() => {
         fetchBookings();
@@ -21,19 +19,46 @@ const UserBookingsPage = () => {
     const fetchBookings = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:3000/api/v1/booking/user', {
+            const response = await axios.get('http://localhost:3000/api/v1/user/bookings', {
                 withCredentials: true
             });
-//////////////////////////////////////////////////////////////////////////////////
+
+            let bookingsData = [];
             if (response.data && Array.isArray(response.data)) {
-                setBookings(response.data);
+                bookingsData = response.data;
             } else if (response.data && response.data.userId && Array.isArray(response.data.userId)) {
-                setBookings(response.data.userId);
+                bookingsData = response.data.userId;
             } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
-                setBookings(response.data.data);
+                bookingsData = response.data.data;
             } else {
                 setError("Unexpected data format from API");
+                setLoading(false);
+                return;
             }
+
+            setBookings(bookingsData);
+
+            // Fetch event details for each booking
+            const events = {};
+            await Promise.all(
+                bookingsData.map(async (booking) => {
+                    if (booking.eventId) {
+                        try {
+                            const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${booking.eventId}`, {
+                                withCredentials: true
+                            });
+
+                            if (eventResponse.data.success && eventResponse.data.data) {
+                                events[booking.eventId] = eventResponse.data.data;
+                            }
+                        } catch (err) {
+                            console.error(`Error fetching event for booking ${booking._id}:`, err);
+                        }
+                    }
+                })
+            );
+
+            setEventDetails(events);
         } catch (err) {
             console.error("Error fetching bookings:", err);
             setError(err.response?.data?.message || "Failed to load bookings");
@@ -75,32 +100,42 @@ const UserBookingsPage = () => {
                 </div>
             ) : (
                 <div className="bookings-list">
-                    {bookings.map((booking) => (
-                        <div key={booking._id} className="booking-card">
-                            <div className="booking-info">
-                                <h3>{booking.event?.title || 'Event Title Unavailable'}</h3>
-                                <p className="booking-date">
-                                    {new Date(booking.createdAt).toLocaleDateString()}
-                                </p>
-                                <div className="booking-details">
-                                    <p>Tickets: {booking.quantity}</p>
-                                    <p>Total: ${booking.totalPrice?.toFixed(2) || (booking.quantity * booking.event?.price).toFixed(2)}</p>
-                                    <p>Status: <span className="status">{booking.status || 'Confirmed'}</span></p>
-                                </div>
-                                <div className="booking-actions">
-                                    <Link to={`/bookings/${booking._id}`} className="view-details-btn">View Details</Link>
-                                    {booking.status !== 'Cancelled' && (
-                                        <button
-                                            onClick={() => handleCancelClick(booking._id)}
-                                            className="cancel-btn"
-                                        >
-                                            Cancel Booking
-                                        </button>
-                                    )}
+                    {bookings.map((booking) => {
+                        const event = booking.eventId && eventDetails[booking.eventId]
+                            ? eventDetails[booking.eventId]
+                            : booking.event || {};
+
+                        return (
+                            <div key={booking._id} className="booking-card">
+                                <div className="booking-info">
+                                    <h3>{event.title || 'Event Title Unavailable'}</h3>
+                                    <span className="booking-date">
+                                        {new Date(booking.createdAt).toLocaleDateString()}
+                                    </span>
+
+                                    <div className="booking-details">
+                                        <p>Tickets: <strong>{booking.quantity || booking.numberOfTickets}</strong></p>
+                                        <p>Total: <strong>${booking.totalPrice?.toFixed(2) || (booking.quantity * event?.ticketPrice).toFixed(2) || 'N/A'}</strong></p>
+                                        <p>Status: <span className={`status ${(booking.status || 'confirmed').toLowerCase()}`}>
+                                            {booking.status || 'Confirmed'}
+                                        </span></p>
+                                    </div>
+
+                                    <div className="booking-actions">
+                                        <Link to={`/bookings/${booking._id}`} className="view-details-btn">View Details</Link>
+                                        {booking.status !== 'Cancelled' && (
+                                            <button
+                                                onClick={() => handleCancelClick(booking._id)}
+                                                className="cancel-btn"
+                                            >
+                                                Cancel Booking
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
 
