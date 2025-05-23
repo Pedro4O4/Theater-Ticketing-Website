@@ -20,7 +20,7 @@ const Homepage = () => {
 
     useEffect(() => {
         // Fetch featured events from your API
-        fetch('/api/v1/event', )
+        fetch('/api/v1/events/all ', )
             .then(response => response.json())
             .then(data => {
                 setFeaturedEvents(data.length ? data : mockFeaturedEvents);
