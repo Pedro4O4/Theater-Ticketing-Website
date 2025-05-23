@@ -20,6 +20,7 @@ import EditEventPage from "./components/Event Components/EditEventPage.jsx";
 import EventDetailsPage from "./components/Event Components/EventDetailPage.jsx";
 import './styles.css';
 import "./App.css";
+import UpdateProfilePage from "./components/UserComponent/UpdateProfilePage.jsx";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -77,6 +78,17 @@ function App() {
                                     <EventDetailsPage />
                                 </ProtectedRoute>
                             } />
+                            <Route path="profile" element={
+                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                    <ProfilePage />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="profile/edit" element={
+                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                    <UpdateProfilePage />
+                                </ProtectedRoute>
+                            } />
+
 
                             <Route path="events" element={
                                 <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
@@ -102,11 +114,7 @@ function App() {
                                     <AdminEventsPage />
                                 </ProtectedRoute>
                             } />
-                            <Route path="profile" element={
-                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
-                                    <ProfilePage />
-                                </ProtectedRoute>
-                            } />
+
 
                             {/* Catch-all route */}
                         </Route>

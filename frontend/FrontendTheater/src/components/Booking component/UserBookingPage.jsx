@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../auth/AuthContext';
 import BookingDetails from './BookingDetails';
-import './UserBookingsPage.css';
+import './UserBookingPage.css';
 
 const UserBookingsPage = () => {
     const [bookings, setBookings] = useState([]);
