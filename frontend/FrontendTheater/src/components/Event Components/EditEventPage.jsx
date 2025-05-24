@@ -216,22 +216,14 @@ const EditEventPage = () => {
 
                 <div className="form-group">
                     <label htmlFor="category">Category</label>
-                    <select
+                    <input
                         id="category"
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
                         required
                     >
-                        <option value="">Select a category</option>
-                        <option value="Music">Music</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Arts">Arts</option>
-                        <option value="Theater">Theater</option>
-                        <option value="Conference">Conference</option>
-                        <option value="Workshop">Workshop</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    </input>
                 </div>
 
                 <div className="form-row">
