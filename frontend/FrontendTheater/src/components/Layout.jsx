@@ -20,7 +20,7 @@ export default function Layout() {
                 <div className="header-content">
                     <h1 className="portal-title-large">Event Portal</h1>
 
-                    {user && (
+                    {user && (isAdminSection || isOrganizerSection || isStandardUserViewingEvents) && (
                         <div className="user-greeting-expanded">
                             <div className="user-avatar">
                                 {user.image ? (

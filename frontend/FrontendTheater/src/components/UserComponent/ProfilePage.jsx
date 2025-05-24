@@ -104,22 +104,32 @@ const ProfilePage = () => {
                     </div>
                 </div>
             )}
-
-            <div className="user-section">
-                <h3>Account Management</h3>
-                <div className="quick-links">
-                    <Link to="/user/bookings">My Bookings</Link>
+            {displayUser?.role === "Standard User" && (
+                <div className="user-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <h3 style={{ textAlign: 'center', width: '100%' }}>User Quick Access</h3>
+                    <div className="quick-links" style={{ width: '100%', maxWidth: 400 }}>
+                        <Link to="/events">Explore Events</Link>
+                        <Link to="/bookings">My bookings</Link>
+                    </div>
                 </div>
-                <button
-                    className="edit-profile-btn"
-                    onClick={() => navigate('/profile/edit')}
-                    style={{ marginTop: '1rem' }}
-                >
-                    Edit Profile
-                </button>
-            </div>
+            )}
+            <button
+                className="edit-profile-btn"
+                onClick={() => navigate('/profile/edit')}
+                style={{ marginTop: '1rem' }}
+            >
+                Edit Profile
+            </button>
+            <button
+                className="edit-profile-btn"
+                onClick={() => navigate('/events') && (user.role === "Organizer"|| user.role === "Standard User")}
+                style={{ marginTop: '1rem' }}
+            >
+               back to events
+            </button>
         </div>
     );
 };
 
 export default ProfilePage;
+

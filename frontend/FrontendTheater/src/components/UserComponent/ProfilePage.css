@@ -131,20 +131,27 @@
 
 .admin-section {
     border-top: 4px solid #e74c3c;
+    background: linear-gradient(135deg, #ffe5e0 0%, #fadbd8 100%);
 }
 
 .organizer-section {
     border-top: 4px solid #f39c12;
+    background: linear-gradient(135deg, #fff6e0 0%, #fef5e7 100%);
 }
 
-.user-section {
+.user-section  {
     border-top: 4px solid #3498db;
+    background: linear-gradient(135deg, #e3f0fa 0%, #f0f8ff 100%);
 }
 
 .admin-section h3, .organizer-section h3, .user-section h3 {
     margin-top: 0;
     color: #2c3e50;
     font-size: 1.3rem;
+}
+
+.user-section h3 {
+    text-align: center;
 }
 
 .quick-links {
@@ -177,7 +184,7 @@
 }
 
 .user-section .quick-links a:hover {
-    background-color: #ebf5fb;
+    background-color: #e3f0fa;
     color: #2980b9;
 }
 
@@ -215,3 +222,4 @@
         color: #2c3e50; /* Even darker color for email */
     }
 }
+
