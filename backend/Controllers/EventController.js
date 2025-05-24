@@ -14,6 +14,7 @@ const Event = require('../Models/Event');
                  });
              }
              // Extract event details from the request body
+             // Get form data
              const {
                  title,
                  description,
@@ -21,27 +22,27 @@ const Event = require('../Models/Event');
                  location,
                  category,
                  ticketPrice,
-                 totalTickets,
-                 status
+                 totalTickets
              } = req.body;
 
-             // Create a new event
+             // Handle the image file
+             const imagePath = req.file ? req.file.path : 'default-image.jpg';
+
+             // Create event
              const newEvent = new Event({
-                 organizerId:req.user.userId,
+                 organizerId: req.user.userId,
                  title,
                  description,
                  date,
                  location,
                  category,
                  ticketPrice,
-                  totalTickets,
-                 status,
+                 totalTickets,
                  remainingTickets: totalTickets,
-                 // Default status is "pending"
+                 image: imagePath
              });
-
              // Save the event to the database
-             await Event.insertOne(newEvent);
+             await newEvent.save();
 
              res.status(201).json({
                  success: true,
@@ -115,37 +116,43 @@ const Event = require('../Models/Event');
             });
         }
     },
-    updateEvent: async (req, res) => {
-         console.log("update event")
-        try {
-            const event = await Event.findById(req.params.id);
+     updateEvent: async (req, res) => {
+         console.log("update event");
+         try {
+             const event = await Event.findById(req.params.id);
 
-            if (!event) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Event not found'
-                });
-            }
+             if (!event) {
+                 return res.status(404).json({
+                     success: false,
+                     message: 'Event not found'
+                 });
+             }
 
+             // Handle image upload if file is present
+             if (req.file) {
+                 // Add image path to request body
+                 req.body.image = `/uploads/${req.file.filename}`;
+                 console.log("Image uploaded:", req.body.image);
+             }
 
-            const updatedEvent = await Event.findByIdAndUpdate(
-                req.params.id,
-                req.body,
-                { new: true, runValidators: true }
-            );
+             const updatedEvent = await Event.findByIdAndUpdate(
+                 req.params.id,
+                 req.body,
+                 {new: true, runValidators: true}
+             );
 
-            res.status(200).json({
-                success: true,
-                data: updatedEvent
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Error updating event',
-                error: error.message
-            });
-        }
-    },
+             res.status(200).json({
+                 success: true,
+                 data: updatedEvent
+             });
+         } catch (error) {
+             res.status(500).json({
+                 success: false,
+                 message: 'Error updating event',
+                 error: error.message
+             });
+         }
+     },
     deleteEvent: async (req, res) => {
         try {
             const event = await Event.findById(req.params.id);

@@ -104,18 +104,28 @@ const EditEventPage = () => {
             // Combine date and time
             const dateTime = new Date(`${formData.date}T${formData.time}`);
 
-            const eventData = {
-                ...formData,
-                date: dateTime.toISOString()
-            };
+            // Use FormData for file uploads
+            const eventFormData = new FormData();
+            eventFormData.append('title', formData.title);
+            eventFormData.append('description', formData.description);
+            eventFormData.append('date', dateTime.toISOString());
+            eventFormData.append('venue', formData.venue);
+            eventFormData.append('category', formData.category);
+            eventFormData.append('ticketPrice', formData.ticketPrice);
+            eventFormData.append('totalTickets', formData.totalTickets);
 
-            // Remove time field as it's now part of the date
-            delete eventData.time;
+            // Handle image upload
+            if (formData.imageFile) {
+                eventFormData.append('image', formData.imageFile);
+            } else if (formData.image) {
+                // Keep existing image URL if no new file
+                eventFormData.append('imageUrl', formData.image);
+            }
 
-            await axios.put(`http://localhost:3000/api/v1/event/${id}`, eventData, {
+            await axios.put(`http://localhost:3000/api/v1/event/${id}`, eventFormData, {
                 withCredentials: true,
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
 
@@ -256,15 +266,42 @@ const EditEventPage = () => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="image">Image URL</label>
+                    <label htmlFor="image">Event Image</label>
+
+                    {/* Image preview */}
+                    {(formData.image || formData.imagePreview) && (
+                        <div className="image-preview" style={{ marginBottom: '10px' }}>
+                            <img
+                                src={formData.imagePreview || formData.image}
+                                alt="Event preview"
+                                style={{ maxHeight: '200px', maxWidth: '100%', borderRadius: '4px' }}
+                            />
+                        </div>
+                    )}
+
                     <input
-                        type="url"
+                        type="file"
                         id="image"
                         name="image"
-                        value={formData.image}
-                        onChange={handleChange}
-                        placeholder="https://example.com/image.jpg"
+                        accept="image/*"
+                        onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                                // Create preview URL for selected image
+                                const previewUrl = URL.createObjectURL(file);
+                                setFormData(prev => ({
+                                    ...prev,
+                                    imageFile: file,
+                                    imagePreview: previewUrl
+                                }));
+                            }
+                        }}
                     />
+                    {formData.image && !formData.imagePreview && (
+                        <div className="current-image-info" style={{ fontSize: '0.8rem', marginTop: '5px' }}>
+                            Current image: {formData.image.split('/').pop()}
+                        </div>
+                    )}
                 </div>
 
                 <div className="form-actions">

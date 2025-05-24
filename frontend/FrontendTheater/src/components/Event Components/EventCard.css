@@ -1,172 +1,137 @@
-/* EventCard.css - Enhanced with modern aesthetics and smooth interactions */
-
+/* Event card sizing and layout */
 .event-card {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    background: #ffffff;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    position: relative;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 400px; /* Increased width */
+    margin: 0 auto;
 }
 
 .event-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Image container with gradient overlay */
-.event-image {
-    position: relative;
+/* Improved image container sizing */
+.event-image-container {
+    width: 100%;
+    height: 250px; /* Increased height */
     overflow: hidden;
-    height: 220px;
+    position: relative;
+    cursor: pointer;
 }
 
-.event-image::after {
-    content: '';
+/* Image sizing and transitions */
+.event-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover ensures the image fills the container */
+    transition: transform 0.5s ease;
+}
+
+.event-image-container:hover .event-image {
+    transform: scale(1.05);
+}
+
+/* Event info section */
+.event-info {
+    padding: 1.2rem;
+}
+
+.event-title {
+    margin: 0 0 0.8rem 0;
+    font-size: 1.2rem;
+    color: #2d3748;
+}
+
+.event-tickets {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin: 0;
+}
+.event-image-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.image-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
-    height: 35%;
-    background: linear-gradient(to top, rgba(0,0,0,0.15), transparent);
-    pointer-events: none;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 8px;
+    font-size: 0.8rem;
+    opacity: 0;
     transition: opacity 0.3s ease;
-}
-
-.event-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-/* Enhanced hover and hold effects */
-.event-card:hover .event-image img {
-    transform: scale(1.08);
-}
-
-.event-card.image-enlarged .event-image img {
-    transform: scale(1.18);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.event-card.image-enlarged .event-image::after {
-    opacity: 0.4;
-}
-
-/* Placeholder styling */
-.placeholder-image {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #f3f6fa, #e2e8f0);
-    color: #64748b;
-    font-weight: 500;
-    font-size: 1rem;
     text-align: center;
-    padding: 1rem;
 }
 
-/* Info section */
-.event-info {
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    position: relative;
-    border-top: 1px solid rgba(0, 0, 0, 0.03);
-    background: #ffffff;
+.event-image-container:hover .image-overlay {
+    opacity: 1;
 }
-
-.event-info::before {
-    content: '';
-    position: absolute;
+/* New approach for full image modal */
+.full-image-modal {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.event-card:hover .event-info::before {
-    opacity: 1;
-}
-
-/* Title styling */
-.event-title {
-    margin: 0;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: #1e293b;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
+.modal-content {
     position: relative;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    width: 95%;
+    height: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Tickets info styling */
-.event-tickets {
+.modal-content img {
+    max-height: 95vh;
+    max-width: 95vw;
+    object-fit: contain;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    animation: imageAppear 0.3s ease-out;
+}
+
+@keyframes imageAppear {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.close-modal {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    background: #ffffff;
+    color: #000000;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    font-size: 0.9rem;
-    color: #4b5563;
-    margin: 0;
-    padding: 0.6rem 1rem;
-    background-color: #f8fafc;
-    border-radius: 8px;
-    width: fit-content;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    border-left: 3px solid #6366f1;
-    transition: all 0.2s ease;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
 }
 
-.event-card:hover .event-tickets {
-    background-color: #f1f5f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-}
-
-/* Media query for tablet and desktop */
-@media (min-width: 768px) {
-    .event-card {
-        flex-direction: row;
-        height: 180px;
-    }
-
-    .event-image {
-        width: 38%;
-        min-width: 240px;
-        height: 100%;
-    }
-
-    .event-info {
-        flex: 1;
-        justify-content: center;
-    }
-}
-
-/* Mobile styling */
-@media (max-width: 767px) {
-    .event-image {
-        height: 200px;
-    }
-
-    .event-title {
-        font-size: 1.25rem;
-    }
-
-    .event-tickets {
-        font-size: 0.85rem;
-        padding: 0.5rem 0.9rem;
-    }
+/* Ensure button click works correctly */
+.close-modal:hover {
+    background: #f0f0f0;
 }
