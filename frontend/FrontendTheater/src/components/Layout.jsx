@@ -1,5 +1,5 @@
 // src/components/Layout.jsx
-import { Link, Outlet, useLocation } from "react-router-dom";
+import {  Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "./Layout.css";
 
@@ -23,8 +23,8 @@ export default function Layout() {
                     {user && (
                         <div className="user-greeting-expanded">
                             <div className="user-avatar">
-                                {user.avatar ? (
-                                    <img src={user.avatar} alt={user.name} />
+                                {user.image ? (
+                                    <img src={user.image} alt={user.name} />
                                 ) : (
                                     <div className="avatar-placeholder">
                                         {user.name.charAt(0).toUpperCase()}
