@@ -13,8 +13,8 @@ const Event = require('../Models/Event');
                      message: 'Unauthorized: Only organizers can create events'
                  });
              }
+
              // Extract event details from the request body
-             // Get form data
              const {
                  title,
                  description,
@@ -22,11 +22,22 @@ const Event = require('../Models/Event');
                  location,
                  category,
                  ticketPrice,
-                 totalTickets
+                 totalTickets,
+                 imageUrl  // Extract imageUrl from request body
              } = req.body;
 
-             // Handle the image file
-             const imagePath = req.file ? req.file.path : 'default-image.jpg';
+             // Determine image path based on upload or URL
+             let imagePath;
+             if (imageUrl) {
+                 // Use the provided URL directly
+                 imagePath = imageUrl;
+             } else if (req.file) {
+                 // Use the uploaded file path
+                 imagePath = req.file.path;
+             } else {
+                 // Fall back to default image
+                 imagePath = 'default-image.jpg';
+             }
 
              // Create event
              const newEvent = new Event({
@@ -41,6 +52,7 @@ const Event = require('../Models/Event');
                  remainingTickets: totalTickets,
                  image: imagePath
              });
+
              // Save the event to the database
              await newEvent.save();
 
@@ -57,7 +69,8 @@ const Event = require('../Models/Event');
                  error: error.message
              });
          }
-     },
+         },
+
      getApprovedEvents: async (req, res) => {
          try {
              console.log("approved events")
@@ -116,6 +129,7 @@ const Event = require('../Models/Event');
             });
         }
     },
+
      updateEvent: async (req, res) => {
          console.log("update event");
          try {
@@ -128,12 +142,20 @@ const Event = require('../Models/Event');
                  });
              }
 
-             // Handle image upload if file is present
-             if (req.file) {
-                 // Add image path to request body
-                 req.body.image = `/uploads/${req.file.filename}`;
+             // Extract the image URL from the request body
+             const { imageUrl } = req.body;
+
+             // Handle image (either from file upload or URL)
+             if (imageUrl) {
+                 // Use the provided URL
+                 req.body.image = imageUrl;
+                 console.log("Image URL provided:", req.body.image);
+             } else if (req.file) {
+                 // Use the uploaded file path
+                 req.body.image = req.file.path;
                  console.log("Image uploaded:", req.body.image);
              }
+             // If neither is provided, keep the existing image
 
              const updatedEvent = await Event.findByIdAndUpdate(
                  req.params.id,

@@ -23,8 +23,8 @@ export default function Layout() {
                     {user && (isStandardUserViewingEvents || isAdminSection || isOrganizerSection) && (
                         <div className="user-greeting-expanded">
                             <div className="user-avatar">
-                                {user.image ? (
-                                    <img src={user.image} alt={user.name} />
+                                {user.profilePicture ? (
+                                    <img src={user.profilePicture} alt={user.name} />
                                 ) : (
                                     <div className="avatar-placeholder">
                                         {user.name.charAt(0).toUpperCase()}

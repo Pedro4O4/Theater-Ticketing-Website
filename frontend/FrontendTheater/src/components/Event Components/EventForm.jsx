@@ -20,7 +20,9 @@ const EventForm = () => {
         totalTickets: '',
         imageFile: null,
         imagePreview: null,
-        image: ''
+        image: '',
+        useImageUrl: false,
+        imageUrl: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ const EventForm = () => {
 
         if (user.role !== 'Organizer') {
             navigate('/events');
-            return;
+
         }
     }, [user, navigate]);
 
@@ -73,11 +75,15 @@ const EventForm = () => {
             eventFormData.append('totalTickets', parseInt(formData.totalTickets));
             eventFormData.append('remainingTickets', parseInt(formData.totalTickets));
 
-            // Append image file if present
-            if (formData.imageFile) {
+            // Handle image based on the selected option
+            if (formData.useImageUrl && formData.imageUrl) {
+                // When URL option is selected, use the imageUrl field
+                eventFormData.append('imageUrl', formData.imageUrl);
+            } else if (formData.imageFile) {
+                // When file upload option is selected, use the file
                 eventFormData.append('image', formData.imageFile);
-            } else if (formData.image) {
-                // Keep existing image URL if no new file
+            } else if (formData.image && !formData.useImageUrl) {
+                // Existing image path if no new image is selected
                 eventFormData.append('imageUrl', formData.image);
             }
 
@@ -202,58 +208,84 @@ const EventForm = () => {
                         placeholder="Enter ticket price"
                     />
                 </div>
-
                 <div className="form-group">
                     <label htmlFor="image">Event Image</label>
 
-                    {/* Image preview with getImageUrl for existing images */}
-                    {formData.imagePreview && (
-                        <div className="image-preview" style={{ marginBottom: '10px' }}>
+                    {/* Image preview */}
+                    {(formData.imagePreview || formData.image) && (
+                        <div className="image-preview">
                             <img
-                                src={formData.imagePreview}
+                                src={formData.imagePreview || getImageUrl(formData.image)}
                                 alt="Event preview"
-                                style={{ maxHeight: '200px', maxWidth: '100%', borderRadius: '4px' }}
                                 onClick={() => setShowFullImage(true)}
                             />
                         </div>
                     )}
 
-                    {formData.image && !formData.imagePreview && (
-                        <div className="image-preview" style={{ marginBottom: '10px' }}>
-                            <img
-                                src={getImageUrl(formData.image)}
-                                alt="Event preview"
-                                style={{ maxHeight: '200px', maxWidth: '100%', borderRadius: '4px' }}
-                                onClick={() => setShowFullImage(true)}
-                            />
-                        </div>
-                    )}
+                    {/* Image source selection buttons */}
+                    <div className="image-source-buttons">
+                        <button
+                            type="button"
+                            className={`source-select-btn ${!formData.useImageUrl ? 'active' : ''}`}
+                            onClick={() => setFormData(prev => ({ ...prev, useImageUrl: false }))}
+                        >
+                            Upload Image
+                        </button>
+                        <button
+                            type="button"
+                            className={`source-select-btn ${formData.useImageUrl ? 'active' : ''}`}
+                            onClick={() => setFormData(prev => ({ ...prev, useImageUrl: true }))}
+                        >
+                            Image URL
+                        </button>
+                    </div>
 
-                    <input
-                        type="file"
-                        id="image"
-                        name="image"
-                        accept="image/*"
-                        onChange={(e) => {
-                            const file = e.target.files[0];
-                            if (file) {
-                                // Create preview URL for selected image
-                                const previewUrl = URL.createObjectURL(file);
-                                setFormData(prev => ({
+                    {/* Conditional rendering based on selection */}
+                    <div className="image-input-container">
+                        {formData.useImageUrl ? (
+                            <input
+                                type="url"
+                                id="imageUrl"
+                                name="imageUrl"
+                                value={formData.imageUrl || ''}
+                                placeholder="Enter image URL"
+                                onChange={(e) => setFormData(prev => ({
                                     ...prev,
-                                    imageFile: file,
-                                    imagePreview: previewUrl
-                                }));
-                            }
-                        }}
-                    />
-                    {formData.image && !formData.imagePreview && (
-                        <div className="current-image-info" style={{ fontSize: '0.8rem', marginTop: '5px' }}>
-                            Current image: {formData.image.split('/').pop()}
-                        </div>
-                    )}
+                                    imageUrl: e.target.value,
+                                    image: e.target.value,
+                                    imageFile: null,
+                                    imagePreview: null
+                                }))}
+                            />
+                        ) : (
+                            <>
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            const previewUrl = URL.createObjectURL(file);
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                imageFile: file,
+                                                imagePreview: previewUrl,
+                                                imageUrl: ''
+                                            }));
+                                        }
+                                    }}
+                                />
+                                {formData.image && !formData.imagePreview && !formData.useImageUrl && (
+                                    <div className="current-image-info">
+                                        Current image: {formData.image.split('/').pop()}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
-
                 <div className="form-actions">
                     <button type="button" onClick={() => navigate('/my-events')} className="cancel-button">
                         Cancel
