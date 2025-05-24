@@ -78,7 +78,7 @@ const EventList = () => {
                     </div>
                 )}
                 {user?.role === "Standard User" && (
-                    <div className="admin-buttons">
+                    <div className="organizer-buttons">
                         <Link to="/bookings" className="event-button">
                             My bookings
                         </Link>
