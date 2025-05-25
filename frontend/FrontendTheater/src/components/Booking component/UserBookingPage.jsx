@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ConfirmationDialog from '../AdminComponent/ConfirmationDialog';
 import './UserBookingPage.css';
@@ -11,6 +11,7 @@ const UserBookingsPage = () => {
     const [error, setError] = useState(null);
     const [deleteBookingId, setDeleteBookingId] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchBookings();
@@ -24,11 +25,11 @@ const UserBookingsPage = () => {
             });
 
             let bookingsData = [];
-            if (response.data && Array.isArray(response.data)) {
+            if (Array.isArray(response.data)) {
                 bookingsData = response.data;
-            } else if (response.data && response.data.userId && Array.isArray(response.data.userId)) {
+            } else if (response.data?.userId && Array.isArray(response.data.userId)) {
                 bookingsData = response.data.userId;
-            } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+            } else if (response.data?.data && Array.isArray(response.data.data)) {
                 bookingsData = response.data.data;
             } else {
                 setError("Unexpected data format from API");
@@ -38,7 +39,7 @@ const UserBookingsPage = () => {
 
             setBookings(bookingsData);
 
-            // Fetch event details for each booking
+            // Fetch event details
             const events = {};
             await Promise.all(
                 bookingsData.map(async (booking) => {
@@ -77,7 +78,6 @@ const UserBookingsPage = () => {
             await axios.delete(`http://localhost:3000/api/v1/booking/${deleteBookingId}`, {
                 withCredentials: true
             });
-            // Remove from local state
             setBookings(bookings.filter(booking => booking._id !== deleteBookingId));
             setShowDeleteConfirm(false);
         } catch (err) {
@@ -91,7 +91,15 @@ const UserBookingsPage = () => {
 
     return (
         <div className="bookings-container">
-            <h1>My Bookings</h1>
+            <div className="header-with-back">
+                <h1>My Bookings</h1>
+                <button
+                    className="back-button"
+                    onClick={() => navigate('/events')}
+                >
+                    Back to Events
+                </button>
+            </div>
 
             {bookings.length === 0 ? (
                 <div className="no-bookings">
@@ -105,6 +113,10 @@ const UserBookingsPage = () => {
                             ? eventDetails[booking.eventId]
                             : booking.event || {};
 
+                        const quantity = booking.quantity || booking.numberOfTickets || 0;
+                        const ticketPrice = event.ticketPrice || 0;
+                        const totalPrice = booking.totalPrice?.toFixed(2) || (quantity * ticketPrice).toFixed(2);
+
                         return (
                             <div key={booking._id} className="booking-card">
                                 <div className="booking-info">
@@ -114,11 +126,13 @@ const UserBookingsPage = () => {
                                     </span>
 
                                     <div className="booking-details">
-                                        <p>Tickets: <strong>{booking.quantity || booking.numberOfTickets}</strong></p>
-                                        <p>Total: <strong>${booking.totalPrice?.toFixed(2) || (booking.quantity * event?.ticketPrice).toFixed(2) || 'N/A'}</strong></p>
-                                        <p>Status: <span className={`status ${(booking.status || 'confirmed').toLowerCase()}`}>
-                                            {booking.status || 'Confirmed'}
-                                        </span></p>
+                                        <p>Tickets: <strong>{quantity}</strong></p>
+                                        <p>Total: <strong>${totalPrice}</strong></p>
+                                        <p>Status:
+                                            <span className={`status ${(booking.status || 'confirmed').toLowerCase()}`}>
+                                                {booking.status || 'Confirmed'}
+                                            </span>
+                                        </p>
                                     </div>
 
                                     <div className="booking-actions">

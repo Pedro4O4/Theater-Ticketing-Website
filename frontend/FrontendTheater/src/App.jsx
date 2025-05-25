@@ -136,7 +136,7 @@ function App() {
                                     <BookingDetails />
                                 </ProtectedRoute>
                             } />
-                            <Route path="bookings/new" element={
+                            <Route path="bookings/new/:eventId" element={
                                 <ProtectedRoute requiredRole={["Standard User"]}>
                                     <BookingTicketForm />
                                 </ProtectedRoute>
