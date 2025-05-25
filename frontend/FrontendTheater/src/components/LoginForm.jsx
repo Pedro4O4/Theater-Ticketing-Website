@@ -25,18 +25,18 @@ export default function LoginForm() {
         try {
             const result = await login(formData);
 
-            if (result.success) {
+
                 // Redirect based on user role
-                if (result.user.role === "System Admin") {
-                    console.log("Successfully logged in admin");
-                    console.log(result.user.role);
-                    navigate("/admin/users");
-                } else if (result.user.role === "Organizer") {
-                    navigate("/org");
-                } else {
-                    navigate("/");
+                // In LoginForm.jsx, update the login success handler:
+                if (result.success) {
+                    // Redirect based on user role
+                        console.log("Successfully logged in admin");
+                        console.log(result.user.role);
+                        navigate("/events");
+
+
                 }
-            } else {
+            else {
                 setError(result.error);
             }
         } catch (err) {
