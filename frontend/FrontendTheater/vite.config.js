@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base:"/Pedro-Deploy"
+  base: "/masr7/", // Changed from basePath to base
 });
