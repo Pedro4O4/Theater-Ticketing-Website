@@ -1,0 +1,15 @@
+### Forget Password
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{
+
+  "email": "pedroUser@gmail.com",
+  "password": "123456abc"
+
+}
+
+### L
+GET http://localhost:3000/api/v1/event/approved
+Content-Type: application/json
+
