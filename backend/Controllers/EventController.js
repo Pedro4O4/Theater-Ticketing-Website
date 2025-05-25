@@ -70,7 +70,21 @@ const Event = require('../Models/Event');
              });
          }
          },
+     getApprovedEventsPublic: async (req, res) => {
+         try {
+             console.log("Fetching approved events for public");
+             const events = await Event.find({ status: "approved" });
 
+             if (events.length === 0) {
+                 console.log("No approved events found.");
+             }
+
+             res.status(200).json(events);
+         } catch (err) {
+             console.error("Error fetching approved events:", err);
+             res.status(500).json({ message: "Failed to fetch approved events." });
+         }
+     },
      getApprovedEvents: async (req, res) => {
          try {
              console.log("approved events")

@@ -37,17 +37,17 @@
     color: #e53e3e;
 }
 
-/* Modified 2-row sequential layout */
+/* Modified 2-row sequential layout with increased gap */
 .event-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-flow: row;
     grid-auto-rows: auto;
-    gap: 1rem; /* Reduced gap for more compact layout */
+    gap: 1.5rem;
     width: 100%;
 }
 
-/* Card wrapper with actions */
+/* Card wrapper with actions - significantly increased height */
 .event-card-with-actions {
     display: flex;
     flex-direction: column;
@@ -57,6 +57,7 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding-bottom: 1.5rem; /* Increased padding at bottom */
 }
 
 .event-card-with-actions:hover {
@@ -79,7 +80,7 @@
 /* Image handling improvements for event list */
 .event-card-with-actions .event-image-container {
     width: 100%;
-    height: 180px; /* Increased height for better visibility */
+    height: 180px; /* Keep original image height as requested */
     overflow: hidden;
     position: relative;
     cursor: pointer;
@@ -88,7 +89,7 @@
 .event-card-with-actions .event-image {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures proper image scaling */
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
@@ -115,22 +116,25 @@
     opacity: 1;
 }
 
-/* Info section */
+/* Info section with significantly increased height */
 .event-card-with-actions .event-info {
-    padding: 0.65rem 1.1rem; /* More compact padding */
-    gap: 0.5rem;
+    padding: 1.8rem 2rem; /* Significantly increased padding */
+    gap: 0.8rem;
+    min-height: 180px; /* Much taller info section */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Enhanced Event Title Styling */
 .event-card-with-actions .event-title {
     font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.8rem; /* Increased bottom margin */
+    padding-bottom: 0.8rem; /* Increased padding */
     color: #1a2b42;
     line-height: 1.25;
     letter-spacing: -0.02em;
     position: relative;
-    padding-bottom: 0.3rem;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -154,25 +158,25 @@
     width: 4rem;
 }
 
-/* Action buttons area */
+/* Action buttons area with increased padding */
 .event-actions {
     display: flex;
     justify-content: flex-end;
-    padding: 0.35rem 0.8rem;
+    padding: 1.5rem 2rem; /* Increased padding significantly */
     background-color: white;
     border-top: 1px solid rgba(0, 0, 0, 0.04);
-    margin-top: 0;
+    margin-top: 1rem; /* Added more space above buttons */
 }
 
 .event-button, .create-event-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.3rem 0.9rem;
+    padding: 0.5rem 1.2rem; /* Larger buttons */
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
 }
 
@@ -199,6 +203,24 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.book-now-btn {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.2rem; /* Larger button */
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-left: 8px;
+}
+
+.book-now-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .event-grid {
@@ -214,6 +236,10 @@
     .event-card-with-actions .event-image-container {
         height: 200px; /* Taller on mobile */
     }
+
+    .event-card-with-actions .event-info {
+        min-height: 160px; /* Slightly smaller on mobile but still tall */
+    }
 }
 
 /* Tablet - maintain 2-column but with smaller gap */
@@ -225,21 +251,9 @@
     .event-card-with-actions .event-image-container {
         height: 160px;
     }
-}
-.book-now-btn {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-left: 8px;
-}
 
-.book-now-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    .event-card-with-actions .event-info {
+        min-height: 170px;
+        padding: 1.5rem 1.8rem;
+    }
 }

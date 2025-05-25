@@ -34,8 +34,8 @@ const upload = multer({
         fileSize: 5 * 1024 * 1024 // 5MB file size limit
     }
 });
+router.get("/approved", eventController.getApprovedEventsPublic);
 
-// Apply authentication middleware to all routes
 router.use(authentication);
 
 // Routes
@@ -70,5 +70,7 @@ router.delete('/:id',
     authorizationMiddleware(['Organizer', 'System Admin']),
     eventController.deleteEvent
 );
+
+
 
 module.exports = router;
