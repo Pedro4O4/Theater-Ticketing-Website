@@ -10,10 +10,6 @@ Content-Type: application/json
 }
 
 ### L
-POST http://localhost:3000/api/v1/booking
+GET http://localhost:3000/api/v1/event/approved
 Content-Type: application/json
-
-{
-
-}
 
