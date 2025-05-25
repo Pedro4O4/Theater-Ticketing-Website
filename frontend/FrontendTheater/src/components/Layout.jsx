@@ -1,11 +1,11 @@
-// src/components/Layout.jsx
-import {  Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "./Layout.css";
 
 export default function Layout() {
     const { user } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
 
     // Determine if we're in an admin or organizer section
     const isAdminSection = location.pathname.startsWith('/admin');
@@ -14,6 +14,10 @@ export default function Layout() {
     const isStandardUserViewingEvents = location.pathname.startsWith('/events') &&
         user.role !== "Organizer";
 
+    const goToProfile = () => {
+        navigate('/profile');
+    };
+
     return (
         <div className="layout-container">
             <header className="layout-header">
@@ -21,7 +25,12 @@ export default function Layout() {
                     <h1 className="portal-title-large">Event Portal</h1>
 
                     {user && (isStandardUserViewingEvents || isAdminSection || isOrganizerSection) && (
-                        <div className="user-greeting-expanded">
+                        <div
+                            className="user-greeting-expanded"
+                            onClick={goToProfile}
+                            style={{ cursor: 'pointer' }}
+                            title="Go to profile"
+                        >
                             <div className="user-avatar">
                                 {user.profilePicture ? (
                                     <img src={user.profilePicture} alt={user.name} />
@@ -62,4 +71,3 @@ export default function Layout() {
         </div>
     );
 }
-
