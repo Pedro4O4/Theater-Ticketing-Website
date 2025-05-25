@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import EventCard from './EventCard';
+import './EventList.css'
 import './AdminEventsPage.css';
 
 const AdminEventsPage = () => {
@@ -115,8 +116,11 @@ const AdminEventsPage = () => {
                     {filteredEvents.map((event) => (
                         <div key={event.id || event._id} className="event-card-with-actions">
                             <EventCard event={event} />
+                            <div className="event-info">
+                            </div>
                             <div className="event-actions">
                                 <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
+                                <h3 className="event-title">{event.title || event.name}</h3>
 
                                 {activeFilter === 'pending' && (
                                     <>
