@@ -7,7 +7,7 @@ export default ({ mode }) => {
 
   return defineConfig({
     plugins: [react()],
-    base: env.VITE_BASE_PATH || '/', // Try with root path if unsure
+    baseURL: import.meta.env.VITE_API_BASE_URL + 'api/v1',
     define: {
       // Make env variables available to the client code
       'import.meta.env.VITE_API_BASE_URL': JSON.stringify(env.VITE_API_BASE_URL)
