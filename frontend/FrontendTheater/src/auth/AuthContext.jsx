@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/api/v1/user/profile", {
+                const res = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/user/profile`, {
                     withCredentials: true,
                 });
                 setUser(res.data);
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (credentials) => {
         try {
             console.log("before post login");
-            const response = await axios.post("http://localhost:3000/api/v1/login", credentials, {
+            const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/login`, credentials, {
                 withCredentials: true, // This is crucial for cookies to be sent/received
             });
             console.log("after post login");
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     // Logout function
     const logout = async () => {
         try {
-            await axios.post('http://localhost:3000/api/v1/logout', {}, {
+            await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/logout`, {}, {
                 withCredentials: true
             });
 

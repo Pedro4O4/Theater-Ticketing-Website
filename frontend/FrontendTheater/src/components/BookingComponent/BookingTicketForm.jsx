@@ -29,7 +29,7 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
     const fetchEventById = async (id) => {
         try {
             setIsEventLoading(true);
-            const response = await axios.get(`http://localhost:3000/api/v1/event/${id}`, {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/${id}`, {
             withCredentials: true
         });
 
@@ -68,7 +68,7 @@ const handleSubmit = async (e) => {
 
     try {
         const response = await axios.post(
-            'http://localhost:3000/api/v1/booking',
+            `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/booking`,
             {
                 eventId: selectedEvent._id,
                 numberOfTickets,

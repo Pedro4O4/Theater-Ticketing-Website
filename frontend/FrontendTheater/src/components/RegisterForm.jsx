@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import "./RegisterForm.css";
 
@@ -11,6 +10,7 @@ export default function RegisterForm() {
         password: "",
         role: "Standard User",
     });
+    const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -18,12 +18,12 @@ export default function RegisterForm() {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post("http://localhost:3000/api/v1/register", form);
-            toast.success("Registration successful! Redirecting to login...");
+            await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/register`, form);
+            setMessage("Registration successful. Redirecting to login...");
             setTimeout(() => navigate('/login'), 2000);
+            // eslint-disable-next-line no-unused-vars
         } catch (err) {
-            const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
-            toast.error(errorMessage);
+            setMessage("Registration failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -33,6 +33,12 @@ export default function RegisterForm() {
         <div className="register-container">
             <div className="register-card">
                 <h1 className="register-title">Create Account</h1>
+
+                {message && (
+                    <div className={message.includes("successful") ? "success-message" : "error-box"}>
+                        {message}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">

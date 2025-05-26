@@ -31,7 +31,7 @@ const EventList = () => {
 
     const fetchEvents = async () => {
         try {
-            const endpoint = 'http://localhost:3000/api/v1/event';
+            const endpoint = `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event`;
             console.log(`Fetching events from ${endpoint} as ${user.role}...`);
 
             const response = await axios.get(endpoint, {

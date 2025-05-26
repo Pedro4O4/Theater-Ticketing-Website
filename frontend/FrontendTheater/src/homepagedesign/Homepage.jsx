@@ -13,7 +13,6 @@ const Homepage = () => {
     const [currentImage, setCurrentImage] = useState(null);
     const navigate = useNavigate();
 
-    const API_URL = 'http://localhost:3000';
 
     // Check if user is logged in
     const isLoggedIn = () => {
@@ -38,7 +37,7 @@ const Homepage = () => {
     };
 
     useEffect(() => {
-        axios.get(`${API_URL}/api/v1/event/approved`)
+        axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/approved`)
             .then(response => {
                 if (response.data && Array.isArray(response.data)) {
                     const events = response.data.map(event => ({

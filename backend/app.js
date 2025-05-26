@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser');
 const cors = require("cors");
 require('dotenv').config();
-
+const Port = process.env.PORT;
 const app = express();
 const fs = require('fs');
 const path = require('path');
@@ -25,7 +25,7 @@ const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 
 // Middleware
-const authenticationMiddleware = require('./middleware/authenticationMiddleware');
+const authenticationMiddleware = require('./Middleware/authenticationMiddleware');
 
 // Middlewares setup
 app.use(express.json());
@@ -63,7 +63,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(3000, () => console.log("Server started"))
+app.listen(Port, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });

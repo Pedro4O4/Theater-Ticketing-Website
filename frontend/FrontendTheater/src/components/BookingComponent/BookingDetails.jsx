@@ -20,7 +20,7 @@ const BookingDetails = () => {
     const fetchBookingDetails = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:3000/api/v1/booking/${id}`, {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/booking/${id}`, {
             withCredentials: true
         });
 
@@ -31,7 +31,7 @@ const BookingDetails = () => {
             if (response.data.eventId) {
                 try {
                     // Use the correct endpoint (singular 'event', not plural 'events')
-                    const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${response.data.eventId}`, {
+                    const eventResponse = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/${response.data.eventId}`, {
                     withCredentials: true
                 });
 
@@ -56,7 +56,7 @@ const BookingDetails = () => {
 
 const handleCancelBooking = async () => {
     try {
-        await axios.delete(`http://localhost:3000/api/v1/booking/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/booking/${id}`, {
         withCredentials: true
     });
     setBooking({...booking, status: 'Cancelled'});
