@@ -20,7 +20,7 @@ const UserBookingsPage = () => {
     const fetchBookings = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:3000/api/v1/user/bookings', {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/user/bookings`, {
                 withCredentials: true
             });
 
@@ -45,7 +45,7 @@ const UserBookingsPage = () => {
                 bookingsData.map(async (booking) => {
                     if (booking.eventId) {
                         try {
-                            const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${booking.eventId}`, {
+                            const eventResponse = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/${booking.eventId}`, {
                                 withCredentials: true
                             });
 
@@ -75,7 +75,7 @@ const UserBookingsPage = () => {
 
     const confirmCancel = async () => {
         try {
-            await axios.delete(`http://localhost:3000/api/v1/booking/${deleteBookingId}`, {
+            await axios.delete(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/booking/${deleteBookingId}`, {
                 withCredentials: true
             });
             setBookings(bookings.filter(booking => booking._id !== deleteBookingId));

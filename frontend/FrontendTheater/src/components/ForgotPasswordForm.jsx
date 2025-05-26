@@ -24,7 +24,7 @@ const ForgotPasswordForm = () => {
 
         try {
             const response = await axios.put(
-                'http://localhost:3000/api/v1/forgetPassword',
+                `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/forgetPassword`,
                 { email }
             );
 
@@ -56,7 +56,7 @@ const ForgotPasswordForm = () => {
 
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/v1/verify-otp',
+                `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/verify-otp`,
                 { email, otp, newPassword }
             );
 

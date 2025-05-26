@@ -88,7 +88,7 @@ const EventForm = () => {
             }
 
             // Create new event
-            const response = await axios.post('http://localhost:3000/api/v1/event', eventFormData, {
+            const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event`, eventFormData, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'multipart/form-data'

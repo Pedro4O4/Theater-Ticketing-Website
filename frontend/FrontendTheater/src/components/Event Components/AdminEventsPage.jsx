@@ -40,7 +40,7 @@ const AdminEventsPage = () => {
     const fetchEvents = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:3000/api/v1/event/all`, {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/all`, {
                 withCredentials: true
             });
 
@@ -58,7 +58,7 @@ const AdminEventsPage = () => {
 
     const handleStatusChange = async (eventId, newStatus) => {
         try {
-            await axios.put(`http://localhost:3000/api/v1/event/${eventId}/`, {
+            await axios.put(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/${eventId}/`, {
                 status: newStatus
             }, {
                 withCredentials: true

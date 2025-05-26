@@ -23,7 +23,7 @@ const EventDetailsPage = () => {
 
         const fetchEventDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/v1/event/${id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/${id}`, {
                     withCredentials: true
                 });
 
