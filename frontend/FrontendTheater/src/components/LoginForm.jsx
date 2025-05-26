@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import './LoginForm.css'
+import { toast } from "react-toastify";
+import './LoginForm.css';
 
 export default function LoginForm() {
     const [formData, setFormData] = useState({
@@ -29,6 +30,8 @@ export default function LoginForm() {
                 // Redirect based on user role
                 // In LoginForm.jsx, update the login success handler:
                 if (result.success) {
+                    toast.success("Login successful!");
+
                     // Redirect based on user role
                         console.log("Successfully logged in admin");
                         console.log(result.user.role);
@@ -37,10 +40,10 @@ export default function LoginForm() {
 
                 }
             else {
-                setError(result.error);
+                    toast.error(result.error || "Login failed");
             }
         } catch (err) {
-            setError("An unexpected error occurred");
+            toast.error("An unexpected error occurred");
             console.error(err);
         } finally {
             setLoading(false);

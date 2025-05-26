@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import axios from "axios";
 
 const AuthContext = createContext();
@@ -84,9 +86,13 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setAuthenticated(false);
             localStorage.removeItem('isAuthenticated');
+            toast.success("Logged out successfully");
+
 
             return { success: true };
         } catch (error) {
+            toast.error("Logout failed. Please try again.");
+
             console.error("Logout error:", error);
             return {
                 success: false,

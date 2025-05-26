@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import "./RegisterForm.css";
 
@@ -19,11 +20,11 @@ export default function RegisterForm() {
         setLoading(true);
         try {
             await axios.post("http://localhost:3000/api/v1/register", form);
-            setMessage("Registration successful. Redirecting to login...");
+            toast.success("Registration successful! Redirecting to login...");
             setTimeout(() => navigate('/login'), 2000);
-            // eslint-disable-next-line no-unused-vars
         } catch (err) {
-            setMessage("Registration failed. Please try again.");
+            const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
