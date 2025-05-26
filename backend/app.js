@@ -25,7 +25,8 @@ const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 
 // Middleware
-const authenticationMiddleware = require('./Middleware/authenticationMiddleware');const backendUrl = process.env.BACKEND_URL;
+const authenticationMiddleware = require('./Middleware/authenticationMiddleware');
+const backendUrl = process.env.BACKEND_URL;
 
 // Middlewares setup
 app.use(express.json());
@@ -44,12 +45,13 @@ app.get('/api/resource-url', (req, res) => {
     res.json({ url: resourceUrl });
 });
 
-// Routes
+// Public routes (no authentication required)
 app.use("/api/v1", authRouter);
-app.use("/api/v1/user", UserRouters);
-app.use("/api/v1/event", EventRouters);
-app.use("/api/v1/booking", BookingRouters);
-app.use(authenticationMiddleware);
+
+// Protected routes - apply authentication middleware to each
+app.use("/api/v1/user", authenticationMiddleware, UserRouters);
+app.use("/api/v1/event", authenticationMiddleware, EventRouters);
+app.use("/api/v1/booking", authenticationMiddleware, BookingRouters);
 
 // MongoDB connection
 const db_url = process.env.DB_URL;
@@ -62,10 +64,16 @@ mongoose.connect(db_url)
     });
 
 // Serve frontend in production
-app.use(express.static(path.join(__dirname, 'frontend/FrontendTheater/dist')));
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend/FrontendTheater/dist', 'index.html'));
-});
+// Check if running in production and frontend exists
+const frontendPath = path.join(__dirname, '../frontend/FrontendTheater/dist');
+if (fs.existsSync(frontendPath)) {
+    app.use(express.static(frontendPath));
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    });
+} else {
+    console.log('Frontend build not found at:', frontendPath);
+}
 
 // 404 handler
 app.use(function (req, res, next) {
