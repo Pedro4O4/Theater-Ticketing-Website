@@ -27,6 +27,7 @@ const BookingRouters = require("./Routes/BookingRouter");
 
 // Middleware
 const authenticationMiddleware = require('./middleware/authenticationMiddleware');
+const backendUrl = process.env.BACKEND_URL;
 
 // Middlewares setup
 app.use(express.json());
@@ -39,6 +40,11 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 // In your backend Express app
+// For logging or generating full URLs to resources
+app.get('/api/resource-url', (req, res) => {
+    const resourceUrl = `${backendUrl}/api/v1/resource`;
+    res.json({ url: resourceUrl });
+});
 
 
 // Routes
@@ -49,7 +55,6 @@ app.use("/api/v1/booking", BookingRouters);
 app.use(authenticationMiddleware);
 
 // MongoDB connection
-
 const db_url = process.env.DB_URL || 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
 const db_name = process.env.DB_NAME || db_url.split('/')[3]?.split('?')[0] || 'studentsFullBack';
 
@@ -72,7 +77,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(3000, () => console.log("Server started"))
+app.listen(process.env.PORT, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });

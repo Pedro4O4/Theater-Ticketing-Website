@@ -26,7 +26,6 @@ import UserBookingPage from "./components/BookingComponent/UserBookingPage";
 import BookingDetails from "./components/BookingComponent/BookingDetails";
 import BookingTicketForm from "./components/BookingComponent/BookingTicketForm.jsx";
 import './styles.css';
-
 function App() {
     const [loading, setLoading] = useState(true);
 
