@@ -25,7 +25,6 @@ import UpdateProfilePage from "./components/UserComponent/UpdateProfilePage.jsx"
 import UserBookingPage from "./components/Booking Component/UserBookingPage";
 import BookingDetails from "./components/Booking Component/BookingDetails";
 import BookingTicketForm from "./components/Booking Component/BookingTicketForm.jsx";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import './styles.css';
 
 function App() {

@@ -4,5 +4,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   // eslint-disable-next-line no-undef
-  base: process.env.VITE_BASE_PATH || '/masr7',
+  base: process.env.VITE_BASE_PATH || '/masr7/frontend/FrontendTheater',
+  css: {
+    preprocessorOptions: {
+      css: { charset: false }
+    }
+  },
+  optimizeDeps: {
+    include: ['@fortawesome/fontawesome-free']
+  }
 });
