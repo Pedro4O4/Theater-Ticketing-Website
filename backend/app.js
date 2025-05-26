@@ -32,7 +32,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.CLIENT_ORIGIN,
+    origin: [
+        'https://masr7-va2e.vercel.app',
+        'http://localhost:5174'
+    ],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
