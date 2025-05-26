@@ -3,5 +3,6 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: "/masr7/", // Changed from basePath to base
+  // eslint-disable-next-line no-undef
+  base: process.env.VITE_BASE_PATH || '/masr7',
 });
