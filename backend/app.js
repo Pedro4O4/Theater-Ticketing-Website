@@ -25,8 +25,7 @@ const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 
 // Middleware
-const authenticationMiddleware = require('./middleware/authenticationMiddleware');
-const backendUrl = process.env.BACKEND_URL;
+const authenticationMiddleware = require('./middleware/authenticationMiddleware');const backendUrl = process.env.BACKEND_URL;
 
 // Middlewares setup
 app.use(express.json());
@@ -53,7 +52,7 @@ app.use("/api/v1/booking", BookingRouters);
 app.use(authenticationMiddleware);
 
 // MongoDB connection
-const db_url = process.env.DB_URL || 'mongodb://localhost:27017/theaterApp';
+const db_url = process.env.DB_URL;
 const db_name = process.env.DB_NAME || (db_url.includes('/') ? db_url.split('/').pop().split('?')[0] : 'theaterApp');
 
 mongoose.connect(db_url)
