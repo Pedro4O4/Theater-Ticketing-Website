@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import EventCard from './EventCard';
 import './EventList.css';
-import './EventCard.css'
+import './EventCard.css';
 
 const EventList = () => {
     const [events, setEvents] = useState([]);
@@ -20,43 +20,41 @@ const EventList = () => {
             return;
         }
 
+        // Redirect System Admin early
+        if (user?.role === "System Admin") {
+            navigate('/admin/events');
+            return;
+        }
+
         fetchEvents();
     }, [navigate, user]);
 
-    // In EventList.jsx - update fetchEvents function
     const fetchEvents = async () => {
         try {
-            // Redirect System Admin to admin events page
-            if (user?.role === "System Admin") {
-                navigate('/admin/events');
-                return; // Stop execution to prevent unnecessary API call
-            }
-
-            // For non-admin users, continue with normal event fetching
-            let endpoint = 'http://localhost:3000/api/v1/event';
+            const endpoint = `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event`;
             console.log(`Fetching events from ${endpoint} as ${user.role}...`);
 
             const response = await axios.get(endpoint, {
                 withCredentials: true
             });
 
-            // Rest of your existing code...
-
             console.log("API Response:", response);
 
-            if (response.data && Array.isArray(response.data)) {
-                setEvents(response.data);
-            } else if (response.data && response.data.events && Array.isArray(response.data.events)) {
-                setEvents(response.data.events);
-            } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
-                setEvents(response.data.data);
+            const data = response.data;
+
+            if (Array.isArray(data)) {
+                setEvents(data);
+            } else if (data?.events && Array.isArray(data.events)) {
+                setEvents(data.events);
+            } else if (data?.data && Array.isArray(data.data)) {
+                setEvents(data.data);
             } else {
-                console.error("Unexpected API response format:", response.data);
+                console.error("Unexpected API response format:", data);
                 setError("Unexpected data format from API");
             }
         } catch (err) {
             console.error("Error fetching events:", err);
-            if (err.response && (err.response.status === 401 || err.response.status === 403 || err.response.status === 405)) {
+            if (err.response && [401, 403, 405].includes(err.response.status)) {
                 navigate('/login');
             } else {
                 const errorMessage = err.response?.data?.message || err.message;
@@ -73,9 +71,15 @@ const EventList = () => {
                 <h1 className="page-title">Events</h1>
                 {user?.role === "Organizer" && (
                     <div className="organizer-buttons">
-
                         <Link to="/my-events" className="create-event-button" style={{ marginLeft: '10px' }}>
                             My Events
+                        </Link>
+                    </div>
+                )}
+                {user?.role === "Standard User" && (
+                    <div className="organizer-buttons">
+                        <Link to="/bookings" className="event-button">
+                            My Bookings
                         </Link>
                     </div>
                 )}
@@ -90,8 +94,19 @@ const EventList = () => {
                         events.map((event) => (
                             <div key={event._id} className="event-card-with-actions">
                                 <EventCard event={event} />
+                                <div className="event-info">
+                                </div>
                                 <div className="event-actions">
-                                    <Link to={`/events/${event._id}`} className="event-button">Details</Link>
+                                    <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
+                                    <h3 className="event-title">{event.title || event.name}</h3>
+                                    {user?.role === "Standard User" && (
+                                        <button
+                                            className="book-now-btn"
+                                            onClick={() => navigate(`/bookings/new/${event._id}`)}
+                                        >
+                                            Book Now
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))

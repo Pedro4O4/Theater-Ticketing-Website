@@ -25,7 +25,7 @@ const UpdateUserRoleModal = ({ isOpen, user, onClose, onUpdate }) => {
         setError(null);
 
         try {
-            await axios.put(`http://localhost:3000/api/v1/user/${userId}`,
+            await axios.put(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/user/${userId}`,
                 { role },
                 { withCredentials: true }
             );

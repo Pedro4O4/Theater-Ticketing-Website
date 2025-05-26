@@ -4,19 +4,12 @@ Content-Type: application/json
 
 {
 
-  "email": "Admin2@gmail.com",
+  "email": "pedroUser@gmail.com",
   "password": "123456abc"
 
 }
 
 ### L
-POST http://localhost:3000/api/v1/verify-otp
+GET http://localhost:3000/api/v1/event/approved
 Content-Type: application/json
-
-{
-  "email": "Admin2@gmail.com",
-   "otp": "828872",
-  "newPassword": "123456abc"
-
-}
 

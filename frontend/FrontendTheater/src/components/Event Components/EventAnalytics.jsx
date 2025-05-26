@@ -28,7 +28,7 @@ const EventAnalytics = () => {
 
     const fetchAnalyticsData = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/v1/user/events/analytics`, {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/user/events/analytics`, {
                 withCredentials: true
             });
 

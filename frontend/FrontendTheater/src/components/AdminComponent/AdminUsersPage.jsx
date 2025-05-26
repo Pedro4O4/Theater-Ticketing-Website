@@ -41,7 +41,7 @@ const AdminUsersPage = () => {
     const fetchUsers = async () => {
         try {
             console.log("Fetching users...");
-            const response = await axios.get('http://localhost:3000/api/v1/user', {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user`, {
                 withCredentials: true
             });
 
@@ -94,7 +94,7 @@ const AdminUsersPage = () => {
     // Handle confirmed deletion
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:3000/api/v1/user/${deleteUserId}`, {
+            await axios.delete(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/user/${deleteUserId}`, {
                 withCredentials: true
             });
 

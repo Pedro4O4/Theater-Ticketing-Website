@@ -29,7 +29,7 @@ const MyEventsPage = () => {
 
     const fetchMyEvents = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/v1/user/events', {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/user/events`, {
                 withCredentials: true
             });
 
@@ -55,7 +55,7 @@ const MyEventsPage = () => {
         }
 
         try {
-            await axios.delete(`http://localhost:3000/api/v1/event/${eventId}`, {
+            await axios.delete(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/${eventId}`, {
                 withCredentials: true
             });
 

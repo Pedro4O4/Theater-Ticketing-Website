@@ -1,199 +1,168 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Homepage.css';
-import Countdown from './countdown.jsx';
-import SearchBar from './SearchBar.jsx';
-import SocialMedia from './SocialMedia.jsx';
+import axios from 'axios';
 
 const Homepage = () => {
     const [featuredEvents, setFeaturedEvents] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [testimonials, setTestimonials] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [showFullImage, setShowFullImage] = useState(false);
+    const [currentImage, setCurrentImage] = useState(null);
+    const navigate = useNavigate();
 
-    // Function to handle search
-    const handleSearch = (query) => {
-        console.log('Search query:', query);
-        // You could redirect to search results page
-        // window.location.href = `/search?q=${encodeURIComponent(query)}`;
+
+    // Check if user is logged in
+    const isLoggedIn = () => {
+        return localStorage.getItem('token') !== null;
+    };
+
+
+
+    const handleEventClick = (event) => {
+        if (isLoggedIn()) {
+            navigate(`/events/${event.id}`);
+        } else {
+            setSelectedEvent(event);
+            setShowLoginPrompt(true);
+        }
+    };
+
+    const openFullImage = (event, e) => {
+        e.stopPropagation();
+        setCurrentImage(event);
+        setShowFullImage(true);
     };
 
     useEffect(() => {
-        // Fetch featured events from your API
-        fetch('/api/v1/events?featured=true')
-            .then(response => response.json())
-            .then(data => {
-                setFeaturedEvents(data.length ? data : mockFeaturedEvents);
+        axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/approved`)
+            .then(response => {
+                if (response.data && Array.isArray(response.data)) {
+                    const events = response.data.map(event => ({
+                        id: event._id,
+                        title: event.title,
+                        date: new Date(event.date).toLocaleDateString(),
+                        location: event.location,
+                        image: event.image || '/placeholder-image.jpg',
+                        ticketPrice: event.ticketPrice,
+                        remainingTickets: event.remainingTickets
+                    }));
+                    setFeaturedEvents(events);
+                } else {
+                    setError('No events found');
+                    setFeaturedEvents([]);
+                }
                 setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching events:', error);
-                setFeaturedEvents(mockFeaturedEvents);
+                setError('Failed to load events. Please try again later.');
+                setFeaturedEvents([]);
                 setLoading(false);
             });
-
-        // Set categories using mock data (you can replace with API call when available)
-        setCategories(mockCategories);
-
-        // Set testimonials using mock data (you can replace with API call when available)
-        setTestimonials(mockTestimonials);
     }, []);
 
-    if (loading && !featuredEvents.length) {
+    if (loading) {
         return <div className="loading-indicator">Loading...</div>;
     }
 
     return (
         <div className="homepage-container">
-            {/* Hero Section */}
-            <div className="hero-section">
+            {/* Hero Section with the specified background image */}
+            <div className="hero-section" style={{
+                background: 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://th.bing.com/th/id/OIP.GcQyOsMVDtUUhTTMmTjY0wHaEJ?w=626&h=351&rs=1&pid=ImgDetMain")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+            }}>
                 <div className="hero-content">
                     <h1 className="hero-title">Experience the Magic of Live Performance</h1>
                     <p className="hero-subtitle">Discover extraordinary events that will leave you breathless</p>
-                    <Link to="/events" className="hero-button">Explore Events</Link>
+                    <div className="hero-buttons">
+                    </div>
                 </div>
             </div>
 
-            {/* Countdown */}
-            <Countdown eventDate="2023-12-31T23:59:59" />
-
-            {/* Search Bar */}
-            <SearchBar onSearch={handleSearch} />
 
             {/* Featured Events Section */}
             <section className="featured-section">
                 <h2 className="section-title">Featured Shows</h2>
-                <div className="featured-events">
-                    {featuredEvents.map(event => (
-                        <div key={event.id} className="featured-event-card">
-                            <div className="event-image">
-                                <img src={event.image} alt={event.title} />
+                {error ? (
+                    <div className="error-message">{error}</div>
+                ) : featuredEvents.length === 0 ? (
+                    <div className="no-events-message">No events available at the moment.</div>
+                ) : (
+                    <div className="events-grid">
+                        {featuredEvents.map(event => (
+                            <div key={event.id} className="event-card">
+                                <div className="event-image-container" onClick={(e) => openFullImage(event, e)}>
+                                    <img
+                                        src={event.image}
+                                        alt={event.title}
+                                        className="event-image"
+                                    />
+                                    <div className="image-overlay">
+                                        <span className="view-full">Click to view full image</span>
+                                    </div>
+                                </div>
+                                <div className="event-info">
+                                    <h3 className="event-title">{event.title}</h3>
+                                    <div className="event-meta">
+                                        <p className="event-date">
+                                            <i className="far fa-calendar"></i> {event.date}
+                                        </p>
+                                        <p className="event-location">
+                                            <i className="fas fa-map-marker-alt"></i> {event.location}
+                                        </p>
+                                    </div>
+                                    <div className="event-price-tag">
+                                        <span>{event.ticketPrice > 0 ? `$${event.ticketPrice}` : 'Free'}</span>
+                                    </div>
+                                    <button
+                                        className="view-details-btn"
+                                        onClick={() => handleEventClick(event)}
+                                    >
+                                        {isLoggedIn() ? 'View Details' : 'Login to View'}
+                                    </button>
+                                </div>
                             </div>
-                            <div className="event-info">
-                                <h3 className="event-title">{event.title}</h3>
-                                <p className="event-date">{event.date}</p>
-                                <p className="event-location">{event.location}</p>
-                                <Link to={`/events/${event.id}`} className="details-button">View Details</Link>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
-            {/* Categories Section */}
-            <section className="categories-section">
-                <h2 className="section-title">Discover by Category</h2>
-                <div className="categories-grid">
-                    {categories.map(category => (
-                        <div key={category.id} className="category-card">
-                            <img src={category.image} alt={category.name} />
-                            <div className="category-overlay">
-                                <h3>{category.name}</h3>
-                                <Link to={`/category/${category.id}`} className="category-button">Browse</Link>
-                            </div>
+            {/* Full Image Modal */}
+            {showFullImage && (
+                <div className="full-image-modal" onClick={() => setShowFullImage(false)}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <img src={currentImage.image} alt={currentImage.title} />
+                        <button className="close-modal" onClick={() => setShowFullImage(false)}>×</button>
+                        <div className="modal-buttons">
+                            <Link to="/login" className="login-btn">Login</Link>
+                            <Link to="/register" className="register-btn">Register</Link>
                         </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Social Media Section */}
-            <SocialMedia />
-
-            {/* Newsletter Section */}
-            <section className="newsletter-section">
-                <div className="newsletter-content">
-                    <h2>Stay Updated</h2>
-                    <p>Subscribe to our newsletter for the latest shows and exclusive offers</p>
-                    <div className="newsletter-form">
-                        <input type="email" placeholder="Your email address" className="creative-form-input" />
-                        <button className="creative-form-submit">Subscribe</button>
                     </div>
                 </div>
-            </section>
+            )}
 
-            {/* Testimonials Section */}
-            <section className="testimonials-section">
-                <h2 className="section-title">What Our Visitors Say</h2>
-                <div className="testimonials-slider">
-                    {testimonials.map(testimonial => (
-                        <div key={testimonial.id} className="testimonial-card">
-                            <p className="testimonial-text">"{testimonial.text}"</p>
-                            <div className="testimonial-author">
-                                <div className="avatar-circle-nav">{testimonial.author[0]}</div>
-                                <span>{testimonial.author}</span>
-                            </div>
+            {/* Login Prompt Modal */}
+            {showLoginPrompt && (
+                <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)}>
+                    <div className="login-prompt-modal" onClick={e => e.stopPropagation()}>
+                        <h3>Login Required</h3>
+                        <p>Please log in to view event details for "{selectedEvent?.title}"</p>
+                        <div className="login-prompt-buttons">
+                            <Link to="/login" className="login-btn">Login</Link>
+                            <Link to="/register" className="register-btn">Register</Link>
+                            <button className="cancel-btn" onClick={() => setShowLoginPrompt(false)}>Cancel</button>
                         </div>
-                    ))}
+                    </div>
                 </div>
-            </section>
+            )}
         </div>
     );
 };
-
-// Fallback mock data
-const mockFeaturedEvents = [
-    {
-        id: 1,
-        title: "Hamilton: An American Musical",
-        date: "June 15, 2023 • 7:30 PM",
-        location: "Main Stage Theatre",
-        image: "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-    },
-    {
-        id: 2,
-        title: "The Phantom of the Opera",
-        date: "June 18, 2023 • 8:00 PM",
-        location: "Grand Opera House",
-        image: "https://images.unsplash.com/photo-1503095396549-807759245b35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-    },
-    {
-        id: 3,
-        title: "An Evening with Jazz Masters",
-        date: "June 20, 2023 • 6:30 PM",
-        location: "Blue Note Lounge",
-        image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-    }
-];
-
-const mockCategories = [
-    {
-        id: 1,
-        name: "Music",
-        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-    },
-    {
-        id: 2,
-        name: "Theatre",
-        image: "https://images.unsplash.com/photo-1503095396549-807759245b35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-    },
-    {
-        id: 3,
-        name: "Comedy",
-        image: "https://images.unsplash.com/photo-1527224857830-43a7acc85260?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-    },
-    {
-        id: 4,
-        name: "Dance",
-        image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-    }
-];
-
-const mockTestimonials = [
-    {
-        id: 1,
-        text: "The performance was absolutely breathtaking. The venue is stunning and the staff was extremely helpful.",
-        author: "Emma Thompson"
-    },
-    {
-        id: 2,
-        text: "Best theater experience I've had in years. Will definitely be coming back for more shows!",
-        author: "Michael Brown"
-    },
-    {
-        id: 3,
-        text: "From booking tickets to the final curtain call, everything was perfect. Highly recommended!",
-        author: "Sarah Johnson"
-    }
-];
 
 export default Homepage;

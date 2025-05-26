@@ -18,7 +18,7 @@ export default function RegisterForm() {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post("http://localhost:3000/api/v1/register", form);
+            await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/register`, form);
             setMessage("Registration successful. Redirecting to login...");
             setTimeout(() => navigate('/login'), 2000);
             // eslint-disable-next-line no-unused-vars

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import EventCard from './EventCard';
+import './EventList.css'
 import './AdminEventsPage.css';
 
 const AdminEventsPage = () => {
@@ -39,7 +40,7 @@ const AdminEventsPage = () => {
     const fetchEvents = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:3000/api/v1/event/all`, {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/all`, {
                 withCredentials: true
             });
 
@@ -57,7 +58,7 @@ const AdminEventsPage = () => {
 
     const handleStatusChange = async (eventId, newStatus) => {
         try {
-            await axios.put(`http://localhost:3000/api/v1/event/${eventId}/`, {
+            await axios.put(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/${eventId}/`, {
                 status: newStatus
             }, {
                 withCredentials: true
@@ -115,8 +116,11 @@ const AdminEventsPage = () => {
                     {filteredEvents.map((event) => (
                         <div key={event.id || event._id} className="event-card-with-actions">
                             <EventCard event={event} />
+                            <div className="event-info">
+                            </div>
                             <div className="event-actions">
                                 <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
+                                <h3 className="event-title">{event.title || event.name}</h3>
 
                                 {activeFilter === 'pending' && (
                                     <>
