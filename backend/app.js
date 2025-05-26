@@ -14,7 +14,6 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
     console.log('Uploads directory created');
 }
-
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
 // Routers
@@ -31,9 +30,9 @@ const authenticationMiddleware = require('./Middleware/authenticationMiddleware'
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(cors({
-    origin: process.env.CLIENT_ORIGIN,
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    origin: ['http://localhost:5176', 'https://masr7-del-frontend.onrender.com'],    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -47,7 +46,7 @@ app.use(authenticationMiddleware);
 
 // MongoDB connection
 const db_name = process.env.DB_NAME;
-const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
+const db_url = process.env.DB_URL;
 
 mongoose.connect(db_url)
     .then(() => console.log(`MongoDB connected to ${db_name}`))
@@ -63,7 +62,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(Port, () => console.log("Server started"))
+app.listen(3000, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });

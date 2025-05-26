@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Homepage.css';
 import axios from 'axios';
+import './Homepage.css';
 
 const Homepage = () => {
     const [featuredEvents, setFeaturedEvents] = useState([]);
@@ -13,13 +13,10 @@ const Homepage = () => {
     const [currentImage, setCurrentImage] = useState(null);
     const navigate = useNavigate();
 
-
     // Check if user is logged in
     const isLoggedIn = () => {
         return localStorage.getItem('token') !== null;
     };
-
-
 
     const handleEventClick = (event) => {
         if (isLoggedIn()) {
@@ -37,10 +34,11 @@ const Homepage = () => {
     };
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/event/approved`)
+        axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/event/approved`)
             .then(response => {
-                if (response.data && Array.isArray(response.data)) {
-                    const events = response.data.map(event => ({
+                const data = response.data;
+                if (data && Array.isArray(data)) {
+                    const events = data.map(event => ({
                         id: event._id,
                         title: event.title,
                         date: new Date(event.date).toLocaleDateString(),
@@ -64,6 +62,7 @@ const Homepage = () => {
             });
     }, []);
 
+    // Rest of the component remains unchanged
     if (loading) {
         return <div className="loading-indicator">Loading...</div>;
     }
