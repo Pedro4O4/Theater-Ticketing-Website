@@ -2,10 +2,9 @@
   "name": "studentsexample",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/app.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node backend/app.js",
-    "build": "npm install && npm install --prefix frontend/FrontendTheater && npm run build --prefix frontend/FrontendTheater"
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",

@@ -22,7 +22,6 @@
 
 /* Hero section */
 .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/hero-background.jpg');
     background-size: cover;
     background-position: center;
     color: white;
