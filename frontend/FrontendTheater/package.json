@@ -1,6 +1,5 @@
 {
   "name": "frontend-theater",
-  "homepage": "https://pedro4o4.github.io/masr7/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,9 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -23,6 +20,7 @@
     "react-router-dom": "^7.6.0",
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.3",
+    "studentsexample": "file:../..",
     "zod": "^3.25.7"
   },
   "devDependencies": {

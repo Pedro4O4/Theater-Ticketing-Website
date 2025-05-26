@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser');
 const cors = require("cors");
 require('dotenv').config();
+import path from "path";
 
 const app = express();
 const fs = require('fs');
@@ -32,14 +33,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
-    origin: [
-        'https://masr7-va2e.vercel.app',
-        'http://localhost:5174'
-    ],
+    origin: process.env.CLIENT_ORIGIN,
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
+// In your backend Express app
+
 
 // Routes
 app.use("/api/v1", authRouter);
@@ -49,8 +49,9 @@ app.use("/api/v1/booking", BookingRouters);
 app.use(authenticationMiddleware);
 
 // MongoDB connection
-const db_name = process.env.DB_NAME;
-const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
+
+const db_url = process.env.DB_URL || 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
+const db_name = process.env.DB_NAME || db_url.split('/')[3]?.split('?')[0] || 'studentsFullBack';
 
 mongoose.connect(db_url)
     .then(() => console.log(`MongoDB connected to ${db_name}`))
@@ -58,6 +59,11 @@ mongoose.connect(db_url)
         console.error("MongoDB connection error:", e.message);
     });
 
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, 'frontend/FrontendTheater/dist')));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/FrontendTheater/dist', 'index.html'));
+})
 // 404 handler
 app.use(function (req, res, next) {
     const error = new Error("404 - Not Found");

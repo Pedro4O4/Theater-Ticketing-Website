@@ -2,10 +2,10 @@
   "name": "studentsexample",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "backend/app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node backend/app.js",
+    "build": "npm install && npm install --prefix frontend/FrontendTheater && npm run build --prefix frontend/FrontendTheater"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0",
     "mongoose": "^8.14.1",
+    "multer": "^2.0.0",
     "nodemailer": "^6.10.1",
     "vite": "^6.3.5"
   },
