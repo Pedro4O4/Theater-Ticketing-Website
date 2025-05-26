@@ -25,7 +25,7 @@ const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 
 // Middleware
-const authenticationMiddleware = require('./middleware/authenticationMiddleware');
+const authenticationMiddleware = require('./Middleware/authenticationMiddleware');
 
 // Middlewares setup
 app.use(express.json());
