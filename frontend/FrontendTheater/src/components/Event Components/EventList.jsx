@@ -94,13 +94,15 @@ const EventList = () => {
                         events.map((event) => (
                             <div key={event._id} className="event-card-with-actions">
                                 <EventCard event={event} />
-                                            <div className="event-info">
-                                            </div>
-                                            <div className="event-actions">
-                                                <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
-                                                <h3 className="event-title">{event.title || event.name}</h3>
 
-                                                {user?.role === "Standard User" && (
+
+                                <div className="event-actions">
+                                    <Link to={`/events/${event._id}`} className="event-button">
+                                        Details
+                                    </Link>
+                                    <h3 className="event-title">{event.title || event.name}</h3>
+
+                                    {user?.role === "Standard User" && (
                                         <button
                                             className="book-now-btn"
                                             onClick={() => navigate(`/bookings/new/${event._id}`)}

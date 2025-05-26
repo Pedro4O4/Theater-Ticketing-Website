@@ -1,13 +1,16 @@
 {
   "name": "frontend-theater",
+  "homepage": "https://Pedro4O4.github.io/Theater-Ticketing-Website",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "node_modules/.bin/vite build",
+    "lint": "node_modules/.bin/eslint .",
+    "preview": "node_modules/.bin/vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -20,7 +23,6 @@
     "react-router-dom": "^7.6.0",
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.3",
-    "studentsexample": "file:../..",
     "zod": "^3.25.7"
   },
   "devDependencies": {

@@ -55,8 +55,7 @@ app.use("/api/v1/booking", authenticationMiddleware, BookingRouters);
 
 // MongoDB connection
 const db_url = process.env.DB_URL;
-const db_name = process.env.DB_NAME || (db_url.includes('/') ? db_url.split('/').pop().split('?')[0] : 'theaterApp');
-
+const db_name = process.env.DB_NAME
 mongoose.connect(db_url)
     .then(() => console.log(`MongoDB connected to ${db_name}`))
     .catch((e) => {
