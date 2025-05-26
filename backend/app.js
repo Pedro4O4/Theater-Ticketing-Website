@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser');
 const cors = require("cors");
 require('dotenv').config();
-
+const Port = process.env.PORT;
 const app = express();
 const fs = require('fs');
 const path = require('path');
@@ -63,7 +63,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(process.env.PORT, () => console.log("Server started"))
+app.listen(Port, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });
