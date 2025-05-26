@@ -1,80 +1,112 @@
-// frontend/FrontendTheater/src/components/shared/Navbar.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
-    const { currentUser, isAuthenticated, isAdmin, isOrganizer, logout } = useAuth();
+    const { isAuthenticated, isAdmin, isOrganizer, logout } = useAuth();
     const navigate = useNavigate();
+    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-    const handleLogout = async () => {
+    const handleLogoutClick = () => {
+        setShowLogoutDialog(true);
+    };
+
+    const confirmLogout = async () => {
+        setIsLoggingOut(true);
         try {
             await logout();
+            setShowLogoutDialog(false);
             navigate('/login');
         } catch (error) {
             console.error('Logout error:', error);
+        } finally {
+            setIsLoggingOut(false);
         }
     };
 
+    const cancelLogout = () => {
+        setShowLogoutDialog(false);
+    };
+
     return (
-        <nav className="navbar">
-            <div className="navbar-container">
-                <Link to="/" className="navbar-logo">
-                    <span className="logo-emoji">🎟️</span> Event Tickets
-                </Link>
+        <>
+            <nav className="navbar">
+                <div className="navbar-container">
+                    <Link to="/" className="navbar-logo">
+                        <span className="logo-emoji">🎟️</span> Event Tickets
+                    </Link>
 
-                <div className="nav-menu">
-                    <Link to="/" className="nav-item">Home</Link>
+                    <div className="nav-menu">
+                        <Link to="/" className="nav-item">Home</Link>
 
-                    {isAuthenticated ? (
-                        <>
-                            {/* Standard user links */}
-                            {!isAdmin && !isOrganizer && (
-                                <Link to="/bookings" className="nav-item">My Bookings</Link>
-                            )}
+                        {isAuthenticated ? (
+                            <>
+                                {!isAdmin && !isOrganizer && (
+                                    <Link to="/bookings" className="nav-item">My Bookings</Link>
+                                )}
 
-                            {/* Organizer links */}
-                            {isOrganizer && (
-                                <div className="nav-dropdown">
-                                    <span className="nav-item">Organizer <i className="fas fa-caret-down"></i></span>
-                                    <div className="dropdown-content">
-                                        <Link to="/my-events">My Events</Link>
-                                        <Link to="/my-events/new">Create Event</Link>
-                                        <Link to="/my-events/analytics">Analytics</Link>
+                                {isOrganizer && (
+                                    <div className="nav-dropdown">
+                                        <span className="nav-item">Organizer <i className="fas fa-caret-down"></i></span>
+                                        <div className="dropdown-content">
+                                            <Link to="/my-events">My Events</Link>
+                                            <Link to="/my-events/new">Create Event</Link>
+                                            <Link to="/my-events/analytics">Analytics</Link>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {/* Admin links */}
-                            {isAdmin && (
-                                <div className="nav-dropdown">
-                                    <span className="nav-item">Admin <i className="fas fa-caret-down"></i></span>
-                                    <div className="dropdown-content">
-                                        <Link to="/admin/events">Manage Events</Link>
-                                        <Link to="/admin/users">Manage Users</Link>
+                                {isAdmin && (
+                                    <div className="nav-dropdown">
+                                        <span className="nav-item">Admin <i className="fas fa-caret-down"></i></span>
+                                        <div className="dropdown-content">
+                                            <Link to="/admin/events">Manage Events</Link>
+                                            <Link to="/admin/users">Manage Users</Link>
+                                        </div>
                                     </div>
-                                </div>
-                            )}):(
+                                )}
 
-                            {/* Profile and Logout - Available for all authenticated users */}
-
-                        </>
-                    ): (
-                        <>
-
-
-
-                            <Link to="/login" className="nav-item">Login</Link>
-                            <Link to="/register" className="nav-item">Register</Link>
-                            <Link to="/profile" className="nav-item">Profile</Link>
-                            <button className="logout-btn" onClick={handleLogout}>Logout</button>
 
                             </>
-                    )}
+                        ) : (
+                            <>
+                                <Link to="/profile" className="nav-item">Profile</Link>
+                                <Link to="/login" className="nav-item">Login</Link>
+                                <Link to="/register" className="nav-item">Register</Link>
+                                <button className="logout-btn" onClick={handleLogoutClick}>Logout</button>
+                            </>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+
+            {showLogoutDialog && (
+                <div className="logout-dialog-overlay">
+                    <div className="logout-dialog">
+                        <h3>Logout Confirmation</h3>
+                        <p>Are you sure you want to logout?</p>
+                        <div className="logout-dialog-buttons">
+                            <button
+                                className="logout-confirm-btn"
+                                onClick={confirmLogout}
+                                disabled={isLoggingOut}
+                            >
+                                {isLoggingOut ? 'Logging out...' : 'Yes'}
+                            </button>
+                            <button
+                                className="logout-cancel-btn"
+                                onClick={cancelLogout}
+                                disabled={isLoggingOut}
+                            >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 

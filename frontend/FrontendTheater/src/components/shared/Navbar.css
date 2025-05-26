@@ -434,3 +434,62 @@
         margin: 0 1rem 2rem;
     }
 }
+
+/* Logout Dialog Styles */
+.logout-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.logout-dialog {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    padding: 24px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.logout-dialog h3 {
+    margin-top: 0;
+    color: #6a3093;
+}
+
+.logout-dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.logout-confirm-btn {
+    background: #6a3093;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.logout-cancel-btn {
+    background: #f1f1f1;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.logout-confirm-btn:disabled, .logout-cancel-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
