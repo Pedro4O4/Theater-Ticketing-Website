@@ -11,11 +11,17 @@ const AdminEventsPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeFilter, setActiveFilter] = useState('pending');
+    const [searchQuery, setSearchQuery] = useState('');
+
     const navigate = useNavigate();
     const { user } = useAuth();
 
     // In AdminEventsPage.jsx - update the role check in useEffect
     useEffect(() => {
+
+
+
+
         if (!user) {
             navigate('/login');
             return;
@@ -35,6 +41,27 @@ const AdminEventsPage = () => {
             setFilteredEvents(events.filter(event => event.status === activeFilter));
         }
     }, [activeFilter, events]);
+
+    useEffect(() => {
+        if (events.length > 0) {
+            // First filter by status
+            let filtered = events.filter(event => event.status === activeFilter);
+
+            // Then apply search filter if there's a search query
+            if (searchQuery.trim()) {
+                const query = searchQuery.toLowerCase();
+                filtered = filtered.filter(event =>
+                    (event.title && event.title.toLowerCase().includes(query)) ||
+                    (event.description && event.description.toLowerCase().includes(query)) ||
+                    (event.location && event.location.toLowerCase().includes(query)) ||
+                    (event.organizer && event.organizer.name &&
+                        event.organizer.name.toLowerCase().includes(query))
+                );
+            }
+
+            setFilteredEvents(filtered);
+        }
+    }, [activeFilter, events, searchQuery]);
 
     const fetchEvents = async () => {
         setLoading(true);
@@ -75,6 +102,9 @@ const AdminEventsPage = () => {
         }
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
     if (loading) {
         return <div className="loading">Loading events...</div>;
     }
@@ -88,6 +118,17 @@ const AdminEventsPage = () => {
                         <Link to="/events" className="view-events-button">View All Events</Link>
                         <Link to="/admin/users" className="view-events-button">Manage Users</Link>
                     </div>
+                </div>
+
+                {/* Search bar is placed here */}
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Search events by title, description, location..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="search-input"
+                    />
                 </div>
                 <div className="filter-tabs">
                     <button
