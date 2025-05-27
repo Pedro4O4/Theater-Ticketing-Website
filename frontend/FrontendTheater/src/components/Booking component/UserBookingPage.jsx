@@ -91,16 +91,20 @@ const UserBookingsPage = () => {
 
     return (
         <div className="bookings-container">
-            <h1>My Bookings</h1>
+            <div className="bookings-header">
+                <h1>My Bookings</h1>
+                <Link to="/events" className="browse-events-btn">Events</Link>
+            </div>
 
             {bookings.length === 0 ? (
                 <div className="no-bookings">
                     <p>You haven't made any bookings yet.</p>
-                    <Link to="/events" className="browse-events-link">Browse Events</Link>
+                    <Link to="/events" className="browse-events-link">Events</Link>
                 </div>
             ) : (
                 <div className="bookings-list">
                     {bookings.map((booking) => {
+                        // Your existing booking mapping code
                         const event = booking.eventId && eventDetails[booking.eventId]
                             ? eventDetails[booking.eventId]
                             : booking.event || {};

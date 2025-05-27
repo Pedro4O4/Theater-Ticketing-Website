@@ -253,3 +253,32 @@
         padding: 0.6rem 0.8rem;
     }
 }
+.search-container {
+    margin: 0 20px;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 1rem;
+    background-color: black;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4c51bf;
+    box-shadow: 0 2px 8px rgba(76, 81, 191, 0.2);
+}
+
+.event-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}

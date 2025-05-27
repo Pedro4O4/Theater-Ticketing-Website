@@ -8,6 +8,8 @@ import './EventCard.css';
 
 const EventList = () => {
     const [events, setEvents] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -29,6 +31,16 @@ const EventList = () => {
         fetchEvents();
     }, [navigate, user]);
 
+    useEffect(() => {
+        // Filter events when search term changes
+        if (events.length > 0) {
+            const filtered = events.filter(event =>
+                (event.title || event.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredEvents(filtered);
+        }
+    }, [searchTerm, events]);
+
     const fetchEvents = async () => {
         try {
             const endpoint = 'http://localhost:3000/api/v1/event';
@@ -41,17 +53,21 @@ const EventList = () => {
             console.log("API Response:", response);
 
             const data = response.data;
+            let eventsData = [];
 
             if (Array.isArray(data)) {
-                setEvents(data);
+                eventsData = data;
             } else if (data?.events && Array.isArray(data.events)) {
-                setEvents(data.events);
+                eventsData = data.events;
             } else if (data?.data && Array.isArray(data.data)) {
-                setEvents(data.data);
+                eventsData = data.data;
             } else {
                 console.error("Unexpected API response format:", data);
                 setError("Unexpected data format from API");
             }
+
+            setEvents(eventsData);
+            setFilteredEvents(eventsData);
         } catch (err) {
             console.error("Error fetching events:", err);
             if (err.response && [401, 403, 405].includes(err.response.status)) {
@@ -65,10 +81,23 @@ const EventList = () => {
         }
     };
 
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
     return (
         <div className="event-list-container">
             <div className="event-header">
                 <h1 className="page-title">Events</h1>
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Search events by title..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="search-input"
+                    />
+                </div>
                 {user?.role === "Organizer" && (
                     <div className="organizer-buttons">
                         <Link to="/my-events" className="create-event-button" style={{ marginLeft: '10px' }}>
@@ -90,8 +119,8 @@ const EventList = () => {
 
             {!loading && !error && (
                 <div className="event-grid">
-                    {events.length > 0 ? (
-                        events.map((event) => (
+                    {filteredEvents.length > 0 ? (
+                        filteredEvents.map((event) => (
                             <div key={event._id} className="event-card-with-actions">
                                 <EventCard event={event} />
                                 <div className="event-info">
@@ -99,6 +128,14 @@ const EventList = () => {
                                 <div className="event-actions">
                                     <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
                                     <h3 className="event-title">{event.title || event.name}</h3>
+
+                                    {event.remainingTickets !== undefined && (
+                                        <div className="tickets-badge">
+                                            <span className="tickets-count">{event.remainingTickets}</span>
+                                            <span className="tickets-label">tickets left</span>
+                                        </div>
+                                    )}
+
                                     {user?.role === "Standard User" && (
                                         <button
                                             className="book-now-btn"
@@ -111,7 +148,7 @@ const EventList = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="no-events">No events found</p>
+                        <p className="no-events">No events found matching "{searchTerm}"</p>
                     )}
                 </div>
             )}

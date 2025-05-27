@@ -16,7 +16,6 @@ const AdminEventsPage = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
 
-    // In AdminEventsPage.jsx - update the role check in useEffect
     useEffect(() => {
 
 
@@ -27,7 +26,7 @@ const AdminEventsPage = () => {
             return;
         }
 
-        if (user.role !== 'System Admin') { // Updated from 'Admin' to 'System Admin'
+        if (user.role !== 'System Admin') {
             navigate('/');
             return;
         }
@@ -35,7 +34,6 @@ const AdminEventsPage = () => {
         fetchEvents();
     }, [navigate, user]);
 
-    // Apply filtering when activeFilter or events change
     useEffect(() => {
         if (events.length > 0) {
             setFilteredEvents(events.filter(event => event.status === activeFilter));
@@ -156,8 +154,11 @@ const AdminEventsPage = () => {
                     {filteredEvents.map((event) => (
                         <div key={event.id || event._id} className="event-card-with-actions">
                             <EventCard event={event} />
+                            <div className="event-info">
+                            </div>
                             <div className="event-actions">
                                 <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
+                                <h3 className="event-title">{event.title || event.name}</h3>
 
                                 {activeFilter === 'pending' && (
                                     <>

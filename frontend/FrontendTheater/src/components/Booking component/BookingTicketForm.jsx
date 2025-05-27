@@ -1,66 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './BookingTicketForm.css';
 
 const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
-    const [events, setEvents] = useState([]);
-    const [selectedEvent, setSelectedEvent] = useState(preSelectedEvent || null);
+    const { eventId } = useParams(); // Get eventId from URL parameters
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const [numberOfTickets, setNumberOfTickets] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
-    const [isEventLoading, setIsEventLoading] = useState(!preSelectedEvent);
+    const [isEventLoading, setIsEventLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    // Fetch event by ID from URL parameter if needed
     useEffect(() => {
-        if (!preSelectedEvent) {
-            fetchAvailableEvents();
-        } else {
+        // If we have a preSelectedEvent, use it immediately
+        if (preSelectedEvent) {
             setSelectedEvent(preSelectedEvent);
+            return;
         }
-    }, [preSelectedEvent]);
 
-    const fetchAvailableEvents = async () => {
+        // If we have an eventId from URL params, fetch that event
+        if (eventId) {
+            fetchEventById(eventId);
+        }
+    }, [preSelectedEvent, eventId]);
+
+    const fetchEventById = async (id) => {
         try {
             setIsEventLoading(true);
-            const response = await axios.get('http://localhost:3000/api/v1/event', {
+            const response = await axios.get(`http://localhost:3000/api/v1/event/${id}`, {
                 withCredentials: true
             });
 
-            let eventData = [];
-            if (response.data && Array.isArray(response.data)) {
-                eventData = response.data;
-            } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
-                eventData = response.data.data;
-            } else if (response.data && response.data.events && Array.isArray(response.data.events)) {
-                eventData = response.data.events;
-            }
-
-            // Filter events with approved status and available tickets
-            const availableEvents = eventData.filter(event => {
-                const isActive = event.status === 'Active' || event.status === 'active' ||
-                    event.status === 'approved' || event.status === 'Approved';
-                const hasTickets = event.remainingTickets > 0 || event.tickCount > 0 || event.totalTickets > 0;
-                return isActive && hasTickets;
-            });
-
-            setEvents(availableEvents);
-            if (availableEvents.length > 0 && !selectedEvent) {
-                setSelectedEvent(availableEvents[0]);
+            if (response.data && response.data.data) {
+                setSelectedEvent(response.data.data);
+            } else {
+                throw new Error('Invalid event data received');
             }
         } catch (err) {
-            console.error("Error fetching events:", err);
-            setError("Failed to load available events: " + (err.response?.data?.message || err.message));
+            console.error("Error fetching event details:", err);
+            setError("Failed to load event details: " + (err.response?.data?.message || err.message));
         } finally {
             setIsEventLoading(false);
         }
-    };
-
-    const handleEventSelect = (e) => {
-        const eventId = e.target.value;
-        const event = events.find(event => event._id === eventId);
-        setSelectedEvent(event);
-        setNumberOfTickets(1);
     };
 
     const handleTicketChange = (e) => {
@@ -84,13 +67,6 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
         setError(null);
 
         try {
-            // Log request payload for debugging
-            console.log("Sending booking request:", {
-                eventId: selectedEvent._id,
-                numberOfTickets,
-                status: 'Confirmed'
-            });
-
             const response = await axios.post(
                 'http://localhost:3000/api/v1/booking',
                 {
@@ -112,8 +88,6 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
             let errorMessage = "Failed to book tickets. Please try again.";
             if (err.response) {
                 errorMessage = err.response.data?.message || errorMessage;
-                // Log complete error response for debugging
-                console.error("Error response:", err.response);
             }
 
             setError(errorMessage);
@@ -126,105 +100,81 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
         return event?.remainingTickets || event?.totalTickets || 0;
     };
 
+    if (isEventLoading) {
+        return <div className="loading">Loading event details...</div>;
+    }
+
+    if (!selectedEvent) {
+        return <div className="loading">Event not found</div>;
+    }
+
     const maxTickets = getAvailableTickets(selectedEvent);
     const ticketPrice = selectedEvent?.ticketPrice || 0;
     const totalPrice = numberOfTickets * ticketPrice;
 
-    if (isEventLoading) return <div className="loading">Loading events...</div>;
-
     return (
         <div className="book-ticket-form">
-            <h2>{preSelectedEvent ? 'Book Tickets' : 'Create a New Booking'}</h2>
+            <h2>Book Tickets</h2>
 
             <form onSubmit={handleSubmit}>
-                {!preSelectedEvent && (
-                    <div className="form-group">
-                        <label htmlFor="event-select">Select an Event:</label>
-                        {events.length === 0 ? (
-                            <div>
-                                <p>No available events found. Check back later!</p>
-                                {error && <div className="error-message">{error}</div>}
-                                <button
-                                    type="button"
-                                    className="book-button"
-                                    onClick={fetchAvailableEvents}
-                                >
-                                    Retry
-                                </button>
-                            </div>
-                        ) : (
-                            <select
-                                id="event-select"
-                                onChange={handleEventSelect}
-                                value={selectedEvent?._id || ''}
-                                className="event-select"
-                                required
-                            >
-                                <option value="">-- Select an event --</option>
-                                {events.map(event => (
-                                    <option key={event._id} value={event._id}>
-                                        {event.title} - ${event.ticketPrice} ({getAvailableTickets(event)} tickets left)
-                                    </option>
-                                ))}
-                            </select>
-                        )}
+                <div className="event-summary">
+                    <h4>{selectedEvent.title}</h4>
+                    <p><strong>Date:</strong> {new Date(selectedEvent.date).toLocaleDateString()}</p>
+                    <p><strong>Location:</strong> {selectedEvent.location}</p>
+                    <p><strong>Category:</strong> {selectedEvent.category}</p>
+                    {selectedEvent.description && (
+                        <p><strong>Description:</strong> {selectedEvent.description}</p>
+                    )}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="numberOfTickets">
+                        Number of Tickets:
+                        <span className="tickets-remaining">({maxTickets} available)</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="numberOfTickets"
+                        value={numberOfTickets}
+                        onChange={handleTicketChange}
+                        min="1"
+                        max={maxTickets}
+                        disabled={isLoading}
+                        required
+                    />
+                </div>
+
+                <div className="price-summary">
+                    <p>Price per ticket: ${ticketPrice.toFixed(2)}</p>
+                    <p className="total-price">Total: ${totalPrice.toFixed(2)}</p>
+                </div>
+
+                {error && (
+                    <div className="error-message">
+                        {error}
+                        <p className="error-hint">
+                            Note: There might be an issue with the booking service. Please try again later or contact support.
+                        </p>
                     </div>
                 )}
 
-                {selectedEvent && (
-                    <>
-                        <div className="event-summary">
-                            <h4>{selectedEvent.title}</h4>
-                            <p><strong>Date:</strong> {new Date(selectedEvent.date).toLocaleDateString()}</p>
-                            <p><strong>Location:</strong> {selectedEvent.location}</p>
-                            <p><strong>Category:</strong> {selectedEvent.category}</p>
-                            {selectedEvent.description && (
-                                <p><strong>Description:</strong> {selectedEvent.description}</p>
-                            )}
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="numberOfTickets">
-                                Number of Tickets:
-                                <span className="tickets-remaining">({maxTickets} available)</span>
-                            </label>
-                            <input
-                                type="number"
-                                id="numberOfTickets"
-                                value={numberOfTickets}
-                                onChange={handleTicketChange}
-                                min="1"
-                                max={maxTickets}
-                                disabled={isLoading}
-                                required
-                            />
-                        </div>
-
-                        <div className="price-summary">
-                            <p>Price per ticket: ${ticketPrice.toFixed(2)}</p>
-                            <p className="total-price">Total: ${totalPrice.toFixed(2)}</p>
-                        </div>
-
-                        {error && (
-                            <div className="error-message">
-                                {error}
-                                <p className="error-hint">
-                                    Note: There might be an issue with the booking service. Please try again later or contact support.
-                                </p>
-                            </div>
-                        )}
-
-                        <div className="form-actions">
-                            <button
-                                type="submit"
-                                className="book-button"
-                                disabled={isLoading || maxTickets === 0 || !selectedEvent}
-                            >
-                                {isLoading ? 'Processing...' : 'Book Now'}
-                            </button>
-                        </div>
-                    </>
-                )}
+                <div className="form-actions">
+                    <button
+                        type="submit"
+                        className="book-button"
+                        disabled={isLoading || maxTickets === 0}
+                    >
+                        {isLoading ? 'Processing...' : 'Book Now'}
+                    </button>
+                    <button
+                        type="button"
+                        className="cancel-button"
+                        onClick={() => navigate('/events')}
+                        disabled={isLoading}
+                    >
+                        Cancel
+                    </button>
+                </div>
             </form>
         </div>
     );

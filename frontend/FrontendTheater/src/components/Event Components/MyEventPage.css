@@ -264,4 +264,57 @@
 .analytics-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}.event-buttons-container {
+     display: flex;
+     gap: 5px;
+     margin-top: 5px;
+ }
+
+.tickets-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.tickets-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.tickets-badge:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.tickets-count {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.tickets-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    margin-top: 2px;
 }
