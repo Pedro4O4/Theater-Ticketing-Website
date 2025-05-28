@@ -55,7 +55,6 @@ const EventDetailsPage = () => {
         });
     };
 
-    const canEdit = user && (user.role === 'Organizer' || user.role === 'System Admin');
 
     const openImageModal = () => {
         if (event?.image) {
@@ -172,12 +171,6 @@ const EventDetailsPage = () => {
                 <button className="back-button" onClick={() => navigate('/events')}>
                     Back to Events
                 </button>
-
-                {canEdit && (
-                    <Link to={`/my-events/${id}/edit`} className="edit-button">
-                        Edit Event
-                    </Link>
-                )}
             </div>
 
             {/* Image Modal */}

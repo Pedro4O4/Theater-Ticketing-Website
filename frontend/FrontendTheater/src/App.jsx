@@ -21,14 +21,11 @@ import EventAnalytics from "./components/Event Components/EventAnalytics.jsx";
 import MyEventsPage from "./components/Event Components/MyEventPage.jsx";
 import EditEventPage from "./components/Event Components/EditEventPage.jsx";
 import EventDetailsPage from "./components/Event Components/EventDetailPage.jsx";
-import './styles.css';
 import "./App.css";
 import UpdateProfilePage from "./components/UserComponent/UpdateProfilePage.jsx";
 import UserBookingPage from "./components/Booking Component/UserBookingPage";
 import BookingDetails from "./components/Booking Component/BookingDetails";
 import BookingTicketForm from "./components/Booking Component/BookingTicketForm.jsx";
-// Remove this line
-import './styles.css';
 
 function App() {
     const [loading, setLoading] = useState(true);
