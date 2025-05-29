@@ -30,10 +30,17 @@ export default function RegisterForm() {
         }
     };
 
+
     return (
         <div className="register-container">
+            <div className="background-shapes">
+                <div className="shape shape-1"></div>
+                <div className="shape shape-2"></div>
+                <div className="shape shape-3"></div>
+            </div>
             <div className="register-card">
-                <h1 className="register-title">Create Account</h1>
+                <div className="card-decoration"></div>
+                <h1 className="register-title">Join the Theater</h1>
 
                 {message && (
                     <div className={message.includes("successful") ? "success-message" : "error-box"}>
@@ -43,51 +50,71 @@ export default function RegisterForm() {
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label className="form-label">Name</label>
-                        <input
-                            type="text"
-                            placeholder="Enter your full name"
-                            className="form-input"
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
-                            required
-                        />
+                        <label className="form-label">
+                            <span className="label-text">Full Name</span>
+                        </label>
+                        <div className="input-container">
+                            <input
+                                type="text"
+                                placeholder="Enter your full name"
+                                className="form-input"
+                                value={form.name}
+                                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                required
+                            />
+                            <i className="input-icon fas fa-user"></i>
+                        </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Email</label>
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            className="form-input"
-                            value={form.email}
-                            onChange={(e) => setForm({ ...form, email: e.target.value })}
-                            required
-                        />
+                        <label className="form-label">
+                            <span className="label-text">Email Address</span>
+                        </label>
+                        <div className="input-container">
+                            <i className="input-icon fas fa-envelope"></i>
+                            <input
+                                type="email"
+                                placeholder="Enter your email"
+                                className="form-input"
+                                value={form.email}
+                                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                required
+                            />
+                        </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                            type="password"
-                            placeholder="Create a password"
-                            className="form-input"
-                            value={form.password}
-                            onChange={(e) => setForm({ ...form, password: e.target.value })}
-                            required
-                        />
+                        <label className="form-label">
+                            <span className="label-text">Password</span>
+                        </label>
+                        <div className="input-container">
+                            <i className="input-icon fas fa-lock"></i>
+                            <input
+                                type="password"
+                                placeholder="Create a secure password"
+                                className="form-input"
+                                value={form.password}
+                                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                required
+                            />
+                        </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Account Type</label>
-                        <select
-                            value={form.role}
-                            onChange={(e) => setForm({ ...form, role: e.target.value })}
-                            className="form-input"
-                        >
-                            <option value="Standard User">Standard User</option>
-                            <option value="Organizer">Organizer</option>
-                        </select>
+                        <label className="form-label">
+                            <span className="label-text">Account Type</span>
+                        </label>
+                        <div className="input-container">
+                            <i className="input-icon fas fa-user-tag"></i>
+                            <select
+                                value={form.role}
+                                onChange={(e) => setForm({ ...form, role: e.target.value })}
+                                className="form-input"
+                            >
+                                <option value="Standard User">Standard User</option>
+                                <option value="Organizer">Organizer</option>
+                            </select>
+                        </div>
                     </div>
 
                     <button
@@ -95,12 +122,19 @@ export default function RegisterForm() {
                         className="btn-primary"
                         disabled={loading}
                     >
-                        {loading ? "Creating Account..." : "Register"}
+                        {loading ? (
+                            <>
+                                <span className="form-loader"></span>
+                                Creating Account...
+                            </>
+                        ) : (
+                            <>Join Now</>
+                        )}
                     </button>
                 </form>
 
                 <div className="redirect-link">
-                    Already have an account? <Link to="/login">Sign In</Link>
+                    Already part of our community? <Link to="/login">Sign In</Link>
                 </div>
             </div>
         </div>

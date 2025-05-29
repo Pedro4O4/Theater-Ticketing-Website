@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
+import CustomToast from './components/shared/CustomToast';
 import 'react-toastify/dist/ReactToastify.css';
 import Homepage from './homepagedesign/Homepage.jsx';
 import { AuthProvider } from "./auth/AuthContext";
@@ -153,7 +153,7 @@ function App() {
                     </Routes>
                 </div>
                 <Footer />
-                <ToastContainer
+                <CustomToast
                     position="top-right"
                     autoClose={5000}
                     hideProgressBar={false}
