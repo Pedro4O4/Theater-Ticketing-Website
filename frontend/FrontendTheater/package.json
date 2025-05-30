@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "node_modules/.bin/vite build",
     "lint": "node_modules/.bin/eslint .",
-    "preview": "node_modules/.bin/vite preview"
+    "preview": "node_modules/.bin/vite preview",
+    "start":"tailwindcss -i ./src/index.css -o"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

@@ -124,6 +124,7 @@ const EventList = () => {
                             <div key={event._id} className="event-card-with-actions">
                                 <EventCard event={event} />
                                 <div className="event-info">
+
                                 </div>
                                 <div className="event-actions">
                                     <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
@@ -136,12 +137,23 @@ const EventList = () => {
                                         </div>
                                     )}
 
-                                    {user?.role === "Standard User" && (
+                                    {user?.role === "Standard User" && event.remainingTickets !== 0 && (
                                         <button
                                             className="book-now-btn"
                                             onClick={() => navigate(`/bookings/new/${event._id}`)}
                                         >
                                             Book Now
+                                        </button>
+                                    )}
+                                    {event.remainingTickets > 0 && event.remainingTickets < 50 && (
+                                        <button className="book-now-btn limited" disabled>
+                                            Limited Tickets
+                                        </button>
+                                    )}
+
+                                    {event.remainingTickets === 0 && (
+                                        <button className="book-now-btn disabled" disabled>
+                                            Sold Out
                                         </button>
                                     )}
                                 </div>

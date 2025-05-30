@@ -317,4 +317,68 @@
     font-size: 0.8rem;
     opacity: 0.9;
     margin-top: 2px;
+}.event-button.disabled {
+     opacity: 0.6;
+     cursor: not-allowed;
+     background-color: #f1f1f1;
+     color: #999;
+     pointer-events: none;
+ }
+
+.cancel-button.disabled {
+    background-color: #f1f1f1;
+    color: #999;
+}
+.button-tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.approval-tooltip {
+    visibility: hidden;
+    position: absolute;
+    background-color: #4ade80;
+    color: #064e3b;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    width: 160px;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #22c55e;
+    z-index: 10;
+}
+
+.approval-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #4ade80 transparent transparent transparent;
+}
+
+.button-tooltip-container:hover .approval-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Add a subtle animation for the tooltip */
+@keyframes tooltip-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.button-tooltip-container:hover .approval-tooltip {
+    visibility: visible;
+    opacity: 1;
+    animation: tooltip-fade-in 0.3s;
 }

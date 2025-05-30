@@ -284,4 +284,28 @@
 .browse-events-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(94, 114, 228, 0.4);
+}.loading-spinner {
+     display: inline-block;
+     width: 12px;
+     height: 12px;
+     margin-right: 8px;
+     border: 2px solid rgba(255, 255, 255, 0.3);
+     border-radius: 50%;
+     border-top-color: white;
+     animation: spin 1s ease-in-out infinite;
+ }
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.confirm-button:disabled,
+.cancel-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.cancel-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }

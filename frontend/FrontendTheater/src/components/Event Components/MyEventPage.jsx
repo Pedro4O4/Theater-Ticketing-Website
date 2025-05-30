@@ -131,10 +131,33 @@ const MyEventsPage = () => {
                             <div className="event-actions">
                                 <h3 className="event-title">{event.title || event.name}</h3>
                                 <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
-                                <Link to={`/my-events/${event.id || event._id}/edit`} className="event-button">Edit</Link>
-                                <button onClick={() => handleDelete(event.id || event._id)} className="event-button cancel-button">
-                                    Delete
-                                </button>
+
+                                {/* Edit button with tooltip for approved events */}
+                                <div className="button-tooltip-container">
+                                    {event.status === 'approved' ? (
+                                        <span className="event-button disabled">Edit</span>
+                                    ) : (
+                                        <Link to={`/my-events/${event.id || event._id}/edit`} className="event-button">Edit</Link>
+                                    )}
+                                    {event.status === 'approved' &&
+                                        <div className="approval-tooltip">Approved events cannot be edited</div>
+                                    }
+                                </div>
+
+                                {/* Delete button with tooltip for approved events */}
+                                <div className="button-tooltip-container">
+                                    <button
+                                        onClick={event.status !== 'approved' ? () => handleDelete(event.id || event._id) : undefined}
+                                        className={`event-button cancel-button ${event.status === 'approved' ? 'disabled' : ''}`}
+                                        disabled={event.status === 'approved'}
+                                    >
+                                        Delete
+                                    </button>
+                                    {event.status === 'approved' &&
+                                        <div className="approval-tooltip">Approved events cannot be deleted</div>
+                                    }
+                                </div>
+
                                 {event.remainingTickets !== undefined && (
                                     <div className="tickets-badge">
                                         <span className="tickets-count">{event.remainingTickets}</span>
