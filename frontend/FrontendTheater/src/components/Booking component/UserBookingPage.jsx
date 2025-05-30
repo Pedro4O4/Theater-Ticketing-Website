@@ -11,6 +11,7 @@ const UserBookingsPage = () => {
     const [error, setError] = useState(null);
     const [deleteBookingId, setDeleteBookingId] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [cancellationLoading, setCancellationLoading] = useState(false);
 
     useEffect(() => {
         fetchBookings();
@@ -74,6 +75,7 @@ const UserBookingsPage = () => {
 
     const confirmCancel = async () => {
         try {
+            setCancellationLoading(true);
             await axios.delete(`http://localhost:3000/api/v1/booking/${deleteBookingId}`, {
                 withCredentials: true
             });
@@ -83,6 +85,8 @@ const UserBookingsPage = () => {
         } catch (err) {
             console.error("Error canceling booking:", err);
             alert(`Error: ${err.response?.data?.message || err.message}`);
+        } finally {
+            setCancellationLoading(false);
         }
     };
 
@@ -131,6 +135,7 @@ const UserBookingsPage = () => {
                                             <button
                                                 onClick={() => handleCancelClick(booking._id)}
                                                 className="cancel-btn"
+                                                disabled={cancellationLoading}
                                             >
                                                 Cancel Booking
                                             </button>
@@ -147,10 +152,12 @@ const UserBookingsPage = () => {
                 isOpen={showDeleteConfirm}
                 title="Confirm Cancellation"
                 message="Are you sure you want to cancel this booking? This action cannot be undone."
-                confirmText="Yes, Cancel Booking"
+                confirmText={cancellationLoading ? "Cancelling..." : "Yes, Cancel Booking"}
                 cancelText="Keep Booking"
                 onConfirm={confirmCancel}
                 onCancel={() => setShowDeleteConfirm(false)}
+                isLoading={cancellationLoading}
+                disabled={cancellationLoading}
             />
         </div>
     );
