@@ -162,6 +162,17 @@ const Homepage = () => {
                     </div>
                 </div>
             )}
+            {/* Scroll Navigation Buttons */}
+            <div className="scroll-nav">
+                <button className="scroll-btn" onClick={() => {
+                    const container = document.querySelector('.events-grid');
+                    container.scrollBy({ left: -320, behavior: 'smooth' });
+                }}>←</button>
+                <button className="scroll-btn" onClick={() => {
+                    const container = document.querySelector('.events-grid');
+                    container.scrollBy({ left: 320, behavior: 'smooth' });
+                }}>→</button>
+            </div>
         </div>
     );
 };

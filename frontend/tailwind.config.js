@@ -3,10 +3,13 @@ export default {
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
+        "./src/components/**/*.{js,ts,jsx,tsx}",
+        "./src/pages/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         extend: {
             colors: {
+
                 primary: {
                     DEFAULT: '#6a3093',
                     light: '#9d4edd',
@@ -25,6 +28,11 @@ export default {
                 dark: '#1b1b2f',
                 light: '#f9fafc'
             },
+            backgroundImage: {
+                'gradient-primary': 'linear-gradient(135deg, #7928CA 0%, #FF0080 100%)',
+                'gradient-secondary': 'linear-gradient(135deg, #FF0080 0%, #7928CA 100%)',
+            },
+
             fontFamily: {
                 sans: ['Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'sans-serif'],
                 heading: ['Playfair Display', 'serif']
