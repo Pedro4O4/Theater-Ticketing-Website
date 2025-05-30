@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './ConfirmationDialog.css'
+import './ConfirmationDialog.css';
 
 const ConfirmationDialog = ({
                                 isOpen,
@@ -9,7 +9,9 @@ const ConfirmationDialog = ({
                                 confirmText,
                                 cancelText,
                                 onConfirm,
-                                onCancel
+                                onCancel,
+                                isLoading,
+                                disabled
                             }) => {
     if (!isOpen) return null;
 
@@ -19,10 +21,19 @@ const ConfirmationDialog = ({
                 <h2>{title}</h2>
                 <p className="dialog-message">{message}</p>
                 <div className="button-container">
-                    <button className="admin-button" onClick={onConfirm}>
+                    <button
+                        className="admin-button"
+                        onClick={onConfirm}
+                        disabled={isLoading || disabled}
+                    >
+                        {isLoading && <span className="loading-spinner"></span>}
                         {confirmText || 'Confirm'}
                     </button>
-                    <button className="admin-button" onClick={onCancel}>
+                    <button
+                        className="admin-button"
+                        onClick={onCancel}
+                        disabled={isLoading || disabled}
+                    >
                         {cancelText || 'Cancel'}
                     </button>
                 </div>
@@ -38,14 +49,18 @@ ConfirmationDialog.propTypes = {
     confirmText: PropTypes.string,
     cancelText: PropTypes.string,
     onConfirm: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired
+    onCancel: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool,
+    disabled: PropTypes.bool
 };
 
 ConfirmationDialog.defaultProps = {
     title: 'Confirm Action',
     message: 'Are you sure you want to proceed?',
     confirmText: 'Confirm',
-    cancelText: 'Cancel'
+    cancelText: 'Cancel',
+    isLoading: false,
+    disabled: false
 };
 
 export default ConfirmationDialog;

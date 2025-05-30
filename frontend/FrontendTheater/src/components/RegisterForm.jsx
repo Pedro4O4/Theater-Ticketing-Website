@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import "./RegisterForm.css";
 
@@ -10,83 +11,116 @@ export default function RegisterForm() {
         password: "",
         role: "Standard User",
     });
-    const [message, setMessage] = useState('');
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError("");
+
         try {
             await axios.post("http://localhost:3000/api/v1/register", form);
-            setMessage("Registration successful. Redirecting to login...");
+            toast.success("Registration successful! Redirecting to login...");
             setTimeout(() => navigate('/login'), 2000);
-            // eslint-disable-next-line no-unused-vars
         } catch (err) {
-            setMessage("Registration failed. Please try again.");
+            const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
+            setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="register-container">
-            <div className="register-card">
-                <h1 className="register-title">Create Account</h1>
+        <div className="login-container">
+            <div className="background-shapes">
+                <div className="shape shape-1"></div>
+                <div className="shape shape-2"></div>
+                <div className="shape shape-3"></div>
+            </div>
+            <div className="login-card">
+                <div className="card-decoration"></div>
+                <h1 className="login-title">Join the Theater</h1>
 
-                {message && (
-                    <div className={message.includes("successful") ? "success-message" : "error-box"}>
-                        {message}
-                    </div>
-                )}
+                {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label className="form-label">Name</label>
-                        <input
-                            type="text"
-                            placeholder="Enter your full name"
-                            className="form-input"
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
-                            required
-                        />
+                        <label className="form-label">
+                            <span className="label-text">Full Name</span>
+                        </label>
+                        <div className="input-container">
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Enter your full name"
+                                className="form-input"
+                                value={form.name}
+                                onChange={handleChange}
+                                required
+                            />
+                            <i className="input-icon fas fa-user"></i>
+                        </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Email</label>
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            className="form-input"
-                            value={form.email}
-                            onChange={(e) => setForm({ ...form, email: e.target.value })}
-                            required
-                        />
+                        <label className="form-label">
+                            <span className="label-text">Email Address</span>
+                        </label>
+                        <div className="input-container">
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Enter your email"
+                                className="form-input"
+                                value={form.email}
+                                onChange={handleChange}
+                                required
+                            />
+                            <i className="input-icon fas fa-envelope"></i>
+                        </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                            type="password"
-                            placeholder="Create a password"
-                            className="form-input"
-                            value={form.password}
-                            onChange={(e) => setForm({ ...form, password: e.target.value })}
-                            required
-                        />
+                        <label className="form-label">
+                            <span className="label-text">Password</span>
+                        </label>
+                        <div className="input-container">
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Create a secure password"
+                                className="form-input"
+                                value={form.password}
+                                onChange={handleChange}
+                                required
+                            />
+                            <i className="input-icon fas fa-lock"></i>
+                        </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Account Type</label>
-                        <select
-                            value={form.role}
-                            onChange={(e) => setForm({ ...form, role: e.target.value })}
-                            className="form-input"
-                        >
-                            <option value="Standard User">Standard User</option>
-                            <option value="Organizer">Organizer</option>
-                        </select>
+                        <label className="form-label">
+                            <span className="label-text">Account Type</span>
+                        </label>
+                        <div className="input-container">
+                            <select
+                                name="role"
+                                value={form.role}
+                                onChange={handleChange}
+                                className="form-input"
+                            >
+                                <option value="Standard User">Standard User</option>
+                                <option value="Organizer">Organizer</option>
+                            </select>
+                            <i className="input-icon fas fa-user-tag"></i>
+                        </div>
                     </div>
 
                     <button
@@ -94,12 +128,19 @@ export default function RegisterForm() {
                         className="btn-primary"
                         disabled={loading}
                     >
-                        {loading ? "Creating Account..." : "Register"}
+                        {loading ? (
+                            <>
+                                <span className="form-loader"></span>
+                                Creating Account...
+                            </>
+                        ) : (
+                            <>Join Now</>
+                        )}
                     </button>
                 </form>
 
                 <div className="redirect-link">
-                    Already have an account? <Link to="/login">Sign In</Link>
+                    <div>Already part of our community? <Link to="/login">Sign In</Link></div>
                 </div>
             </div>
         </div>
