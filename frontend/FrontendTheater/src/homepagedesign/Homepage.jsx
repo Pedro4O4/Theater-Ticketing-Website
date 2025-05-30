@@ -37,8 +37,7 @@ const Homepage = () => {
         setShowFullImage(true);
     };
 
-    console.log("test thing")
-    console.log("test thing")
+
     useEffect(() => {
         axios.get(`${API_URL}/api/v1/event/approved`)
             .then(response => {
