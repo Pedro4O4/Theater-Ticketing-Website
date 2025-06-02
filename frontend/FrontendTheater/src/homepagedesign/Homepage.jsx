@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Homepage.css';
 import axios from 'axios';
+import '.././index.css'
 
 const Homepage = () => {
     const [featuredEvents, setFeaturedEvents] = useState([]);
@@ -20,8 +20,6 @@ const Homepage = () => {
         return localStorage.getItem('token') !== null;
     };
 
-
-
     const handleEventClick = (event) => {
         if (isLoggedIn()) {
             navigate(`/events/${event.id}`);
@@ -36,7 +34,6 @@ const Homepage = () => {
         setCurrentImage(event);
         setShowFullImage(true);
     };
-
 
     useEffect(() => {
         axios.get(`${API_URL}/api/v1/event/approved`)
@@ -87,7 +84,6 @@ const Homepage = () => {
                 </div>
             </div>
 
-
             {/* Featured Events Section */}
             <section className="featured-section">
                 <h2 className="section-title">Featured Shows</h2>
@@ -96,42 +92,56 @@ const Homepage = () => {
                 ) : featuredEvents.length === 0 ? (
                     <div className="no-events-message">No events available at the moment.</div>
                 ) : (
-                    <div className="events-grid">
-                        {featuredEvents.map(event => (
-                            <div key={event.id} className="event-card">
-                                <div className="event-image-container" onClick={(e) => openFullImage(event, e)}>
-                                    <img
-                                        src={event.image}
-                                        alt={event.title}
-                                        className="event-image"
-                                    />
-                                    <div className="image-overlay">
-                                        <span className="view-full">Click to view full image</span>
+                    <>
+                        <div className="events-grid">
+                            {featuredEvents.map(event => (
+                                <div key={event.id} className="event-card">
+                                    <div className="event-image-container" onClick={(e) => openFullImage(event, e)}>
+                                        <img
+                                            src={event.image}
+                                            alt={event.title}
+                                            className="event-image"
+                                        />
+                                        <div className="image-overlay">
+                                            <span className="view-full">Click to view full image</span>
+                                        </div>
+                                    </div>
+                                    <div className="event-info">
+                                        <h3 className="event-title">{event.title}</h3>
+                                        <div className="event-meta">
+                                            <p className="event-date">
+                                                <i className="far fa-calendar"></i> {event.date}
+                                            </p>
+                                            <p className="event-location">
+                                                <i className="fas fa-map-marker-alt"></i> {event.location}
+                                            </p>
+                                        </div>
+                                        <div className="event-price-tag">
+                                            <span>{event.ticketPrice > 0 ? `$${event.ticketPrice}` : 'Free'}</span>
+                                        </div>
+                                        <button
+                                            className="view-details-btn"
+                                            onClick={() => handleEventClick(event)}
+                                        >
+                                            {isLoggedIn() ? 'View Details' : 'Login to View'}
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="event-info">
-                                    <h3 className="event-title">{event.title}</h3>
-                                    <div className="event-meta">
-                                        <p className="event-date">
-                                            <i className="far fa-calendar"></i> {event.date}
-                                        </p>
-                                        <p className="event-location">
-                                            <i className="fas fa-map-marker-alt"></i> {event.location}
-                                        </p>
-                                    </div>
-                                    <div className="event-price-tag">
-                                        <span>{event.ticketPrice > 0 ? `$${event.ticketPrice}` : 'Free'}</span>
-                                    </div>
-                                    <button
-                                        className="view-details-btn"
-                                        onClick={() => handleEventClick(event)}
-                                    >
-                                        {isLoggedIn() ? 'View Details' : 'Login to View'}
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+
+                        {/* Scroll Navigation Buttons */}
+                        <div className="scroll-nav">
+                            <button className="scroll-btn" onClick={() => {
+                                const container = document.querySelector('.events-grid');
+                                container.scrollBy({ left: -320, behavior: 'smooth' });
+                            }}>←</button>
+                            <button className="scroll-btn" onClick={() => {
+                                const container = document.querySelector('.events-grid');
+                                container.scrollBy({ left: 320, behavior: 'smooth' });
+                            }}>→</button>
+                        </div>
+                    </>
                 )}
             </section>
 
@@ -163,17 +173,6 @@ const Homepage = () => {
                     </div>
                 </div>
             )}
-            {/* Scroll Navigation Buttons */}
-            <div className="scroll-nav">
-                <button className="scroll-btn" onClick={() => {
-                    const container = document.querySelector('.events-grid');
-                    container.scrollBy({ left: -320, behavior: 'smooth' });
-                }}>←</button>
-                <button className="scroll-btn" onClick={() => {
-                    const container = document.querySelector('.events-grid');
-                    container.scrollBy({ left: 320, behavior: 'smooth' });
-                }}>→</button>
-            </div>
         </div>
     );
 };

@@ -1,7 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import "./Layout.css";
-
+import './Layout.css'
 export default function Layout() {
     const { user } = useAuth();
     const location = useLocation();

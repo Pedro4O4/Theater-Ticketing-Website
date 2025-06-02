@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 
 import './Navbar.css';
-
 const Navbar = () => {
     const { isAuthenticated, isAdmin, isOrganizer, logout } = useAuth();
     const navigate = useNavigate();
