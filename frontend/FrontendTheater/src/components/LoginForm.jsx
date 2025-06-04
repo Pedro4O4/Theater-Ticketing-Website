@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { toast } from "react-toastify";
 import './LoginForm.css';
-import tailwindConfig from "../../../tailwind.config.js";
 
 export default function LoginForm() {
     const [formData, setFormData] = useState({

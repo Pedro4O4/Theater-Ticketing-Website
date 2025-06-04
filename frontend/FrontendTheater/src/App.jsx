@@ -25,6 +25,7 @@ import UserBookingPage from "./components/Booking Component/UserBookingPage";
 import BookingDetails from "./components/Booking Component/BookingDetails";
 import BookingTicketForm from "./components/Booking Component/BookingTicketForm.jsx";
 import './index.css'
+import './styles.css'
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -45,6 +46,7 @@ function App() {
         <AuthProvider>
             <div className="app-container">
                 <Navbar />
+                <div className="navbar-spacer"></div>
                 <div className="main-content">
                     <Routes>
                         {/* Auth routes */}

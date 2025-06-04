@@ -4,13 +4,14 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 :root {
     /* Color palette */
     --primary-color: #e50914;
     --secondary-color: #0f1626;
     --accent-color: #f9a825;
-    --background-color: #121212;
+    --background-color: #0a0a0a;
+    --background-gradient: linear-gradient(to right, #0a0a0a, #1a0000);
+    --background-gradient-reverse: linear-gradient(to left, #0a0a0a, #1a0000);
     --text-color: #f5f5f5;
     --light-gray: #e0e0e0;
     --dark-gray: #333333;
@@ -20,13 +21,15 @@
     --font-body: 'Roboto', sans-serif;
 }
 
+
 body {
     font-family: var(--font-body), serif;
-    background-color: var(--background-color);
+    background: var(--background-gradient);
     color: var(--text-color);
     line-height: 1.6;
     min-height: 100vh;
 }
+
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading), serif;

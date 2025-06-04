@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 
@@ -8,6 +8,21 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    // Track scroll position
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                setScrolled(true);
+            } else {
+                setScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const handleLogoutClick = () => {
         setShowLogoutDialog(true);
@@ -32,7 +47,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="navbar">
+            <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
                 <div className="navbar-container">
                     <Link to="/" className="navbar-logo">
                         <span className="logo-emoji">🎟️</span> Event Tickets
@@ -67,8 +82,6 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                 )}
-
-
                             </>
                         ) : (
                             <>

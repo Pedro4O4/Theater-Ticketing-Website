@@ -1,17 +1,16 @@
-/* Enhanced LoginForm.css */
+/* Enhanced LoginForm.css with Red & Black Theme */
 :root {
-    --primary: #7b2cbf;
-    --primary-light: #9d4edd;
-    --secondary: #ff9e00;
-    --secondary-light: #ffca80;
-    --dark: #1b1b2f;
+    --primary: #e50914;
+    --primary-light: #ff3d47;
+    --secondary: #000000;
+    --secondary-light: #1a1a1a;
+    --dark: #0a0a0a;
     --success: #38b000;
     --danger: #d90429;
     --transition-speed: 0.3s;
     --input-border-radius: 12px;
-    --text-color: #e2e0ff;
-    --accent-teal: #2ec4b6;
-    --accent-pink: #ff6b97;
+    --text-color: #f5f5f5;
+    --accent-dark: #121212;
     --card-border-radius: 20px;
 }
 
@@ -21,7 +20,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--dark);
-    background-image: radial-gradient(circle at 10% 20%, rgba(91, 37, 145, 0.3) 0%, rgba(14, 14, 42, 0.5) 90%);
+    background-image: radial-gradient(circle at 10% 20%, rgba(229, 9, 20, 0.2) 0%, rgba(10, 10, 10, 0.8) 90%);
     padding: 20px;
     color: var(--text-color);
     position: relative;
@@ -45,8 +44,8 @@
     border-radius: 50%;
     animation: float 8s ease-in-out infinite;
     backdrop-filter: blur(8px);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(229, 9, 20, 0.15), rgba(10, 10, 10, 0.05));
+    border: 1px solid rgba(229, 9, 20, 0.1);
 }
 
 .shape-1 {
@@ -80,15 +79,15 @@
 }
 
 .login-card {
-    background: rgba(30, 30, 60, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     padding: 2.8rem;
     border-radius: var(--card-border-radius);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 450px;
-    border: 1px solid rgba(157, 78, 221, 0.2);
+    border: 1px solid rgba(229, 9, 20, 0.2);
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
@@ -96,7 +95,8 @@
 
 .login-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 30px 60px rgba(229, 9, 20, 0.3);
+    border-color: rgba(229, 9, 20, 0.4);
 }
 
 .card-decoration {
@@ -105,7 +105,7 @@
     right: 0;
     width: 150px;
     height: 150px;
-    background: linear-gradient(135deg, rgba(157, 78, 221, 0.3), rgba(46, 196, 182, 0.2));
+    background: linear-gradient(135deg, rgba(229, 9, 20, 0.3), rgba(0, 0, 0, 0.2));
     border-radius: 0 0 0 100%;
     z-index: -1;
 }
@@ -127,9 +127,10 @@
     left: 50%;
     width: 80px;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-light), var(--accent-teal));
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
     transform: translateX(-50%);
     border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(229, 9, 20, 0.5);
 }
 
 /* Form elements styling */
@@ -158,25 +159,25 @@
 
 .form-input {
     width: 100%;
-    border: 2px solid rgba(157, 78, 221, 0.2);
-    background-color: rgba(30, 30, 60, 0.4);
+    border: 2px solid rgba(229, 9, 20, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
     color: var(--text-color);
     border-radius: var(--input-border-radius);
     font-size: 1rem;
     transition: all var(--transition-speed) ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     padding-right: 2.5rem;
 }
 
 .form-input::placeholder {
-    color: rgba(157, 78, 221, 0.5);
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .form-input:focus {
     outline: none;
-    border-color: var(--accent-teal);
-    box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: rgba(30, 30, 60, 0.6);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.15), 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .btn-primary {
@@ -187,7 +188,7 @@
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-speed) ease;
-    box-shadow: 0 10px 20px rgba(123, 44, 191, 0.4);
+    box-shadow: 0 10px 20px rgba(229, 9, 20, 0.4);
     position: relative;
     overflow: hidden;
     letter-spacing: 1px;
@@ -211,7 +212,7 @@
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(123, 44, 191, 0.6);
+    box-shadow: 0 15px 30px rgba(229, 9, 20, 0.6);
     background: linear-gradient(135deg, var(--primary-light), var(--primary));
 }
 
@@ -225,7 +226,7 @@
 }
 
 .btn-primary:disabled {
-    background: linear-gradient(135deg, #a88bc7, #c9abdf);
+    background: linear-gradient(135deg, #a83232, #c96a6a);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -298,11 +299,11 @@
     left: 25%;
     width: 50%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(157, 78, 221, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(229, 9, 20, 0.3), transparent);
 }
 
 .redirect-link a {
-    color: var(--accent-teal);
+    color: var(--primary-light);
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
@@ -317,13 +318,13 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent-teal), var(--primary-light));
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
     transition: width 0.3s ease;
 }
 
 .redirect-link a:hover {
-    color: var(--secondary-light);
-    text-shadow: 0 0 10px rgba(46, 196, 182, 0.5);
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
 }
 
 .redirect-link a:hover::after {
