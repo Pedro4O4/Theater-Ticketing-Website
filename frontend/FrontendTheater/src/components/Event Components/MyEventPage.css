@@ -1,10 +1,12 @@
-/* MyEventPage.css */
+/* MyEventPage.css - Dark theme with red accents */
 
 /* Container and layout */
 .event-list-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    background-color: #121212;
+    color: #f0f0f0;
 }
 
 /* Header styling */
@@ -14,12 +16,12 @@
     align-items: center;
     margin-bottom: 2.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #333;
 }
 
 .page-title {
     font-size: 2.2rem;
-    color: #333;
+    color: #f0f0f0;
     margin: 0;
     font-weight: 600;
 }
@@ -27,11 +29,12 @@
 .organizer-buttons {
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 .create-event-button {
     padding: 0.75rem 1.5rem;
-    background-color: #27ae60;
+    background-color: #e41c3c;
     color: white;
     border: none;
     border-radius: 6px;
@@ -41,9 +44,22 @@
 }
 
 .create-event-button:hover {
-    background-color: #219653;
+    background-color: #c41230;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+    box-shadow: 0 4px 8px rgba(228, 28, 60, 0.3);
+}
+
+/* Search input */
+.search-input {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #e41c3c !important;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+.search-input::placeholder {
+    color: #bbbbbb;
 }
 
 /* Event grid styling */
@@ -59,25 +75,31 @@
 .event-card-with-actions {
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(228, 28, 60, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: white;
-    border: 1px solid #e2e8f0;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    position: relative;
 }
 
 .event-card-with-actions:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 16px rgba(228, 28, 60, 0.25);
 }
 
 /* Action buttons container */
 .event-actions {
     display: flex;
     padding: 1rem;
-    background-color: #f8f9fa;
-    border-top: 1px solid #e2e8f0;
+    background-color: #1a1a1a;
+    border-top: 1px solid #333;
     gap: 0.75rem;
     flex-wrap: wrap;
+}
+
+.event-title {
+    color: #f0f0f0;
+    margin-right: auto;
 }
 
 /* Button styling */
@@ -109,13 +131,49 @@
     background-color: #c53030;
 }
 
+.view-events-button {
+    background-color: #2d3748;
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid #e41c3c;
+}
+
+.view-events-button:hover {
+    background-color: #1a202c;
+    box-shadow: 0 2px 8px rgba(228, 28, 60, 0.3);
+    transform: translateY(-2px);
+}
+
+.analytics-button {
+    background: linear-gradient(135deg, #e41c3c, #9c1330);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.analytics-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(228, 28, 60, 0.3);
+}
+
 /* Status messages */
 .loading {
     padding: 3rem 1.5rem;
     text-align: center;
     font-size: 1.2rem;
-    color: #718096;
-    background-color: #f7fafc;
+    color: #f0f0f0;
+    background-color: #1a1a1a;
     border-radius: 8px;
     margin: 2rem 0;
 }
@@ -123,27 +181,184 @@
 .error-message {
     padding: 1.5rem;
     text-align: center;
-    color: #e53e3e;
-    background-color: #fff5f5;
+    color: #ff6b6b;
+    background-color: rgba(228, 28, 60, 0.1);
     border-radius: 8px;
     margin: 2rem 0;
-    border: 1px solid #fed7d7;
+    border: 1px solid #e41c3c;
 }
 
 .no-events-message {
     padding: 4rem 2rem;
     text-align: center;
-    background-color: #f7fafc;
+    background-color: #1a1a1a;
     border-radius: 8px;
     margin: 2rem auto;
     max-width: 600px;
-    border: 1px dashed #cbd5e0;
+    border: 1px dashed #444;
 }
 
 .no-events-message p {
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
-    color: #4a5568;
+    color: #bbbbbb;
+}
+
+.no-events-container {
+    max-width: 600px;
+    margin: 3rem auto;
+}
+
+.no-events {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid #333;
+}
+
+.no-events h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #f0f0f0;
+}
+
+.no-events p {
+    color: #bbbbbb;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.no-events .event-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #e41c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.no-events .event-button:hover {
+    background-color: #c41230;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(228, 28, 60, 0.4);
+}
+
+/* Ticket badges */
+.tickets-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #e41c3c 0%, #9c1330 100%);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.tickets-badge:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 10px rgba(228, 28, 60, 0.4);
+}
+
+.tickets-count {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.tickets-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
+/* Disabled buttons */
+.event-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #2d3748;
+    color: #999;
+    pointer-events: none;
+}
+
+.cancel-button.disabled {
+    background-color: #2d3748;
+    color: #999;
+}
+
+/* Tooltips */
+.button-tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.approval-tooltip {
+    visibility: hidden;
+    position: absolute;
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    width: 160px;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e41c3c;
+    z-index: 10;
+}
+
+.approval-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1a1a1a transparent transparent transparent;
+}
+
+.button-tooltip-container:hover .approval-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Animation for tooltip */
+@keyframes tooltip-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.button-tooltip-container:hover .approval-tooltip {
+    visibility: visible;
+    opacity: 1;
+    animation: tooltip-fade-in 0.3s;
+}
+
+/* Event buttons container */
+.event-buttons-container {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
 }
 
 /* Responsive adjustments */
@@ -178,207 +393,4 @@
         min-width: 80px;
         text-align: center;
     }
-}
-/* Add these styles to your MyEventPage.css */
-
-.no-events-container {
-    max-width: 600px;
-    margin: 3rem auto;
-}
-
-.no-events {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    padding: 3rem 2rem;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border: 1px solid #e2e8f0;
-}
-
-.no-events h2 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.no-events p {
-    color: #718096;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-    line-height: 1.5;
-}
-
-.no-events .event-button {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: #4285f4;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-}
-
-.no-events .event-button:hover {
-    background-color: #3367d6;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(66,133,244,0.3);
-}
-.organizer-buttons {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.view-events-button {
-    background-color: #34a853;
-    color: white;
-    padding: 0.75rem 1.25rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-.view-events-button:hover {
-    background-color: #2d9249;
-    box-shadow: 0 2px 8px rgba(52, 168, 83, 0.3);
-    transform: translateY(-2px);
-}.analytics-button {
-     background: linear-gradient(135deg, #6e8efb, #a777e3);
-     color: white;
-     padding: 0.75rem 1.5rem;
-     border-radius: 8px;
-     text-decoration: none;
-     font-weight: 600;
-     display: inline-flex;
-     align-items: center;
-     justify-content: center;
-     transition: all 0.3s ease;
-     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
- }
-
-.analytics-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}.event-buttons-container {
-     display: flex;
-     gap: 5px;
-     margin-top: 5px;
- }
-
-.tickets-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    color: white;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    z-index: 2;
-}
-
-.tickets-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    z-index: 2;
-    transition: all 0.3s ease;
-}
-
-.tickets-badge:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-}
-
-.tickets-count {
-    font-weight: 700;
-    font-size: 1.1rem;
-}
-
-.tickets-label {
-    font-size: 0.8rem;
-    opacity: 0.9;
-    margin-top: 2px;
-}.event-button.disabled {
-     opacity: 0.6;
-     cursor: not-allowed;
-     background-color: #f1f1f1;
-     color: #999;
-     pointer-events: none;
- }
-
-.cancel-button.disabled {
-    background-color: #f1f1f1;
-    color: #999;
-}
-.button-tooltip-container {
-    position: relative;
-    display: inline-block;
-}
-
-.approval-tooltip {
-    visibility: hidden;
-    position: absolute;
-    background-color: #4ade80;
-    color: #064e3b;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 10px;
-    width: 160px;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -80px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 0.8rem;
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid #22c55e;
-    z-index: 10;
-}
-
-.approval-tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #4ade80 transparent transparent transparent;
-}
-
-.button-tooltip-container:hover .approval-tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Add a subtle animation for the tooltip */
-@keyframes tooltip-fade-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.button-tooltip-container:hover .approval-tooltip {
-    visibility: visible;
-    opacity: 1;
-    animation: tooltip-fade-in 0.3s;
 }

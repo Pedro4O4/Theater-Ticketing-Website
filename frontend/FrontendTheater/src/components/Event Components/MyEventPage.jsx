@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import EventCard from './EventCard';
-import './EventList.css';
 import './MyEventPage.css';
 
 const MyEventsPage = () => {

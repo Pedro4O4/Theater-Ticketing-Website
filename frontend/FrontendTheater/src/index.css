@@ -193,7 +193,7 @@ button:hover {
 /* Fix Event Card Styles */
 .event-card {
     min-width: 300px;
-    background-color: #000000 !important;
+    background-color: #121212 !important;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
@@ -209,10 +209,6 @@ button:hover {
     border: 1px solid rgba(229, 9, 20, 0.3);
 }
 
-.event-info {
-    padding: 1.5rem;
-    background-color: #000000;
-}
 
 .event-meta {
     display: flex;
@@ -298,7 +294,7 @@ button:hover {
 
 .event-price-tag {
     display: inline-block;
-    background: var(--primary-color);
+    background: darkgoldenrod;
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -319,7 +315,7 @@ button:hover {
 }
 
 .view-details-btn:hover {
-    background: var(--primary-color);
+    background: black;
     color: white;
     transform: translateY(-2px);
 }
@@ -505,4 +501,14 @@ button:hover {
         width: 95%;
         padding: 1.5rem;
     }
+}
+/* App container with dark theme */
+.app-container {
+    background-color: var(--background-color);
+    background: var(--background-gradient);
+    color: var(--text-color);
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
 }
