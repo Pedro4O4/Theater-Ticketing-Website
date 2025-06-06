@@ -1,5 +1,5 @@
 const Event = require('../Models/Event');
-
+const Booking = require('../Models/Booking'); // Assuming you have a Booking model
 
 
 const eventcontroller = {
@@ -199,7 +199,7 @@ const eventcontroller = {
                     message: 'Event not found'
                 });
             }
-
+            await Booking.deleteMany({ eventId: event._id });
             await Event.deleteOne(event)
 
             res.status(200).json({

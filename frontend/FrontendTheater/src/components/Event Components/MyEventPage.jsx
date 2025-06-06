@@ -11,6 +11,7 @@ const MyEventsPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
     const navigate = useNavigate();
     const { user } = useAuth();
 
@@ -70,15 +71,20 @@ const MyEventsPage = () => {
             return;
         }
 
+        setIsDeleting(true);
         try {
+            // Direct delete without OTP verification
             await axios.delete(`http://localhost:3000/api/v1/event/${eventId}`, {
                 withCredentials: true
             });
 
-            // Use both id and _id in filter to ensure it works with either format
-            setEvents(events.filter(event => (event.id || event._id) !== eventId));
+            // Update UI after successful deletion
+            setFilteredEvents(prev => prev.filter(event => (event.id || event._id) !== eventId));
+            setEvents(prev => prev.filter(event => (event.id || event._id) !== eventId));
         } catch (err) {
             setError('Failed to delete event: ' + (err.response?.data?.message || err.message));
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -143,18 +149,15 @@ const MyEventsPage = () => {
                                     }
                                 </div>
 
-                                {/* Delete button with tooltip for approved events */}
+                                {/* Delete button */}
                                 <div className="button-tooltip-container">
                                     <button
-                                        onClick={event.status !== 'approved' ? () => handleDelete(event.id || event._id) : undefined}
-                                        className={`event-button cancel-button ${event.status === 'approved' ? 'disabled' : ''}`}
-                                        disabled={event.status === 'approved'}
+                                        onClick={() => handleDelete(event.id || event._id)}
+                                        className="delete-button"
+                                        disabled={isDeleting}
                                     >
-                                        Delete
+                                        {isDeleting ? 'Deleting...' : 'Delete'}
                                     </button>
-                                    {event.status === 'approved' &&
-                                        <div className="approval-tooltip">Approved events cannot be deleted</div>
-                                    }
                                 </div>
 
                                 {event.remainingTickets !== undefined && (
