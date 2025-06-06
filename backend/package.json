@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0",
     "mongoose": "^8.14.1",
+    "multer": "^2.0.0",
     "nodemailer": "^6.10.1",
     "vite": "^6.3.5"
   },
