@@ -394,3 +394,179 @@
         text-align: center;
     }
 }
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(6px);
+}
+
+/* Modal content with dark theme */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(145deg, #1c1c1c, #0f0f0f);
+    border: 1px solid #3a3a3a;
+    border-left: 4px solid #cc0000;
+    border-radius: 10px;
+    padding: 28px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 51, 51, 0.2);
+    color: #f0f0f0;
+    animation: modalFadeIn 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    min-height: 350px;
+}
+
+/* Modal header with red accent */
+.modal-header {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #ff3333;
+    border-bottom: 1px solid #333;
+    padding-bottom: 12px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal message - moved up with more emphasis */
+.modal-message {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #eeeeee;
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 10px;
+}
+
+/* OTP input container */
+.otp-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 40px auto;
+}
+
+/* Individual OTP input */
+.otp-digit {
+    width: 40px;
+    height: 50px;
+    font-size: 22px;
+    text-align: center;
+    background-color: #252525;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.otp-digit:focus {
+    outline: none;
+    border-color: #ff3333;
+    background-color: #2a2a2a;
+    box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Button container - moved down */
+.modal-content > div:last-child {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;
+}
+
+/* Button styles */
+.modal-button {
+    flex: 1;
+    padding: 15px 10px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Confirm button - red theme */
+.modal-button.confirm {
+    background: linear-gradient(145deg, #e00000, #aa0000);
+    color: white;
+    border-bottom: 2px solid #800000;
+}
+
+.modal-button.confirm:hover:not(:disabled) {
+    background: linear-gradient(145deg, #ff0000, #cc0000);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3);
+}
+
+.modal-button.confirm:active:not(:disabled) {
+    transform: translateY(1px);
+    background: linear-gradient(145deg, #cc0000, #990000);
+    box-shadow: 0 1px 2px rgba(255, 0, 0, 0.3);
+    border-bottom: 2px solid transparent;
+}
+
+/* Cancel button - dark theme */
+.modal-button.cancel {
+    background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+    color: #eee;
+    border-bottom: 2px solid #222;
+}
+
+.modal-button.cancel:hover:not(:disabled) {
+    background: linear-gradient(145deg, #444, #333);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.modal-button.cancel:active:not(:disabled) {
+    transform: translateY(1px);
+    background: linear-gradient(145deg, #333, #222);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid transparent;
+}
+
+/* Disabled button states */
+.modal-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Animation for modal */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* OTP inputs animation */
+.otp-digit {
+    animation: inputPulse 1.5s ease-in-out;
+}
+
+@keyframes inputPulse {
+    0% { border-color: #444; }
+    50% { border-color: #ff3333; box-shadow: 0 0 15px rgba(255, 51, 51, 0.3); }
+    100% { border-color: #444; }
+}
