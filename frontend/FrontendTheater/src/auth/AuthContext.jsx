@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         try {
             console.log("before post login");
             const response = await axios.post("http://localhost:3000/api/v1/login", credentials, {
-                withCredentials: true, // This is crucial for cookies to be sent/received
+                withCredentials: true,
             });
             console.log("after post login");
 
@@ -52,8 +52,6 @@ export const AuthProvider = ({ children }) => {
                 setAuthenticated(true);
                 console.log(response.data);
 
-                // Since token is stored in HTTP-only cookie, we don't need to store it in localStorage
-                // Instead, mark that the user is authenticated in localStorage
                 localStorage.setItem('isAuthenticated', 'true');
 
                 return {
@@ -68,6 +66,17 @@ export const AuthProvider = ({ children }) => {
             };
         } catch (err) {
             console.error(err);
+
+            // Check if this is a verification required error
+            if (err.response?.status === 403 &&
+                err.response?.data?.message?.includes("verification")) {
+                return {
+                    success: false,
+                    requiresVerification: true,
+                    error: err.response.data.message
+                };
+            }
+
             return {
                 success: false,
                 error: err.response?.data?.message || "Login failed"

@@ -17,6 +17,8 @@ router.put('/forgetPassword', UserController.forgetPassword);
 
 router.post('/verify-otp', UserController["verify-otp"]);
 
+router.post('/verify-otp-register', UserController["verifyRegistration"]);
+
 router.post('/logout',logout)
 
 module.exports = router;
