@@ -129,7 +129,7 @@ const UserBookingsPage = () => {
                                         </span></p>
                                     </div>
 
-                                    <div className="booking-actions">
+                                    <div className="bookings-actions">
                                         <Link to={`/bookings/${booking._id}`} className="view-details-btn">View Details</Link>
                                         {booking.status !== 'Cancelled' && (
                                             <button

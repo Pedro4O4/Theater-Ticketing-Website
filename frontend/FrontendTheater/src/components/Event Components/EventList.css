@@ -1,4 +1,4 @@
-/* EventList.css - Compact aesthetic with sequential layout */
+/* EventList.css - Modern Dark & Red Theme */
 
 .event-list-container {
     display: flex;
@@ -14,7 +14,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.8rem;
+    margin-bottom: 25px;
     flex-wrap: wrap;
     gap: 0.6rem;
 }
@@ -35,6 +35,29 @@
 
 .error-message {
     color: #e53e3e;
+}
+
+.search-container {
+    margin: 0 20px;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 1rem;
+    background-color: black;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4c51bf;
+    box-shadow: 0 2px 8px rgba(76, 81, 191, 0.2);
 }
 
 /* More compact grid with smaller gap */
@@ -218,69 +241,6 @@
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .event-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .event-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .event-card-with-actions .event-image-container {
-        height: 160px;
-    }
-
-    .event-card-with-actions .event-info {
-        min-height: 50px;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-    .event-grid {
-        gap: 0.8rem;
-    }
-
-    .event-card-with-actions .event-image-container {
-        height: 130px;
-    }
-
-    .event-card-with-actions .event-info {
-        min-height: 60px;
-        padding: 0.6rem 0.8rem;
-    }
-}
-.search-container {
-    margin: 0 20px;
-    flex-grow: 1;
-    max-width: 500px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    font-size: 1rem;
-    background-color: black;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #4c51bf;
-    box-shadow: 0 2px 8px rgba(76, 81, 191, 0.2);
-}
-
-.event-header {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
-}
 /* Limited tickets button */
 .book-now-btn.limited {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
@@ -369,6 +329,7 @@
     border-color: rgba(255, 255, 255, 0.15);
     transform: translateY(-1px);
 }
+
 .profile-header-banner {
     display: flex;
     align-items: center;
@@ -495,6 +456,7 @@
     animation: text-shimmer 8s ease-in-out infinite;
 }
 
+
 .profile-greeting h2::before {
     content: '';
     position: absolute;
@@ -517,39 +479,6 @@
     100% { background-position: 0 center; }
 }
 
-.role-indicator {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-left: 8px;
-    position: relative;
-    top: -1px;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    background: linear-gradient(90deg, #ff3366, #ff0844, #ff3366);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-fill-color: transparent;
-    animation: shine 6s linear infinite;
-    filter: drop-shadow(0 0 2px rgba(255, 51, 102, 0.3));
-    transition: all 0.3s ease;
-    padding: 0.1em 0.3em;
-    display: inline-block;
-}
-
-.role-indicator::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 51, 102, 0.7), transparent);
-    transform: scaleX(0.7);
-    opacity: 0.7;
-    transition: all 0.3s ease;
-}
 
 .role-indicator:hover::after {
     transform: scaleX(1);
@@ -584,18 +513,88 @@
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Responsive styles */
-@media (min-width: 1024px) {
-    .profile-header-banner {
-        max-width: 80%;
-    }
-
-    .profile-avatar-container {
-        right: 15%;
-    }
+/* Modal Styling */
+.modal-content {
+    position: relative;
+    max-width: 95%;
+    max-height: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
 }
 
+.modal-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    animation: imageAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.full-image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    backdrop-filter: blur(2px);
+}
+
+.close-modal {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border: none;
+    font-size: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.close-modal:hover {
+    color: #ff1f53;
+    transform: scale(1.08);
+}
+
+@keyframes imageAppear {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+    .event-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .event-card-with-actions .event-image-container {
+        height: 160px;
+    }
+
+    .event-card-with-actions .event-info {
+        min-height: 50px;
+    }
+
     .profile-header-banner {
         padding: 0.7rem;
     }
@@ -616,6 +615,29 @@
 
     .role-indicator {
         font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .event-grid {
+        gap: 0.8rem;
+    }
+
+    .event-card-with-actions .event-image-container {
+        height: 130px;
+    }
+
+    .event-card-with-actions .event-info {
+        min-height: 60px;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .profile-header-banner {
+        max-width: 80%;
+    }
+
+    .profile-avatar-container {
+        right: 15%;
     }
 }
 

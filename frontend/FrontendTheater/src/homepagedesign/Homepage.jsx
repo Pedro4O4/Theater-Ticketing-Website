@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '.././index.css'
+import '.././index.css';
+import { getImageUrl } from '../utils/imageHelper';
 
 const Homepage = () => {
     const [featuredEvents, setFeaturedEvents] = useState([]);
@@ -44,7 +45,7 @@ const Homepage = () => {
                         title: event.title,
                         date: new Date(event.date).toLocaleDateString(),
                         location: event.location,
-                        image: event.image || '/placeholder-image.jpg',
+                        image: getImageUrl(event.image) || '/placeholder-image.jpg',
                         ticketPrice: event.ticketPrice,
                         remainingTickets: event.remainingTickets
                     }));
@@ -107,7 +108,7 @@ const Homepage = () => {
                                         </div>
                                     </div>
                                     <div className="event-info">
-                                        <h3 className="event-title">{event.title}</h3>
+                                        <h3 className="events-titles">{event.title}</h3>
                                         <div className="event-meta">
                                             <p className="event-date">
                                                 <i className="far fa-calendar"></i> {event.date}
@@ -120,7 +121,7 @@ const Homepage = () => {
                                             <span>{event.ticketPrice > 0 ? `$${event.ticketPrice}` : 'Free'}</span>
                                         </div>
                                         <button
-                                            className="view-details-btn"
+                                            className="view-detail-btn"
                                             onClick={() => handleEventClick(event)}
                                         >
                                             {isLoggedIn() ? 'View Details' : 'Login to View'}
@@ -151,10 +152,6 @@ const Homepage = () => {
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <img src={currentImage.image} alt={currentImage.title} />
                         <button className="close-modal" onClick={() => setShowFullImage(false)}>×</button>
-                        <div className="modal-buttons">
-                            <Link to="/login" className="login-btn">Login</Link>
-                            <Link to="/register" className="register-btn">Register</Link>
-                        </div>
                     </div>
                 </div>
             )}

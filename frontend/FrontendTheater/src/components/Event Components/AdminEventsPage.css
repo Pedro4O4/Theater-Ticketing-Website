@@ -593,25 +593,6 @@ body {
 
     /* Futuristic Creative Search Bar */
 }
-.profile-header-banner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.8rem;
-    margin: 0 auto 1.2rem;
-    width: 100%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(20, 20, 20, 0.7);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(8px);
-    grid-column: 1 / -1;
-    justify-self: center;
-    max-width: 100%;
-    position: relative;
-    overflow: hidden;
-}
 
 .profile-header-banner:hover {
     transform: translateY(-2px);
@@ -638,20 +619,6 @@ body {
     transition: all 0.3s ease;
 }
 
-.profile-avatar-container::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ff0f43, #a71b41);
-    z-index: -1;
-    opacity: 0.85;
-    transition: all 0.4s ease;
-    animation: subtle-pulse 3s infinite alternate;
-}
 
 @keyframes subtle-pulse {
     0% { transform: scale(1); opacity: 0.85; }
@@ -667,22 +634,7 @@ body {
     opacity: 0.9;
 }
 
-.profile-small-avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: #a71b41;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    font-weight: bold;
-    object-fit: cover;
-    border: 3px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-}
+
 
 .profile-small-avatar:hover {
     transform: rotate(5deg);
@@ -696,28 +648,6 @@ body {
     width: 100%;
 }
 
-.profile-greeting h2 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: white;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 0 2px rgba(255, 255, 255, 0.1);
-    position: relative;
-    transition: all 0.4s ease;
-    padding: 0.1em 0;
-    overflow: hidden;
-    background: linear-gradient(90deg, #ffffff, #f0f0f0, #ffffff);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: text-shimmer 8s ease-in-out infinite;
-}
 
 .profile-greeting h2::before {
     content: '';

@@ -2,32 +2,50 @@
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
-    background-color: #f8f9fa;
+    background-color: #1a1a1a;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    color: #333;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    color: #f0f0f0;
+    background-image: linear-gradient(145deg, #1a1a1a 0%, #222222 100%);
 }
 
 .update-profile-container h2 {
     margin-bottom: 1.5rem;
-    color: #2c3e50;
+    color: #ffffff;
     text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 1.8rem;
+    position: relative;
+    padding-bottom: 0.8rem;
+}
+
+.update-profile-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff0f43, #a71b41);
+    border-radius: 2px;
 }
 
 .update-profile-form {
-    background-color: #fff;
+    background: linear-gradient(145deg, #222222 0%, #1c1c1c 100%);
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border-top: 3px solid #a71b41;
 }
 
 .error-message {
-    background-color: #f8d7da;
-    color: #721c24;
+    background: rgba(231, 76, 60, 0.2);
+    color: #ff6b6b;
     padding: 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
     margin-bottom: 1.5rem;
-    border-left: 4px solid #dc3545;
+    border-left: 3px solid #e74c3c;
 }
 
 .form-group {
@@ -38,43 +56,54 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #495057;
+    color: #e0e0e0;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #495057;
-    transition: border-color 0.2s;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #ffffff;
+    transition: all 0.3s ease;
     font-size: 1rem;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #3498db;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 15, 67, 0.4);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 0 0 2px rgba(167, 27, 65, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group input[type="file"] {
+    padding: 0.5rem;
+    background: transparent;
 }
 
 .password-section {
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .password-section h3 {
     margin-top: 0;
     font-size: 1.2rem;
-    color: #2c3e50;
+    color: #ffffff;
 }
 
 .password-note {
     margin-bottom: 1rem;
-    color: #6c757d;
+    color: #b0b0b0;
     font-style: italic;
     font-size: 0.9rem;
 }
@@ -88,43 +117,52 @@
 
 .cancel-btn {
     padding: 0.75rem 1.5rem;
-    background-color: #e9ecef;
-    color: #495057;
-    border: none;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
 }
 
 .cancel-btn:hover {
-    background-color: #dee2e6;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .save-btn {
     padding: 0.75rem 1.5rem;
-    background-color: #3498db;
+    background: linear-gradient(90deg, #ff0f43, #a71b41);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(167, 27, 65, 0.3);
 }
 
 .save-btn:hover {
-    background-color: #2980b9;
+    background: linear-gradient(90deg, #ff1f53, #b72b51);
+    box-shadow: 0 6px 14px rgba(167, 27, 65, 0.4);
+    transform: translateY(-2px);
 }
 
 .save-btn:disabled {
-    background-color: #a2c8e6;
+    background: linear-gradient(90deg, #813040, #5a1f2e);
+    opacity: 0.7;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 @media (max-width: 768px) {
     .update-profile-container {
         padding: 1rem;
+        margin: 1rem;
     }
 
     .update-profile-form {

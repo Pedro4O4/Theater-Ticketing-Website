@@ -409,22 +409,7 @@
     backdrop-filter: blur(6px);
 }
 
-/* Modal content with dark theme */
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(145deg, #1c1c1c, #0f0f0f);
-    border: 1px solid #3a3a3a;
-    border-left: 4px solid #cc0000;
-    border-radius: 10px;
-    padding: 28px;
-    width: 90%;
-    max-width: 420px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 51, 51, 0.2);
-    color: #f0f0f0;
-    animation: modalFadeIn 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-    min-height: 350px;
-}
+
 
 /* Modal header with red accent */
 .modal-header {
@@ -478,13 +463,7 @@
     box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Button container - moved down */
-.modal-content > div:last-child {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: auto;
-}
+
 
 /* Button styles */
 .modal-button {

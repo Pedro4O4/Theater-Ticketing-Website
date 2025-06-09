@@ -270,13 +270,28 @@ button:hover {
 .event-info {
     padding: 1.5rem;
 }
-
-.event-title {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    color: var(--text-color);
+.events-titles {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    background-color: white;
+    color: var(--secondary-color);
+    letter-spacing: 0.02em;
+    position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+.events-titles::after {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    bottom: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color), transparent);
+}
 .event-meta {
     display: flex;
     flex-direction: column;
@@ -294,7 +309,7 @@ button:hover {
 
 .event-price-tag {
     display: inline-block;
-    background: darkgoldenrod;
+    background: darkred;
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -302,24 +317,30 @@ button:hover {
     font-weight: bold;
     margin-bottom: 1.25rem;
 }
-
-.view-details-btn {
+.view-detail-btn {
     width: 100%;
     padding: 0.75rem;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.8);
     border: 1px solid var(--primary-color);
     color: var(--primary-color);
-    border-radius: 4px;
+    border-radius: 6px;
     font-weight: 600;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(167, 27, 65, 0.1);
 }
 
-.view-details-btn:hover {
-    background: black;
+.view-detail-btn:hover {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.9), rgba(25, 0, 0, 0.95));
     color: white;
     transform: translateY(-2px);
+    border-color: #ff1f53;
+    box-shadow: 0 6px 14px rgba(167, 27, 65, 0.3);
 }
 
+.view-detail-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(167, 27, 65, 0.2);
+}
 /* Modal Styles */
 .full-image-modal, .login-prompt-overlay {
     position: fixed;

@@ -1,21 +1,22 @@
 .book-ticket-form {
-    background: white;
+    background: #161616;
     padding: 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     max-width: 550px;
     width: 90%;
     margin: 2.5rem auto;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 31, 83, 0.15);
 }
 
 .book-ticket-form:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 15px 30px rgba(255, 31, 83, 0.2);
 }
 
 .book-ticket-form h2 {
-    color: #2c3e50;
+    color: #ffffff;
     margin-bottom: 2rem;
     text-align: center;
     font-size: 1.8rem;
@@ -32,7 +33,7 @@
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(90deg, #28a745, #5e72e4);
+    background: linear-gradient(90deg, #ff1f53, #ff4d6d);
     border-radius: 3px;
 }
 
@@ -43,7 +44,7 @@
 .form-group label {
     display: block;
     margin-bottom: 0.75rem;
-    color: #495057;
+    color: #e0e0e0;
     font-weight: 500;
     font-size: 1.05rem;
 }
@@ -51,68 +52,70 @@
 .form-group input {
     width: 100%;
     padding: 0.9rem 1rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #333;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #222;
+    color: #ffffff;
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: #5e72e4;
-    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.2);
+    border-color: #ff1f53;
+    box-shadow: 0 0 0 3px rgba(255, 31, 83, 0.2);
 }
 
 .tickets-remaining {
     display: inline-block;
     margin-left: 8px;
-    color: #6c757d;
+    color: #e0e0e0;
     font-size: 0.9rem;
     font-weight: normal;
     padding: 3px 8px;
-    background-color: #f8f9fa;
+    background-color: #333;
     border-radius: 4px;
 }
 
 .price-summary {
-    background: linear-gradient(145deg, #f8f9fa, #ffffff);
+    background: linear-gradient(145deg, #222, #1c1c1c);
     padding: 1.25rem;
     border-radius: 10px;
     margin-bottom: 1.8rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid #333;
 }
 
 .price-summary p {
     margin: 0.5rem 0;
-    color: #555;
+    color: #d0d0d0;
     font-size: 1.05rem;
 }
 
 .total-price {
     font-size: 1.4rem;
     font-weight: bold;
-    color: #2c3e50;
+    color: #ffffff;
     padding-top: 0.5rem;
     margin-top: 0.5rem !important;
-    border-top: 1px dashed #e0e0e0;
+    border-top: 1px dashed #444;
 }
 
 .error-message {
-    color: #dc3545;
-    background: #f8d7da;
+    color: #ff8c9e;
+    background: rgba(255, 31, 83, 0.15);
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
-    border-left: 4px solid #dc3545;
+    border-left: 4px solid #ff1f53;
     font-size: 0.95rem;
 }
 
 .error-hint {
     font-size: 0.85rem;
     margin-top: 0.75rem;
-    color: #6c757d;
+    color: #b0b0b0;
 }
 
 .form-actions {
@@ -130,33 +133,33 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .cancel-button {
-    background: #6c757d;
+    background: #333;
     color: white;
 }
 
 .cancel-button:hover {
-    background: #5a6268;
+    background: #444;
     transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
 }
 
 .book-button {
-    background: linear-gradient(45deg, #28a745, #20c997);
+    background: linear-gradient(45deg, #ff1f53, #ff4d6d);
     color: white;
 }
 
 .book-button:hover {
-    background: linear-gradient(45deg, #218838, #1aa179);
+    background: linear-gradient(45deg, #ff0a43, #ff3961);
     transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(40, 167, 69, 0.25);
+    box-shadow: 0 6px 10px rgba(255, 31, 83, 0.3);
 }
 
 .book-button:disabled {
-    background: linear-gradient(45deg, #adb5bd, #ced4da);
+    background: linear-gradient(45deg, #444, #555);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -166,32 +169,33 @@
     width: 100%;
     padding: 0.9rem 1rem;
     border-radius: 8px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #333;
     margin-bottom: 15px;
-    background-color: white;
+    background-color: #222;
+    color: #ffffff;
     font-size: 1rem;
     appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23495057' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e0e0e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 16px;
     transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .event-select:focus {
     outline: none;
-    border-color: #5e72e4;
-    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.2);
+    border-color: #ff1f53;
+    box-shadow: 0 0 0 3px rgba(255, 31, 83, 0.2);
 }
 
 .event-summary {
-    background-color: #fff;
+    background-color: #222;
     border-radius: 10px;
     padding: 1.5rem;
     margin: 1.5rem 0;
-    border-left: 4px solid #5e72e4;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #ff1f53;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
 }
 
@@ -201,7 +205,7 @@
 
 .event-summary h4 {
     margin-top: 0;
-    color: #2c3e50;
+    color: #ffffff;
     font-size: 1.3rem;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -209,12 +213,12 @@
 
 .event-summary p {
     margin: 8px 0;
-    color: #4a5568;
+    color: #d0d0d0;
     line-height: 1.5;
 }
 
 .event-summary p strong {
-    color: #343a40;
+    color: #ffffff;
     font-weight: 600;
     display: inline-block;
     min-width: 100px;
@@ -223,37 +227,7 @@
 .loading {
     text-align: center;
     padding: 2rem;
-    color: #5e72e4;
+    color: #ff1f53;
     font-size: 1.1rem;
     animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-}
-
-@media (max-width: 480px) {
-    .book-ticket-form {
-        padding: 1.5rem;
-        margin: 1.5rem auto;
-    }
-
-    .form-actions {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .form-actions button {
-        width: 100%;
-    }
-
-    .event-summary h4 {
-        font-size: 1.2rem;
-    }
-
-    .total-price {
-        font-size: 1.3rem;
-    }
 }

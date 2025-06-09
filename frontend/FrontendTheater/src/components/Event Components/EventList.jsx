@@ -138,7 +138,7 @@ const EventList = () => {
                             <div className="profile-greeting">
                                 <h2>
                                     Hi, {user?.name || "User"}!
-                                    <span className="role-indicator">{user?.role || "Standard User"}</span>
+                                    <span className="role-indicator">{user?.role}</span>
                                 </h2>
                                 {user?.role && (
                                     <div className="profile-stats">
