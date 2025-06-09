@@ -1,8 +1,10 @@
 .footer {
-  background-color: #1a1a2e;
-  color: #fff;
+  background-color: #0a0a0a;
+  background-image: linear-gradient(to right, #000000, #1a0000);
+  color: #f0f0f0;
   padding: 40px 0 20px;
   margin-top: auto;
+  box-shadow: 0 -4px 15px rgba(229, 9, 20, 0.1);
 }
 
 .footer-container {
@@ -24,7 +26,19 @@
 .footer-section h3 {
   font-size: 1.2rem;
   margin-bottom: 15px;
-  color: #6a8af7;
+  color: #e50914; /* Netflix red */
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.footer-section h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(to right, #e50914, transparent);
 }
 
 .footer-section ul {
@@ -41,10 +55,26 @@
   color: #ccc;
   text-decoration: none;
   transition: color 0.3s ease;
+  position: relative;
 }
 
 .footer-section a:hover {
-  color: #6a8af7;
+  color: #ff3d47;
+}
+
+.footer-section a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: #e50914;
+  transition: width 0.3s ease;
+}
+
+.footer-section a:hover::after {
+  width: 100%;
 }
 
 .social-links {
@@ -62,14 +92,17 @@
 }
 
 .social-links a:hover {
-  color: #6a8af7;
+  color: #e50914;
+  text-shadow: 0 0 5px rgba(229, 9, 20, 0.3);
 }
 
 .footer-bottom {
   text-align: center;
   padding-top: 20px;
   margin-top: 20px;
-  border-top: 1px solid #333;
+  border-top: 1px solid #331111;
+  color: #999;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {

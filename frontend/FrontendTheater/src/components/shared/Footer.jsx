@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
-
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -24,9 +23,9 @@ const Footer = () => {
 
         <div className="footer-section">
           <h3>Contact Us</h3>
-          <p>Email: info@eventtickets.com</p>
-          <p>Phone: +1 (555) 123-4567</p>
-          <p>Address: 123 Event Street, City, Country</p>
+          <p>Email: bebonageh68@gmail.com</p>
+          <p>Phone: 01221627432</p>
+          <p>Address: 12 st.mary rod al farag Street, City, Country</p>
         </div>
 
         <div className="footer-section">

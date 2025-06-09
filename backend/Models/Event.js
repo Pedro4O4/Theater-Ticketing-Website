@@ -48,14 +48,21 @@ const eventSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
-
     status: {
         type: String,
         required: true,
         enum: ["approved", "pending", "declined"],
-        default: "pending", // Default status is "pending"
-
+        default: "pending",
     },
+    // Add these fields for OTP functionality
+    otp: {
+        type: String,
+        default: null
+    },
+    otpExpires: {
+        type: Date,
+        default: null
+    }
 }, { timestamps: true });
 
 const Event = mongoose.model('Event', eventSchema);
