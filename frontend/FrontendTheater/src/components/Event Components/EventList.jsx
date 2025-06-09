@@ -86,6 +86,7 @@ const EventList = () => {
     };
 
     return (
+
         <div className="event-list-container">
             <div className="event-header">
                 <h1 className="page-title">Events</h1>
@@ -119,6 +120,34 @@ const EventList = () => {
 
             {!loading && !error && (
                 <div className="event-grid">
+                    <div className="profile-header-banner" onClick={() => navigate('/profile')}>
+                        <div className="profile-info">
+                            <div className="profile-avatar-container">
+                                {user?.profilePicture ? (
+                                    <img
+                                        src={user.profilePicture}
+                                        alt="Profile"
+                                        className="profile-small-avatar"
+                                    />
+                                ) : (
+                                    <div className="profile-small-avatar">
+                                        {user?.name?.charAt(0)?.toUpperCase() || '?'}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="profile-greeting">
+                                <h2>
+                                    Hi, {user?.name || "User"}!
+                                    <span className="role-indicator">{user?.role || "Standard User"}</span>
+                                </h2>
+                                {user?.role && (
+                                    <div className="profile-stats">
+                                        <span className="stats-item">Member since {new Date().getFullYear()}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map((event) => (
                             <div key={event._id} className="event-card-with-actions">

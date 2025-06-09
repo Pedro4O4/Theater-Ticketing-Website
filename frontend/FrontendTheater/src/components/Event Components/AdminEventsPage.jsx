@@ -148,7 +148,34 @@ const AdminEventsPage = () => {
             </div>
 
             {error && <div className="error-message">{error}</div>}
-
+                <div className="profile-header-banner" onClick={() => navigate('/profile')}>
+                    <div className="profile-info">
+                        <div className="profile-avatar-container">
+                            {user?.profilePicture ? (
+                                <img
+                                    src={user.profilePicture}
+                                    alt="Profile"
+                                    className="profile-small-avatar"
+                                />
+                            ) : (
+                                <div className="profile-small-avatar">
+                                    {user?.name?.charAt(0)?.toUpperCase() || '?'}
+                                </div>
+                            )}
+                        </div>
+                        <div className="profile-greeting">
+                            <h2>
+                                Hi, {user?.name || "User"}!
+                                <span className="role-indicator">{user?.role || "Standard User"}</span>
+                            </h2>
+                            {user?.role && (
+                                <div className="profile-stats">
+                                    <span className="stats-item">Member since {new Date().getFullYear()}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             {filteredEvents && filteredEvents.length > 0 ? (
                 <div className="event-grid">
                     {filteredEvents.map((event) => (
