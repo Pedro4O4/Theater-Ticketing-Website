@@ -50,7 +50,7 @@ app.use(authenticationMiddleware);
 
 // MongoDB connection
 const db_name = process.env.DB_NAME;
-const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
+const db_url = process.env.DB_URL;
 
 mongoose.connect(db_url)
     .then(() => console.log(`MongoDB connected to ${db_name}`))
