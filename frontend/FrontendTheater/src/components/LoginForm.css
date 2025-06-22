@@ -1,76 +1,224 @@
-/* src/components/LoginForm.css */
+/* Enhanced LoginForm.css with Red & Black Theme */
+:root {
+    --primary: #e50914;
+    --primary-light: #ff3d47;
+    --secondary: #000000;
+    --secondary-light: #1a1a1a;
+    --dark: #0a0a0a;
+    --success: #38b000;
+    --danger: #d90429;
+    --transition-speed: 0.3s;
+    --input-border-radius: 12px;
+    --text-color: #f5f5f5;
+    --accent-dark: #121212;
+    --card-border-radius: 20px;
+}
+
 .login-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
+    background-color: var(--dark);
+    background-image: radial-gradient(circle at 10% 20%, rgba(229, 9, 20, 0.2) 0%, rgba(10, 10, 10, 0.8) 90%);
     padding: 20px;
+    color: var(--text-color);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated background elements */
+.background-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.2;
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+    backdrop-filter: blur(8px);
+    background: linear-gradient(135deg, rgba(229, 9, 20, 0.15), rgba(10, 10, 10, 0.05));
+    border: 1px solid rgba(229, 9, 20, 0.1);
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    top: 70%;
+    left: 75%;
+    animation-delay: 2s;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    top: 40%;
+    left: 25%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(0); }
 }
 
 .login-card {
-    background-color: lightsteelblue;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 255);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 2.8rem;
+    border-radius: var(--card-border-radius);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 450px;
-    transition: all 0.3s ease;
+    border: 1px solid rgba(229, 9, 20, 0.2);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(229, 9, 20, 0.3);
+    border-color: rgba(229, 9, 20, 0.4);
+}
+
+.card-decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(229, 9, 20, 0.3), rgba(0, 0, 0, 0.2));
+    border-radius: 0 0 0 100%;
+    z-index: -1;
 }
 
 .login-title {
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1.75rem;
-    color: white;
+    margin-bottom: 2rem;
+    color: var(--text-color);
     text-align: center;
+    position: relative;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+.login-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transform: translateX(-50%);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(229, 9, 20, 0.5);
+}
+
+/* Form elements styling */
 .form-group {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .form-label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
     font-weight: 500;
-    color: #4b5563;
+    color: var(--text-color);
+    transition: var(--transition-speed);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.input-container {
+    position: relative;
+}
+
+.input-icon {
+    display: none;
 }
 
 .form-input {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
+    border: 2px solid rgba(229, 9, 20, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--text-color);
+    border-radius: var(--input-border-radius);
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding-right: 2.5rem;
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .form-input:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.15), 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .btn-primary {
     width: 100%;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
-    padding: 0.9rem;
     border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 10px 20px rgba(229, 9, 20, 0.4);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1px;
+    padding: 1rem;
+    border-radius: var(--input-border-radius);
+    font-size: 1rem;
     margin-top: 0.5rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    text-transform: none;
+}
+
+.btn-primary:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: var(--transition-speed);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(229, 9, 20, 0.6);
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+}
+
+.btn-primary:hover:before {
+    left: 100%;
+    transition: 0.7s;
 }
 
 .btn-primary:active {
@@ -78,100 +226,246 @@
 }
 
 .btn-primary:disabled {
-    background: linear-gradient(135deg, #93c5fd, #60a5fa);
+    background: linear-gradient(135deg, #a83232, #c96a6a);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-.redirect-link {
-    margin-top: 1.5rem;
-    text-align: center;
+/* Form loader */
+.form-loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: rotate 1s ease-in-out infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Message styles */
+.error-box, .error-message {
+    background-color: rgba(217, 4, 41, 0.15);
+    border-left: 4px solid var(--danger);
+    color: #ff9999;
+    padding: 1.2rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
     font-size: 0.95rem;
-    color: #4b5563;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.success-message {
+    background-color: rgba(56, 176, 0, 0.15);
+    border-left: 4px solid var(--success);
+    color: #a3f5a3;
+    padding: 1.2rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Redirect link styling */
+.redirect-link {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-color);
+    position: relative;
+    padding-top: 1.5rem;
+}
+
+.redirect-link:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(229, 9, 20, 0.3), transparent);
 }
 
 .redirect-link a {
-    color: #2563eb;
+    color: var(--primary-light);
     font-weight: 600;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 0 4px;
+}
+
+.redirect-link a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transition: width 0.3s ease;
 }
 
 .redirect-link a:hover {
-    color: #1d4ed8;
-    text-decoration: underline;
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
 }
 
-/* Error message styling to match register form */
-.error-message {
-    background-color: #fee2e2;
-    border-left: 4px solid #ef4444;
-    color: #b91c1c;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+.redirect-link a:hover::after {
+    width: 100%;
 }
 
-.error-box {
-    background-color: #fee2e2;
-    border-left: 4px solid #ef4444;
-    color: #b91c1c;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 2rem;
+    }
+
+    .login-title {
+        font-size: 1.7rem;
+    }
+
+    .btn-primary {
+        padding: 1rem;
+    }
 }
 
-/* Success message styling to match register form */
-.success-message {
-    background-color: #dcfce7;
-    border-left: 4px solid #22c55e;
-    color: #166534;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
-}
-.redirect-link {
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 0.95rem;
-    color: #4b5563;
-}
+@media (max-width: 480px) {
+    .login-container {
+        padding: 15px;
+    }
 
-.redirect-link div {
-    margin: 0.5rem 0;
-}
+    .login-card {
+        padding: 1.8rem 1.5rem;
+    }
 
-.mt-2 {
-    margin-top: 0.5rem;
-}
-.redirect-links-container {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.redirect-link-item {
-    text-align: center;
-    font-size: 0.95rem;
-    color: white;
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+}/* OTP Form Styles */
+.otp-form-container {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
+    margin-bottom: 20px;
 }
 
-.redirect-link-item a {
-    color: #ffffff;
-    font-weight: 600;
-    text-decoration: underline;
-    transition: all 0.2s ease;
+.otp-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #00000000;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8.2px);
+    -webkit-backdrop-filter: blur(8.2px);
+    border: 1px solid #369eff66;
+    width: 14em;
+    height: 14em;
+    position: relative;
 }
 
-.redirect-link-item a:hover {
-    color: #e0e0e0;
-    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.otp-form p {
+    color: var(--text-color, #333);
+    font-weight: bolder;
+    text-align: center;
+}
+
+.path {
+    fill: #369eff
+}
+
+.svg {
+    filter: blur(20px);
+    z-index: -1;
+    position: absolute;
+    opacity: 50%;
+    animation: anim 3s infinite;
+}
+
+.inp {
+    margin-left: auto;
+    margin-right: auto;
+    gap: 4px;
+    display: flex;
+}
+
+.input + .input {
+    margin-left: 0.3em
+}
+
+.input {
+    color: var(--text-color, #333);
+    height: 2em;
+    width: 2em;
+    text-align: center;
+    background: #00000000;
+    outline: none;
+    border: 1px #369eff solid;
+    border-radius: 10px;
+    transition: all 0.6s ease;
+}
+
+.input:focus {
+    outline: none;
+    border: 1px #fff solid;
+}
+
+.input:not(:placeholder-shown) {
+    opacity: 40%
+}
+
+.verify-btn {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #00000000;
+    color: var(--text-color, #333);
+    width: 100%;
+    height: 2.3em;
+    border: #369eff 0.2em solid;
+    border-radius: 11px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.verify-btn:hover {
+    background-color: #369eff;
+}
+
+@keyframes anim {
+    0% {
+        transform: translateY(-70px);
+    }
+
+    50% {
+        transform: translateY(-19px);
+    }
+
+    100% {
+        transform: translateY(-70px);
+    }
 }

@@ -126,4 +126,22 @@
 .user-role.Standard.User {
     background-color: #f4f4f4;
     color: #495057;
+}.loading-spinner {
+     display: inline-block;
+     width: 14px;
+     height: 14px;
+     margin-right: 8px;
+     border: 2px solid rgba(255, 255, 255, 0.3);
+     border-radius: 50%;
+     border-top-color: white;
+     animation: spin 1s ease-in-out infinite;
+ }
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.admin-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }

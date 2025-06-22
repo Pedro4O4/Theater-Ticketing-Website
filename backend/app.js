@@ -5,7 +5,21 @@ const cors = require("cors");
 require('dotenv').config();
 
 const app = express();
+const fs = require('fs');
+const path = require('path');
 
+// Increase payload size limit
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('Uploads directory created');
+}
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 // Routers
 const authRouter = require("./Routes/auth");
 
@@ -14,7 +28,7 @@ const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
 
 // Middleware
-const authenticationMiddleware = require('./middleware/authenticationMiddleware');
+const authenticationMiddleware = require('./Middleware/authenticationMiddleware');
 
 // Middlewares setup
 app.use(express.json());
@@ -36,7 +50,7 @@ app.use(authenticationMiddleware);
 
 // MongoDB connection
 const db_name = process.env.DB_NAME;
-const db_url = 'mongodb+srv://monemsomida:Monem%40010036@cluster0.izera.mongodb.net/studentsFullBack?retryWrites=true&w=majority&appName=Cluster0';
+const db_url = process.env.DB_URL;
 
 mongoose.connect(db_url)
     .then(() => console.log(`MongoDB connected to ${db_name}`))
@@ -52,7 +66,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(3000, () => console.log("Server started"))
+app.listen(process.env.PORT, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });
