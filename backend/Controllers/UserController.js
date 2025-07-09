@@ -493,60 +493,69 @@ const UserController = {
             });
         }
     },
+// تعديل طريقة GetOrganizerAnalytics لإصلاح استعلام البيانات
     GetOrganizerAnalytics: async (req, res) => {
         try {
             const organizerId = req.user.userId;
 
-            // Validate user role
+            // التحقق من دور المستخدم
             if (req.user.role !== 'Organizer') {
                 return res.status(403).json({
                     message: "Unauthorized: Only organizers can access analytics"
                 });
             }
 
-            // Get all events for this organizer
-            const events = await Event.find({  organizerId })
-                .select('_id title totalTickets remainingTickets');
+            // الحصول على جميع الفعاليات لهذا المنظم
+            const events = await Event.find({ organizerId })
+                .select('_id title totalTickets remainingTickets ticketPrice');
 
             if (!events || events.length === 0) {
-                return res.status(404).json({
-                    message: "No events found for analytics",
-                    suggestions: [
-                        "Create events to start generating analytics",
-                        "Check back after creating your first event"
-                    ]
+                return res.status(200).json({
+                    totalEvents: 0,
+                    totalRevenue: 0,
+                    averageSoldPercentage: 0,
+                    events: []
                 });
             }
 
-            // Calculate analytics for each event
+            // حساب التحليلات لكل فعالية
             const analytics = await Promise.all(events.map(async event => {
+                // استخدام _id بدلاً من id للبحث عن الحجوزات
                 const bookings = await Booking.find({
-                    event: event.id,
-                    status: { $ne: 'canceled' }
+                    eventId: event._id,
+                    status: { $ne: 'Cancelled' } // استبعاد الحجوزات الملغاة
                 });
 
-                const ticketsSold = bookings.reduce((sum, booking) => sum + booking.numberOfTickets, 0);
-                const percentageSold = (ticketsSold / event.totalTickets) * 100;
+                // حساب إجمالي التذاكر المباعة من جميع الحجوزات
+                const ticketsSold = bookings.reduce((sum, booking) => sum + (booking.numberOfTickets || 0), 0);
+
+                // حساب نسبة التذاكر المباعة
+                const percentageSold = event.totalTickets > 0 ?
+                    (ticketsSold / event.totalTickets) * 100 : 0;
+
+                // حساب الإيرادات
+                const revenue = ticketsSold * event.ticketPrice;
 
                 return {
                     eventId: event._id,
                     eventTitle: event.title,
-                    totalTickets: event.totalTickets,
+                    totalTickets: event.totalTickets || 0,
                     ticketsSold: ticketsSold,
-                    ticketsAvailable: event.remainingTickets,
-                    percentageSold: percentageSold.toFixed(2),
-                    revenue: ticketsSold * event.ticketPrice
+                    ticketsAvailable: event.remainingTickets || 0,
+                    percentageSold: percentageSold,
+                    revenue: revenue
                 };
             }));
 
-            // Calculate overall statistics
+            // حساب الإحصائيات الإجمالية
             const totalRevenue = analytics.reduce((sum, item) => sum + item.revenue, 0);
-            const averageSoldPercentage = analytics.reduce((sum, item) => sum + parseFloat(item.percentageSold), 0) / analytics.length;
+            const averageSoldPercentage = analytics.length > 0 ?
+                analytics.reduce((sum, item) => sum + item.percentageSold, 0) / analytics.length : 0;
 
             res.status(200).json({
                 totalEvents: analytics.length,
                 totalRevenue: totalRevenue,
-                averageSoldPercentage: averageSoldPercentage.toFixed(2),
+                averageSoldPercentage: averageSoldPercentage,
                 events: analytics.sort((a, b) => b.percentageSold - a.percentageSold)
             });
 

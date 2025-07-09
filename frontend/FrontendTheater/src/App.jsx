@@ -26,6 +26,7 @@ import BookingDetails from "./components/Booking Component/BookingDetails";
 import BookingTicketForm from "./components/Booking Component/BookingTicketForm.jsx";
 import './index.css'
 import './styles.css'
+
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -43,7 +44,6 @@ function App() {
     }
 
     return (
-
         <AuthProvider>
             <div className="app-container">
                 <Navbar />
@@ -55,98 +55,95 @@ function App() {
                         <Route path="/register" element={<RegisterForm />} />
                         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
 
-                            <Route index element={<Homepage />} />
-                            <Route path="home" element={<Homepage />} />
-                            {/* Redirect root to events */}
-                            <Route index element={<Navigate to="/events" replace />} />
-                            <Route path="events" element={<EventList />} />
+                        <Route index element={<Homepage />} />
+                        <Route path="home" element={<Homepage />} />
+                        {/* Redirect root to events */}
+                        <Route index element={<Navigate to="/events" replace />} />
+                        <Route path="events" element={<EventList />} />
 
-                            {/* IMPORTANT: More specific routes first */}
-                            <Route path="my-events/new" element={
-                                <ProtectedRoute requiredRole="Organizer">
-                                    <EventForm />
-                                </ProtectedRoute>
-                            } />
+                        {/* IMPORTANT: More specific routes first */}
+                        <Route path="my-events/new" element={
+                            <ProtectedRoute requiredRole="Organizer">
+                                <EventForm />
+                            </ProtectedRoute>
+                        } />
 
-                            <Route path="my-events/:id/edit" element={
-                                <ProtectedRoute requiredRole="Organizer">
-                                    <EditEventPage />
-                                </ProtectedRoute>
-                            } />
+                        <Route path="my-events/:id/edit" element={
+                            <ProtectedRoute requiredRole="Organizer">
+                                <EditEventPage />
+                            </ProtectedRoute>
+                        } />
 
-                            <Route path="my-events/analytics" element={
-                                <ProtectedRoute requiredRole="Organizer">
-                                    <EventAnalytics />
-                                </ProtectedRoute>
-                            } />
+                        <Route path="my-events/analytics" element={
+                            <ProtectedRoute requiredRole="Organizer">
+                                <EventAnalytics />
+                            </ProtectedRoute>
+                        } />
 
-                            {/* General route AFTER more specific ones */}
-                            <Route path="events/:id" element={
-                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
-                                    <EventDetailsPage />
-                                </ProtectedRoute>
-                            } />
-                            <Route path="profile" element={
-                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
-                                    <ProfilePage />
-                                </ProtectedRoute>
-                            } />
-                            <Route path="profile/edit" element={
-                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
-                                    <UpdateProfilePage />
-                                </ProtectedRoute>
-                            } />
-
-
-                            <Route path="events" element={
-                                <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
-                                    <EventList />
-                                </ProtectedRoute>
-                            } />
-
-                            <Route path="my-events" element={
-                                <ProtectedRoute requiredRole="Organizer">
-                                    <MyEventsPage />
-                                </ProtectedRoute>
-                            } />
-
-                            {/* Admin routes */}
-                            <Route path="admin/users" element={
-                                <ProtectedRoute requiredRole="System Admin">
-                                    <AdminUsersPage />
-                                </ProtectedRoute>
-                            } />
-
-                            <Route path="admin/events" element={
-                                <ProtectedRoute requiredRole="System Admin">
-                                    <AdminEventsPage />
-                                </ProtectedRoute>
-                            } />
-
-                            <Route path="bookings" element={
-                                <ProtectedRoute requiredRole={["Standard User"]}>
-                                    <UserBookingPage />
-                                </ProtectedRoute>
-                            } />
-
-                            <Route path="bookings/:id" element={
-                                <ProtectedRoute requiredRole={["Standard User"]}>
-                                    <BookingDetails />
-                                </ProtectedRoute>
-                            } />
-                            <Route path="/bookings/new/:eventId" element={
-                                <ProtectedRoute requiredRole={["Standard User"]}>
-                                    <BookingTicketForm />
-                                </ProtectedRoute>
-                            } />
-                            <Route path="bookings/new" element={
-                                <ProtectedRoute requiredRole={["Standard User"]}>
-                                    <BookingDetails />
-                                </ProtectedRoute>
-                            } />
+                        {/* General route AFTER more specific ones */}
+                        <Route path="events/:id" element={
+                            <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                <EventDetailsPage />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="profile" element={
+                            <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                <ProfilePage />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="profile/edit" element={
+                            <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                <UpdateProfilePage />
+                            </ProtectedRoute>
+                        } />
 
 
+                        <Route path="events" element={
+                            <ProtectedRoute requiredRole={["System Admin", "Organizer", "Standard User"]}>
+                                <EventList />
+                            </ProtectedRoute>
+                        } />
 
+                        <Route path="my-events" element={
+                            <ProtectedRoute requiredRole="Organizer">
+                                <MyEventsPage />
+                            </ProtectedRoute>
+                        } />
+
+                        {/* Admin routes */}
+                        <Route path="admin/users" element={
+                            <ProtectedRoute requiredRole="System Admin">
+                                <AdminUsersPage />
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="admin/events" element={
+                            <ProtectedRoute requiredRole="System Admin">
+                                <AdminEventsPage />
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="bookings" element={
+                            <ProtectedRoute requiredRole={["Standard User"]}>
+                                <UserBookingPage />
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="bookings/:id" element={
+                            <ProtectedRoute requiredRole={["Standard User"]}>
+                                <BookingDetails />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/bookings/new/:eventId" element={
+                            <ProtectedRoute requiredRole={["Standard User"]}>
+                                <BookingTicketForm />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="bookings/new" element={
+                            <ProtectedRoute requiredRole={["Standard User"]}>
+                                <BookingDetails />
+                            </ProtectedRoute>
+                        } />
 
                         <Route path="*" element={<Navigate to="/login" replace />} />
                     </Routes>

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ConfirmationDialog from '../AdminComponent/ConfirmationDialog';
 import './UserBookingPage.css';
+import { formatCurrency } from '../../utils/feeCalculator';
+import { toast } from 'react-toastify';
 
 const UserBookingsPage = () => {
     const [bookings, setBookings] = useState([]);
@@ -20,7 +22,7 @@ const UserBookingsPage = () => {
     const fetchBookings = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:3000/api/v1/user/bookings', {
+            const response = await axios.get('http://localhost:3000/api/v1/booking/user', {
                 withCredentials: true
             });
 
@@ -45,12 +47,17 @@ const UserBookingsPage = () => {
                 bookingsData.map(async (booking) => {
                     if (booking.eventId) {
                         try {
-                            const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${booking.eventId}`, {
+                            // 修正: 确保 eventId 是字符串而不是对象
+                            const eventId = typeof booking.eventId === 'object' ?
+                                booking.eventId._id || booking.eventId.toString() :
+                                booking.eventId;
+
+                            const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${eventId}`, {
                                 withCredentials: true
                             });
 
                             if (eventResponse.data.success && eventResponse.data.data) {
-                                events[booking.eventId] = eventResponse.data.data;
+                                events[eventId] = eventResponse.data.data;
                             }
                         } catch (err) {
                             console.error(`Error fetching event for booking ${booking._id}:`, err);
@@ -93,6 +100,8 @@ const UserBookingsPage = () => {
     if (loading) return <div className="loading">Loading your bookings...</div>;
     if (error) return <div className="error">Error: {error}</div>;
 
+
+
     return (
         <div className="bookings-container">
             <div className="bookings-header">
@@ -108,10 +117,27 @@ const UserBookingsPage = () => {
             ) : (
                 <div className="bookings-list">
                     {bookings.map((booking) => {
-                        // Your existing booking mapping code
-                        const event = booking.eventId && eventDetails[booking.eventId]
-                            ? eventDetails[booking.eventId]
-                            : booking.event || {};
+                        // 修正: 正确处理 eventId，确保是字符串
+                        const eventId = typeof booking.eventId === 'object' ?
+                            booking.eventId._id || booking.eventId.toString() :
+                            booking.eventId;
+
+                        const event = eventDetails[eventId] || {};
+
+                        // Get ticket quantity from either numberOfTickets or quantity field
+                        const ticketQuantity = booking.numberOfTickets || booking.quantity || 0;
+                        const ticketPrice = event?.ticketPrice || 0;
+
+                        // 修正: 更好地处理费用计算
+                        const hasDetailedFees = booking.subtotal !== undefined &&
+                            (booking.percentageFee !== undefined || booking.fixedFee !== undefined);
+
+                        const subtotal = booking.subtotal || (ticketPrice * ticketQuantity);
+
+                        // 修正: 更准确地计算费用
+                        const percentageFee = booking.percentageFee !== undefined ? booking.percentageFee : (subtotal * 0.035);
+                        const fixedFee = booking.fixedFee !== undefined ? booking.fixedFee : (1.99 * ticketQuantity);
+                        const totalFees = percentageFee + fixedFee;
 
                         return (
                             <div key={booking._id} className="booking-card">
@@ -122,8 +148,19 @@ const UserBookingsPage = () => {
                                     </span>
 
                                     <div className="booking-details">
-                                        <p>Tickets: <strong>{booking.quantity || booking.numberOfTickets}</strong></p>
-                                        <p>Total: <strong>${booking.totalPrice?.toFixed(2) || (booking.quantity * event?.ticketPrice).toFixed(2) || 'N/A'}</strong></p>
+                                        <p>Tickets: <strong>{ticketQuantity}</strong></p>
+
+                                        {/* Show fee breakdown if available */}
+                                        {hasDetailedFees ? (
+                                            <div className="fee-summary">
+                                                <p>Subtotal: <span>{formatCurrency(subtotal)}</span></p>
+                                                <p>Fees: <span>{formatCurrency(totalFees)}</span></p>
+                                                <p className="total">Total: <strong>{formatCurrency(booking.totalPrice)}</strong></p>
+                                            </div>
+                                        ) : (
+                                            <p>Total: <strong>{formatCurrency(booking.totalPrice || (ticketQuantity * ticketPrice) || 0)}</strong></p>
+                                        )}
+
                                         <p>Status: <span className={`status ${(booking.status || 'confirmed').toLowerCase()}`}>
                                             {booking.status || 'Confirmed'}
                                         </span></p>

@@ -1,233 +1,217 @@
+/* Dark & Red BookingTicketForm Styles */
 .book-ticket-form {
-    background: #161616;
+    max-width: 800px;
+    margin: 3rem auto;
     padding: 2.5rem;
+    background-color: #121212;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    max-width: 550px;
-    width: 90%;
-    margin: 2.5rem auto;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 31, 83, 0.15);
-}
-
-.book-ticket-form:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(255, 31, 83, 0.2);
+    color: #e0e0e0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 31, 83, 0.1);
 }
 
 .book-ticket-form h2 {
+    margin-top: 0;
     color: #ffffff;
-    margin-bottom: 2rem;
+    font-size: 2rem;
     text-align: center;
-    font-size: 1.8rem;
-    font-weight: 600;
     position: relative;
-    padding-bottom: 0.75rem;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
-.book-ticket-form h2:after {
+.book-ticket-form h2::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
+    width: 80px;
     height: 3px;
     background: linear-gradient(90deg, #ff1f53, #ff4d6d);
-    border-radius: 3px;
+    border-radius: 2px;
+}
+
+.event-summary {
+    background-color: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    border: 1px solid #333;
+}
+
+.event-summary h4 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+}
+
+.event-summary p {
+    margin: 0.8rem 0;
+    color: #d0d0d0;
+    line-height: 1.5;
+}
+
+.event-summary strong {
+    color: #ffffff;
+    font-weight: 600;
 }
 
 .form-group {
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.75rem;
-    color: #e0e0e0;
-    font-weight: 500;
-    font-size: 1.05rem;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.9rem 1rem;
-    border: 1px solid #333;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    background-color: #222;
     color: #ffffff;
+    margin-bottom: 0.7rem;
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
-.form-group input:focus {
+.tickets-remaining {
+    color: #ff4d6d;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1.1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="number"]:focus {
     outline: none;
     border-color: #ff1f53;
     box-shadow: 0 0 0 3px rgba(255, 31, 83, 0.2);
 }
 
-.tickets-remaining {
-    display: inline-block;
-    margin-left: 8px;
-    color: #e0e0e0;
-    font-size: 0.9rem;
-    font-weight: normal;
-    padding: 3px 8px;
-    background-color: #333;
-    border-radius: 4px;
-}
-
-.price-summary {
-    background: linear-gradient(145deg, #222, #1c1c1c);
-    padding: 1.25rem;
+/* Fee Breakdown Styles - NEW */
+.fee-breakdown {
+    background-color: #222;
     border-radius: 10px;
-    margin-bottom: 1.8rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    border: 1px solid #333;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border-left: 3px solid #ff1f53;
 }
 
-.price-summary p {
-    margin: 0.5rem 0;
+.fee-breakdown p {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.7rem;
     color: #d0d0d0;
-    font-size: 1.05rem;
+}
+
+.fee-line {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.subtotal {
+    font-weight: 500;
+    color: #e0e0e0;
+    border-bottom: 1px dashed #444;
+    padding-bottom: 0.8rem;
+    margin-bottom: 0.8rem;
 }
 
 .total-price {
-    font-size: 1.4rem;
     font-weight: bold;
-    color: #ffffff;
-    padding-top: 0.5rem;
-    margin-top: 0.5rem !important;
-    border-top: 1px dashed #444;
+    font-size: 1.2em;
+    color: #ff4d6d;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #444;
 }
 
+/* Error message styling */
 .error-message {
+    background-color: rgba(220, 53, 69, 0.1);
     color: #ff8c9e;
-    background: rgba(255, 31, 83, 0.15);
     padding: 1rem;
     border-radius: 8px;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem 0;
     border-left: 4px solid #ff1f53;
-    font-size: 0.95rem;
 }
 
 .error-hint {
-    font-size: 0.85rem;
-    margin-top: 0.75rem;
-    color: #b0b0b0;
+    font-size: 0.9rem;
+    color: #bbb;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
 }
 
+.price-summary {
+    margin-bottom: 2rem;
+}
+
+/* Button styles */
 .form-actions {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
-.form-actions button {
-    padding: 0.85rem 1.75rem;
-    border: none;
+.book-button, .cancel-button {
+    flex: 1;
+    padding: 1rem;
     border-radius: 8px;
+    font-weight: 600;
     font-size: 1rem;
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.cancel-button {
-    background: #333;
-    color: white;
-}
-
-.cancel-button:hover {
-    background: #444;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    border: none;
+    text-align: center;
 }
 
 .book-button {
-    background: linear-gradient(45deg, #ff1f53, #ff4d6d);
+    background: linear-gradient(135deg, #c71f37, #ff1f53);
     color: white;
+    box-shadow: 0 4px 12px rgba(255, 31, 83, 0.2);
 }
 
-.book-button:hover {
-    background: linear-gradient(45deg, #ff0a43, #ff3961);
+.book-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ff1f53, #ff4d6d);
     transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(255, 31, 83, 0.3);
+    box-shadow: 0 6px 15px rgba(255, 31, 83, 0.3);
+}
+
+.cancel-button {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+.cancel-button:hover {
+    background-color: #333;
+    transform: translateY(-2px);
 }
 
 .book-button:disabled {
-    background: linear-gradient(45deg, #444, #555);
+    background: #4d4d4d;
+    color: #aaa;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-.event-select {
-    width: 100%;
-    padding: 0.9rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #333;
-    margin-bottom: 15px;
-    background-color: #222;
-    color: #ffffff;
-    font-size: 1rem;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e0e0e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 16px;
-    transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.event-select:focus {
-    outline: none;
-    border-color: #ff1f53;
-    box-shadow: 0 0 0 3px rgba(255, 31, 83, 0.2);
-}
-
-.event-summary {
-    background-color: #222;
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    border-left: 4px solid #ff1f53;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-}
-
-.event-summary:hover {
-    transform: translateY(-3px);
-}
-
-.event-summary h4 {
-    margin-top: 0;
-    color: #ffffff;
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.event-summary p {
-    margin: 8px 0;
-    color: #d0d0d0;
-    line-height: 1.5;
-}
-
-.event-summary p strong {
-    color: #ffffff;
-    font-weight: 600;
-    display: inline-block;
-    min-width: 100px;
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
 }
 
 .loading {
-    text-align: center;
-    padding: 2rem;
     color: #ff1f53;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     animation: pulse 1.5s infinite;
+    text-align: center;
+    padding: 3rem;
 }

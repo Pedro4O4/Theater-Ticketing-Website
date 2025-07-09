@@ -36,9 +36,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
     origin: process.env.CLIENT_ORIGIN,
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Routes

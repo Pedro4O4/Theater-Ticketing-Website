@@ -160,6 +160,30 @@
     color: #ffffff;
 }
 
+/* Fee Summary Styles - NEW */
+.fee-summary {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed #444;
+}
+
+.fee-summary p {
+    margin: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.fee-summary .total {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed #444;
+    color: #ff4d6d;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
 .status {
     padding: 0.3rem 0.9rem;
     border-radius: 20px;

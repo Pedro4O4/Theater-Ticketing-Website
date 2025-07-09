@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import ConfirmationDialog from '../AdminComponent/ConfirmationDialog';
 import './BookingDetails.css';
+import { formatCurrency } from '../../utils/feeCalculator';
+import { toast } from 'react-toastify';
 
 const BookingDetails = () => {
     const { id } = useParams();
@@ -26,15 +28,20 @@ const BookingDetails = () => {
             if (response.data) {
                 setBooking(response.data);
 
-                // If we have an eventId, fetch the event details
+                // إذا كان لدينا معرف للفعالية، نجلب تفاصيلها
                 if (response.data.eventId) {
                     try {
-                        // Use the correct endpoint (singular 'event', not plural 'events')
-                        const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${response.data.eventId}`, {
+                        // تأكد من أن eventId هو سلسلة نصية وليس كائن
+                        const eventId = typeof response.data.eventId === 'object' ?
+                            response.data.eventId._id || response.data.eventId.toString() :
+                            response.data.eventId;
+
+                        // استخدم المسار الصحيح (singular 'event', not plural 'events')
+                        const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${eventId}`, {
                             withCredentials: true
                         });
 
-                        // Handle the response structure correctly
+                        // معالجة هيكل الاستجابة بشكل صحيح
                         if (eventResponse.data.success && eventResponse.data.data) {
                             setEvent(eventResponse.data.data);
                         }
@@ -55,14 +62,16 @@ const BookingDetails = () => {
 
     const handleCancelBooking = async () => {
         try {
-            await axios.delete(`http://localhost:3000/api/v1/booking/${id}`, {
-                withCredentials: true
-            });
+            // استخدام POST بدلاً من PATCH
+            await axios.delete(`http://localhost:3000/api/v1/booking/${id}`,
+                { withCredentials: true }
+            );
             setBooking({...booking, status: 'Cancelled'});
             setShowCancelConfirm(false);
+            toast.success('تم إلغاء الحجز بنجاح');
         } catch (err) {
             console.error("Error canceling booking:", err);
-            alert(`Error: ${err.response?.data?.message || err.message}`);
+            toast.error(`خطأ: ${err.response?.data?.message || err.message}`);
         }
     };
 
@@ -92,12 +101,20 @@ const BookingDetails = () => {
         </div>
     );
 
-    // Use event state if available, fallback to booking.event
+    // استخدم حالة الفعالية إذا كانت متاحة، وإلا استخدم booking.event
     const eventData = event || booking.event || {};
 
     const bookingDate = booking.createdAt
         ? new Date(booking.createdAt).toLocaleDateString()
         : 'Date not available';
+
+    // حساب subtotal إذا لم يتم توفيره
+    const ticketQuantity = booking.numberOfTickets || booking.quantity || 0;
+    const ticketPrice = eventData.ticketPrice || 0;
+    const subtotal = booking.subtotal || (ticketPrice * ticketQuantity);
+    const percentageFee = booking.percentageFee || (subtotal * 0.035); // 3.5%
+    const fixedFee = booking.fixedFee || (1.99 * ticketQuantity);
+    const totalPrice = booking.totalPrice || (subtotal + percentageFee + fixedFee);
 
     return (
         <div className="booking-details-container">
@@ -109,7 +126,7 @@ const BookingDetails = () => {
                     </span>
                 </div>
 
-                {/* Event Information Section */}
+                {/* قسم معلومات الفعالية */}
                 <div className="event-details-content">
                     <div className="event-image-container">
                         {eventData.image ? (
@@ -144,7 +161,7 @@ const BookingDetails = () => {
                     </div>
                 </div>
 
-                {/* Booking Information Section */}
+                {/* قسم معلومات الحجز */}
                 <div className="booking-info-section">
                     <h3>Booking Information</h3>
                     <div className="info-grid">
@@ -158,15 +175,34 @@ const BookingDetails = () => {
                         </div>
                         <div className="info-item">
                             <span className="info-label">Number of Tickets:</span>
-                            <span className="info-value">{booking.numberOfTickets || booking.quantity}</span>
+                            <span className="info-value">{ticketQuantity}</span>
                         </div>
                         <div className="info-item">
                             <span className="info-label">Price per Ticket:</span>
-                            <span className="info-value">${eventData.ticketPrice?.toFixed(2) || 'N/A'}</span>
+                            <span className="info-value">{formatCurrency(ticketPrice)}</span>
                         </div>
-                        <div className="info-item">
-                            <span className="info-label">Total Price:</span>
-                            <span className="info-value">${booking.totalPrice?.toFixed(2) || 'N/A'}</span>
+                    </div>
+                </div>
+
+                {/* قسم تفاصيل الأسعار */}
+                <div className="price-breakdown-section">
+                    <h3>Price Breakdown</h3>
+                    <div className="price-breakdown">
+                        <div className="price-item">
+                            <span>Subtotal:</span>
+                            <span>{formatCurrency(subtotal)}</span>
+                        </div>
+                        <div className="price-item fee">
+                            <span>Service Fee (3.5%):</span>
+                            <span>{formatCurrency(percentageFee)}</span>
+                        </div>
+                        <div className="price-item fee">
+                            <span>Processing Fee:</span>
+                            <span>{formatCurrency(fixedFee)}</span>
+                        </div>
+                        <div className="price-item total">
+                            <span>Total:</span>
+                            <span>{formatCurrency(totalPrice)}</span>
                         </div>
                     </div>
                 </div>

@@ -208,6 +208,51 @@
     font-weight: 500;
 }
 
+/* Price Breakdown Section - NEW */
+.price-breakdown-section {
+    padding: 2rem;
+    background-color: #1a1a1a;
+    border-top: 1px solid #333;
+}
+
+.price-breakdown-section h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #333;
+}
+
+.price-breakdown {
+    background-color: #222;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 3px solid #ff1f53;
+}
+
+.price-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    color: #e0e0e0;
+}
+
+.price-item.fee {
+    color: #aaa;
+    font-size: 0.95em;
+}
+
+.price-item.total {
+    font-weight: bold;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #444;
+    color: #ff4d6d;
+    font-size: 1.1rem;
+}
+
 /* Actions styling */
 .booking-actions {
     display: flex;
