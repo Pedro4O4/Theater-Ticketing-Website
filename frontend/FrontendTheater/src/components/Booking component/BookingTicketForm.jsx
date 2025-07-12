@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './BookingTicketForm.css';
+import { calculateFees, formatCurrency } from '../../utils/feeCalculator';
 
 const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
     const { eventId } = useParams(); // Get eventId from URL parameters
@@ -10,6 +11,12 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isEventLoading, setIsEventLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [feeDetails, setFeeDetails] = useState({
+        subtotal: 0,
+        percentageFee: 0,
+        fixedFee: 0,
+        total: 0
+    });
     const navigate = useNavigate();
 
     // Fetch event by ID from URL parameter if needed
@@ -26,6 +33,14 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
         }
     }, [preSelectedEvent, eventId]);
 
+    // Update fee calculation when number of tickets or event changes
+    useEffect(() => {
+        if (selectedEvent && selectedEvent.ticketPrice) {
+            const fees = calculateFees(selectedEvent.ticketPrice, numberOfTickets);
+            setFeeDetails(fees);
+        }
+    }, [selectedEvent, numberOfTickets]);
+
     const fetchEventById = async (id) => {
         try {
             setIsEventLoading(true);
@@ -35,6 +50,12 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
 
             if (response.data && response.data.data) {
                 setSelectedEvent(response.data.data);
+
+                // Calculate initial fees
+                if (response.data.data.ticketPrice) {
+                    const fees = calculateFees(response.data.data.ticketPrice, 1);
+                    setFeeDetails(fees);
+                }
             } else {
                 throw new Error('Invalid event data received');
             }
@@ -72,6 +93,10 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
                 {
                     eventId: selectedEvent._id,
                     numberOfTickets,
+                    subtotal: feeDetails.subtotal,
+                    percentageFee: feeDetails.percentageFee,
+                    fixedFee: feeDetails.fixedFee,
+                    totalPrice: feeDetails.total,
                     status: 'confirmed'
                 },
                 { withCredentials: true }
@@ -110,7 +135,6 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
 
     const maxTickets = getAvailableTickets(selectedEvent);
     const ticketPrice = selectedEvent?.ticketPrice || 0;
-    const totalPrice = numberOfTickets * ticketPrice;
 
     return (
         <div className="book-ticket-form">
@@ -144,9 +168,15 @@ const BookTicketForm = ({ event: preSelectedEvent, onBookingComplete }) => {
                     />
                 </div>
 
+                {/* Price Breakdown with Fees */}
                 <div className="price-summary">
-                    <p>Price per ticket: ${ticketPrice.toFixed(2)}</p>
-                    <p className="total-price">Total: ${totalPrice.toFixed(2)}</p>
+                    <div className="fee-breakdown">
+                        <p>Price per ticket: {formatCurrency(ticketPrice)}</p>
+                        <p className="subtotal">Subtotal: {formatCurrency(feeDetails.subtotal)}</p>
+                        <p className="fee-line">Service fee (3.5%): {formatCurrency(feeDetails.percentageFee)}</p>
+                        <p className="fee-line">Processing fee: {formatCurrency(feeDetails.fixedFee)}</p>
+                        <p className="total-price">Total: {formatCurrency(feeDetails.total)}</p>
+                    </div>
                 </div>
 
                 {error && (

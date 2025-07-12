@@ -4,6 +4,8 @@ import axios from 'axios';
 import ConfirmationDialog from '../AdminComponent/ConfirmationDialog';
 import { getImageUrl } from '../../utils/imageHelper';
 import './BookingDetails.css';
+import { formatCurrency } from '../../utils/feeCalculator';
+import { toast } from 'react-toastify';
 
 const BookingDetails = () => {
     const { id } = useParams();
@@ -21,23 +23,7 @@ const BookingDetails = () => {
         try {
             setLoading(true);
             const response = await axios.get(`http://localhost:3000/api/v1/booking/${id}`, {
-            withCredentials: true
-        });
 
-        if (response.data) {
-            setBooking(response.data);
-
-            // If we have an eventId, fetch the event details
-            if (response.data.eventId) {
-                try {
-                    // Use the correct endpoint (singular 'event', not plural 'events')
-                    const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${response.data.eventId}`, {
-                    withCredentials: true
-                });
-
-                // Handle the response structure correctly
-                if (eventResponse.data.success && eventResponse.data.data) {
-                    setEvent(eventResponse.data.data);
                 }
             } catch (eventErr) {
                 console.error("Error fetching event details:", eventErr);
@@ -66,6 +52,8 @@ const handleCancelBooking = async () => {
         alert(`Error: ${err.response?.data?.message || err.message}`);
 }
 };
+=======
+  
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -109,6 +97,8 @@ return (
                         {booking.status || 'Confirmed'}
                     </span>
             </div>
+=======
+   
 
             {/* Event Information Section */}
             <div className="event-details-content">
@@ -141,6 +131,8 @@ return (
                     <div className="event-info-item full-width">
                         <h4>📝 Description</h4>
                         <p className="event-description">{eventData.description || 'No description available'}</p>
+=======
+               
                     </div>
                 </div>
             </div>

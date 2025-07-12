@@ -30,6 +30,7 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .create-event-button {
@@ -164,6 +165,17 @@
 
 .analytics-button:hover {
     transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(228, 28, 60, 0.3);
+}
+
+/* New revenue button styling */
+.revenue-button {
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+    border: 1px solid #e41c3c;
+}
+
+.revenue-button:hover {
+    background: linear-gradient(135deg, #1a202c, #2d3748);
     box-shadow: 0 6px 15px rgba(228, 28, 60, 0.3);
 }
 
@@ -361,40 +373,7 @@
     margin-top: 5px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .event-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .page-title {
-        font-size: 1.8rem;
-    }
-
-    .event-actions {
-        justify-content: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .organizer-buttons {
-        width: 100%;
-    }
-
-    .create-event-button {
-        width: 100%;
-        text-align: center;
-    }
-
-    .event-button {
-        flex: 1;
-        min-width: 80px;
-        text-align: center;
-    }
-}
-
+/* Modal styling */
 .modal-container {
     position: fixed;
     top: 0;
@@ -409,7 +388,16 @@
     backdrop-filter: blur(6px);
 }
 
-
+.modal-content {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid #333;
+    animation: modalFadeIn 0.3s ease-out forwards;
+}
 
 /* Modal header with red accent */
 .modal-header {
@@ -462,8 +450,6 @@
     background-color: #2a2a2a;
     box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
-
-
 
 /* Button styles */
 .modal-button {
@@ -548,4 +534,50 @@
     0% { border-color: #444; }
     50% { border-color: #ff3333; box-shadow: 0 0 15px rgba(255, 51, 51, 0.3); }
     100% { border-color: #444; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .event-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    .event-actions {
+        justify-content: center;
+    }
+
+    .organizer-buttons {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .analytics-button, .view-events-button, .create-event-button {
+        margin: 5px 0;
+        flex: 1 0 calc(50% - 10px);
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .organizer-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .create-event-button, .view-events-button, .analytics-button, .revenue-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .event-button {
+        flex: 1;
+        min-width: 80px;
+        text-align: center;
+    }
 }
