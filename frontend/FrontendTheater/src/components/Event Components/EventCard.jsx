@@ -6,7 +6,6 @@ import './EventCard.css';
 import { getImageUrl } from '../../utils/imageHelper';
 
 const EventCard = ({ event }) => {
-    const { _id, title, remainingTickets } = event;
     const [isHolding, setIsHolding] = useState(false);
     const [showFullImage, setShowFullImage] = useState(false);
 
@@ -31,15 +30,6 @@ const EventCard = ({ event }) => {
                     <div className="image-overlay">
                         <span className="view-full">Click to view full image</span>
                     </div>
-                </div>
-
-                <div className="event-info">
-                    <h3 className="event-title">{title}</h3>
-                    {typeof remainingTickets !== 'undefined' && (
-                        <p className="event-tickets">
-                            🎟️ {remainingTickets > 0 ? `${remainingTickets} tickets remaining` : 'Sold Out'}
-                        </p>
-                    )}
                 </div>
             </div>
 

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../auth/AuthContext';
+import { useParams,  useNavigate } from 'react-router-dom';
 import './EventDetailPage.css';
 import { getImageUrl } from '../../utils/imageHelper';
 
 const EventDetailsPage = () => {
     const { id } = useParams();
-    const { user } = useAuth();
     const navigate = useNavigate();
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -55,14 +53,11 @@ const EventDetailsPage = () => {
         });
     };
 
-    const canEdit = user && (user.role === 'Organizer' || user.role === 'System Admin');
-
     const openImageModal = () => {
         if (event?.image) {
             setShowImageModal(true);
         }
     };
-// Rest of your code remains the same...
 
     if (loading) {
         return (
@@ -97,6 +92,7 @@ const EventDetailsPage = () => {
             </div>
         );
     }
+
     if (!event) {
         return (
             <div className="event-details-container">
@@ -115,19 +111,21 @@ const EventDetailsPage = () => {
             </div>
 
             <div className="event-details-content">
-                <div className="event-image-container" onClick={openImageModal}>
-                    {event.image ? (
-                        <>
-                            <img
-                                src={getImageUrl(event.image)}
-                                alt={event.title}
-                                className="event-image"
-                            />
-                            <div className="image-overlay">Click to enlarge</div>
-                        </>
-                    ) : (
-                        <div className="event-no-image">No image available</div>
-                    )}
+                <div className="event-image-section">
+                    <div className="event-image-container" onClick={openImageModal}>
+                        {event.image ? (
+                            <>
+                                <img
+                                    src={getImageUrl(event.image)}
+                                    alt={event.title}
+                                    className="event-image"
+                                />
+                                <div className="image-overlay">Click to enlarge</div>
+                            </>
+                        ) : (
+                            <div className="event-no-image">No image available</div>
+                        )}
+                    </div>
                 </div>
 
                 <div className="event-info">
@@ -172,12 +170,6 @@ const EventDetailsPage = () => {
                 <button className="back-button" onClick={() => navigate('/events')}>
                     Back to Events
                 </button>
-
-                {canEdit && (
-                    <Link to={`/my-events/${id}/edit`} className="edit-button">
-                        Edit Event
-                    </Link>
-                )}
             </div>
 
             {/* Image Modal */}

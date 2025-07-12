@@ -1,10 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import CustomToast from './components/shared/CustomToast';
+import 'react-toastify/dist/ReactToastify.css';
 import Homepage from './homepagedesign/Homepage.jsx';
 import { AuthProvider } from "./auth/AuthContext";
 import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
-import Layout from "./components/Layout";
 import Navbar from "./components/shared/Navbar";
 import Footer from "./components/shared/Footer";
 import Loader from "./components/shared/Loader";
@@ -19,16 +20,12 @@ import EventAnalytics from "./components/Event Components/EventAnalytics.jsx";
 import MyEventsPage from "./components/Event Components/MyEventPage.jsx";
 import EditEventPage from "./components/Event Components/EditEventPage.jsx";
 import EventDetailsPage from "./components/Event Components/EventDetailPage.jsx";
-import './styles.css';
-import "./App.css";
 import UpdateProfilePage from "./components/UserComponent/UpdateProfilePage.jsx";
 import UserBookingPage from "./components/Booking Component/UserBookingPage";
 import BookingDetails from "./components/Booking Component/BookingDetails";
 import BookingTicketForm from "./components/Booking Component/BookingTicketForm.jsx";
-// Remove this line
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import './styles.css';
-
+import './index.css'
+import './styles.css'
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -46,9 +43,11 @@ function App() {
     }
 
     return (
+
         <AuthProvider>
             <div className="app-container">
                 <Navbar />
+                <div className="navbar-spacer"></div>
                 <div className="main-content">
                     <Routes>
                         {/* Auth routes */}
@@ -56,7 +55,6 @@ function App() {
                         <Route path="/register" element={<RegisterForm />} />
                         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
 
-                        <Route path="/" element={<Layout />}>
                             <Route index element={<Homepage />} />
                             <Route path="home" element={<Homepage />} />
                             {/* Redirect root to events */}
@@ -136,7 +134,7 @@ function App() {
                                     <BookingDetails />
                                 </ProtectedRoute>
                             } />
-                            <Route path="bookings/new/:eventId" element={
+                            <Route path="/bookings/new/:eventId" element={
                                 <ProtectedRoute requiredRole={["Standard User"]}>
                                     <BookingTicketForm />
                                 </ProtectedRoute>
@@ -148,13 +146,24 @@ function App() {
                             } />
 
 
-                            {/* Catch-all route */}
-                        </Route>
+
 
                         <Route path="*" element={<Navigate to="/login" replace />} />
                     </Routes>
                 </div>
                 <Footer />
+                <CustomToast
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark classic"
+                />
             </div>
         </AuthProvider>
     );

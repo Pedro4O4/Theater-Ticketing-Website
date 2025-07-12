@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ConfirmationDialog from '../AdminComponent/ConfirmationDialog';
 import './UserBookingPage.css';
@@ -11,7 +11,7 @@ const UserBookingsPage = () => {
     const [error, setError] = useState(null);
     const [deleteBookingId, setDeleteBookingId] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const navigate = useNavigate();
+    const [cancellationLoading, setCancellationLoading] = useState(false);
 
     useEffect(() => {
         fetchBookings();
@@ -25,11 +25,11 @@ const UserBookingsPage = () => {
             });
 
             let bookingsData = [];
-            if (Array.isArray(response.data)) {
+            if (response.data && Array.isArray(response.data)) {
                 bookingsData = response.data;
-            } else if (response.data?.userId && Array.isArray(response.data.userId)) {
+            } else if (response.data && response.data.userId && Array.isArray(response.data.userId)) {
                 bookingsData = response.data.userId;
-            } else if (response.data?.data && Array.isArray(response.data.data)) {
+            } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
                 bookingsData = response.data.data;
             } else {
                 setError("Unexpected data format from API");
@@ -39,7 +39,7 @@ const UserBookingsPage = () => {
 
             setBookings(bookingsData);
 
-            // Fetch event details
+            // Fetch event details for each booking
             const events = {};
             await Promise.all(
                 bookingsData.map(async (booking) => {
@@ -75,14 +75,18 @@ const UserBookingsPage = () => {
 
     const confirmCancel = async () => {
         try {
+            setCancellationLoading(true);
             await axios.delete(`http://localhost:3000/api/v1/booking/${deleteBookingId}`, {
                 withCredentials: true
             });
+            // Remove from local state
             setBookings(bookings.filter(booking => booking._id !== deleteBookingId));
             setShowDeleteConfirm(false);
         } catch (err) {
             console.error("Error canceling booking:", err);
             alert(`Error: ${err.response?.data?.message || err.message}`);
+        } finally {
+            setCancellationLoading(false);
         }
     };
 
@@ -91,31 +95,23 @@ const UserBookingsPage = () => {
 
     return (
         <div className="bookings-container">
-            <div className="header-with-back">
+            <div className="bookings-header">
                 <h1>My Bookings</h1>
-                <button
-                    className="back-button"
-                    onClick={() => navigate('/events')}
-                >
-                    Back to Events
-                </button>
+                <Link to="/events" className="browse-events-btn">Events</Link>
             </div>
 
             {bookings.length === 0 ? (
                 <div className="no-bookings">
                     <p>You haven't made any bookings yet.</p>
-                    <Link to="/events" className="browse-events-link">Browse Events</Link>
+                    <Link to="/events" className="browse-events-link">Events</Link>
                 </div>
             ) : (
                 <div className="bookings-list">
                     {bookings.map((booking) => {
+                        // Your existing booking mapping code
                         const event = booking.eventId && eventDetails[booking.eventId]
                             ? eventDetails[booking.eventId]
                             : booking.event || {};
-
-                        const quantity = booking.quantity || booking.numberOfTickets || 0;
-                        const ticketPrice = event.ticketPrice || 0;
-                        const totalPrice = booking.totalPrice?.toFixed(2) || (quantity * ticketPrice).toFixed(2);
 
                         return (
                             <div key={booking._id} className="booking-card">
@@ -126,21 +122,20 @@ const UserBookingsPage = () => {
                                     </span>
 
                                     <div className="booking-details">
-                                        <p>Tickets: <strong>{quantity}</strong></p>
-                                        <p>Total: <strong>${totalPrice}</strong></p>
-                                        <p>Status:
-                                            <span className={`status ${(booking.status || 'confirmed').toLowerCase()}`}>
-                                                {booking.status || 'Confirmed'}
-                                            </span>
-                                        </p>
+                                        <p>Tickets: <strong>{booking.quantity || booking.numberOfTickets}</strong></p>
+                                        <p>Total: <strong>${booking.totalPrice?.toFixed(2) || (booking.quantity * event?.ticketPrice).toFixed(2) || 'N/A'}</strong></p>
+                                        <p>Status: <span className={`status ${(booking.status || 'confirmed').toLowerCase()}`}>
+                                            {booking.status || 'Confirmed'}
+                                        </span></p>
                                     </div>
 
-                                    <div className="booking-actions">
+                                    <div className="bookings-actions">
                                         <Link to={`/bookings/${booking._id}`} className="view-details-btn">View Details</Link>
                                         {booking.status !== 'Cancelled' && (
                                             <button
                                                 onClick={() => handleCancelClick(booking._id)}
                                                 className="cancel-btn"
+                                                disabled={cancellationLoading}
                                             >
                                                 Cancel Booking
                                             </button>
@@ -157,10 +152,12 @@ const UserBookingsPage = () => {
                 isOpen={showDeleteConfirm}
                 title="Confirm Cancellation"
                 message="Are you sure you want to cancel this booking? This action cannot be undone."
-                confirmText="Yes, Cancel Booking"
+                confirmText={cancellationLoading ? "Cancelling..." : "Yes, Cancel Booking"}
                 cancelText="Keep Booking"
                 onConfirm={confirmCancel}
                 onCancel={() => setShowDeleteConfirm(false)}
+                isLoading={cancellationLoading}
+                disabled={cancellationLoading}
             />
         </div>
     );

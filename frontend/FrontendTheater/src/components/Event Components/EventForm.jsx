@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import './EventForm.css';
-import './EventDetailPage.css';
 import { getImageUrl } from '../../utils/imageHelper';
 
 const EventForm = () => {

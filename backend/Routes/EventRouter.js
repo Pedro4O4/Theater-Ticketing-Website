@@ -35,13 +35,14 @@ const upload = multer({
     }
 });
 
-// Apply authentication middleware to all routes
+router.get("/approved", eventController.getApprovedEventsPublic);
+
 router.use(authentication);
 
 // Routes
 router.post('/',
     authorizationMiddleware(['Organizer']),
-    upload.single('image'), // Add file upload to create event
+    upload.single('image'),
     eventController.createEvent
 );
 
@@ -62,10 +63,23 @@ router.get('/:id',
 
 router.put('/:id',
     authorizationMiddleware(['Organizer', 'System Admin']),
-    upload.single('image'), // Add file upload middleware to update route
+    upload.single('image'),
     eventController.updateEvent
 );
 
+// Request OTP for event deletion
+router.post('/:id/request-deletion-otp',
+    authorizationMiddleware(['Organizer', 'System Admin']),
+    eventController.requestEventDeletionOTP
+);
+
+// Verify OTP and delete event
+router.post('/verify-deletion-otp',
+    authorizationMiddleware(['Organizer', 'System Admin']),
+    eventController.verifyEventDeletionOTP
+);
+
+// Delete event (only for non-approved events)
 router.delete('/:id',
     authorizationMiddleware(['Organizer', 'System Admin']),
     eventController.deleteEvent

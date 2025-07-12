@@ -11,6 +11,8 @@ const EventAnalytics = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { user } = useAuth();
+    console.log("event");
+
 
     useEffect(() => {
         if (!user) {
@@ -210,7 +212,8 @@ const EventAnalytics = () => {
                 </button>
             </div>
         </div>
-    );
+
+);
 };
 
 export default EventAnalytics;
