@@ -4,10 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import EventCard from './EventCard';
 import './EventList.css';
-import './EventCard.css'
+import './EventCard.css';
 
 const EventList = () => {
     const [events, setEvents] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -20,43 +22,55 @@ const EventList = () => {
             return;
         }
 
+        // Redirect System Admin early
+        if (user?.role === "System Admin") {
+            navigate('/admin/events');
+            return;
+        }
+
         fetchEvents();
     }, [navigate, user]);
 
-    // In EventList.jsx - update fetchEvents function
+    useEffect(() => {
+        // Filter events when search term changes
+        if (events.length > 0) {
+            const filtered = events.filter(event =>
+                (event.title || event.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredEvents(filtered);
+        }
+    }, [searchTerm, events]);
+
     const fetchEvents = async () => {
         try {
-            // Redirect System Admin to admin events page
-            if (user?.role === "System Admin") {
-                navigate('/admin/events');
-                return; // Stop execution to prevent unnecessary API call
-            }
-
-            // For non-admin users, continue with normal event fetching
-            let endpoint = 'http://localhost:3000/api/v1/event';
+            const endpoint = 'http://localhost:3000/api/v1/event';
             console.log(`Fetching events from ${endpoint} as ${user.role}...`);
 
             const response = await axios.get(endpoint, {
                 withCredentials: true
             });
 
-            // Rest of your existing code...
-
             console.log("API Response:", response);
 
-            if (response.data && Array.isArray(response.data)) {
-                setEvents(response.data);
-            } else if (response.data && response.data.events && Array.isArray(response.data.events)) {
-                setEvents(response.data.events);
-            } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
-                setEvents(response.data.data);
+            const data = response.data;
+            let eventsData = [];
+
+            if (Array.isArray(data)) {
+                eventsData = data;
+            } else if (data?.events && Array.isArray(data.events)) {
+                eventsData = data.events;
+            } else if (data?.data && Array.isArray(data.data)) {
+                eventsData = data.data;
             } else {
-                console.error("Unexpected API response format:", response.data);
+                console.error("Unexpected API response format:", data);
                 setError("Unexpected data format from API");
             }
+
+            setEvents(eventsData);
+            setFilteredEvents(eventsData);
         } catch (err) {
             console.error("Error fetching events:", err);
-            if (err.response && (err.response.status === 401 || err.response.status === 403 || err.response.status === 405)) {
+            if (err.response && [401, 403, 405].includes(err.response.status)) {
                 navigate('/login');
             } else {
                 const errorMessage = err.response?.data?.message || err.message;
@@ -67,15 +81,35 @@ const EventList = () => {
         }
     };
 
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
     return (
+
         <div className="event-list-container">
             <div className="event-header">
                 <h1 className="page-title">Events</h1>
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Search events by title..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="search-input"
+                    />
+                </div>
                 {user?.role === "Organizer" && (
                     <div className="organizer-buttons">
-
                         <Link to="/my-events" className="create-event-button" style={{ marginLeft: '10px' }}>
                             My Events
+                        </Link>
+                    </div>
+                )}
+                {user?.role === "Standard User" && (
+                    <div className="organizer-buttons">
+                        <Link to="/bookings" className="event-button">
+                            My Bookings
                         </Link>
                     </div>
                 )}
@@ -86,17 +120,76 @@ const EventList = () => {
 
             {!loading && !error && (
                 <div className="event-grid">
-                    {events.length > 0 ? (
-                        events.map((event) => (
+                    <div className="profile-header-banner" onClick={() => navigate('/profile')}>
+                        <div className="profile-info">
+                            <div className="profile-avatar-container">
+                                {user?.profilePicture ? (
+                                    <img
+                                        src={user.profilePicture}
+                                        alt="Profile"
+                                        className="profile-small-avatar"
+                                    />
+                                ) : (
+                                    <div className="profile-small-avatar">
+                                        {user?.name?.charAt(0)?.toUpperCase() || '?'}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="profile-greeting">
+                                <h2>
+                                    Hi, {user?.name || "User"}!
+                                    <span className="role-indicator">{user?.role}</span>
+                                </h2>
+                                {user?.role && (
+                                    <div className="profile-stats">
+                                        <span className="stats-item">Member since {new Date().getFullYear()}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    {filteredEvents.length > 0 ? (
+                        filteredEvents.map((event) => (
                             <div key={event._id} className="event-card-with-actions">
                                 <EventCard event={event} />
+                                <div className="event-info">
+
+                                </div>
                                 <div className="event-actions">
-                                    <Link to={`/events/${event._id}`} className="event-button">Details</Link>
+                                    <Link to={`/events/${event.id || event._id}`} className="event-button">Details</Link>
+                                    <h3 className="event-title">{event.title || event.name}</h3>
+
+                                    {event.remainingTickets !== undefined && (
+                                        <div className="tickets-badge">
+                                            <span className="tickets-count">{event.remainingTickets}</span>
+                                            <span className="tickets-label">tickets left</span>
+                                        </div>
+                                    )}
+
+                                    {user?.role === "Standard User" && event.remainingTickets !== 0 && (
+                                        <button
+                                            className="book-now-btn"
+                                            onClick={() => navigate(`/bookings/new/${event._id}`)}
+                                        >
+                                            Book Now
+                                        </button>
+                                    )}
+                                    {event.remainingTickets > 0 && event.remainingTickets < 50 && (
+                                        <button className="book-now-btn limited" disabled>
+                                            Limited Tickets
+                                        </button>
+                                    )}
+
+                                    {event.remainingTickets === 0 && (
+                                        <button className="book-now-btn disabled" disabled>
+                                            Sold Out
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p className="no-events">No events found</p>
+                        <p className="no-events">No events found matching "{searchTerm}"</p>
                     )}
                 </div>
             )}

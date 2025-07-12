@@ -1,67 +1,227 @@
-
 const userModel = require("../Models/User");
 const Event = require("../Models/Event");
 const Booking = require("../Models/Booking");
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
 require("dotenv").config();
 const secretKey = process.env.SECRET_KEY;
 const bcrypt = require("bcrypt");
 
+// Create email transporter
+const createTransporter = () => {
+    return nodemailer.createTransport({  // Fixed: createTransport not createTransporter
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_APP_PASSWORD
+        }
+    });
+};
+
+// Send OTP email
+const sendOTPToValidEmail = async (email, otp) => {
+    try {
+        const transporter = createTransporter();
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Account Verification - EventTix',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                  <h2 style="color: var(--primary);">Account Verification</h2>
+                  <p>Hello,</p>
+                  <p>Thank you for registering with EventTix. Please verify your account to continue.</p>
+                  <p>Your verification code is:</p>
+                  <div style="background-color: #f3f4f6; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                    <h1 style="font-size: 32px; color: var(--primary); margin: 0; letter-spacing: 5px;">${otp}</h1>
+                  </div>
+                  <p>This code will expire in 10 minutes.</p>
+                  <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+                  <p style="font-size: 12px; color: #6b7280;">
+                    This is an automated email from EventTix. Please do not reply to this email.
+                  </p>
+                </div>
+            `
+        };
+
+        const result = await transporter.sendMail(mailOptions);
+        console.log('Verification email sent successfully:', result.messageId);
+        return { success: true, messageId: result.messageId };
+    } catch (error) {
+        console.error('Error sending verification email:', error);
+        return { success: false, error: error.message };
+    }
+};
+const sendOTPEmail = async (email, otp) => {
+    try {
+        const transporter = createTransporter();
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Password Reset OTP - EventTix',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                  <h2 style="color: #8B5CF6;">Password Reset Request</h2>
+                  <p>Hello,</p>
+                  <p>You have requested to reset your password for your EventTix account.</p>
+                  <p>Your verification code is:</p>
+                  <div style="background-color: #f3f4f6; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                    <h1 style="font-size: 32px; color: #8B5CF6; margin: 0; letter-spacing: 5px;">${otp}</h1>
+                  </div>
+                  <p>This code will expire in 10 minutes.</p>
+                  <p>If you didn't request this password reset, please ignore this email.</p>
+                  <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+                  <p style="font-size: 12px; color: #6b7280;">
+                    This is an automated email from EventTix. Please do not reply to this email.
+                  </p>
+                </div>
+            `
+        };
+
+        const result = await transporter.sendMail(mailOptions);
+        console.log('OTP email sent successfully:', result.messageId);
+        return { success: true, messageId: result.messageId };
+    } catch (error) {
+        console.error('Error sending OTP email:', error);
+        return { success: false, error: error.message };
+    }
+};
+
 const UserController = {
-
-
-
+    // Fixed registration function
     register: async (req, res) => {
         try {
-            const { email, password, name, role } = req.body;
+            const {email, password, name, role = "Standard User"} = req.body;
 
-            // Check if the user already exists
-            const existingUser = await userModel.findOne({email });
+            // Check if user already exists
+            const existingUser = await userModel.findOne({email});
             if (existingUser) {
-                return res.status(409).json({ message: "User already exists" });
+                return res.status(409).json({message: "User already exists"});
             }
+
+            // Generate a 6-digit OTP
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
             // Hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Create a new user
+            // Create a new unverified user with all required fields
             const newUser = new userModel({
-                 name,
+                name,
                 email,
                 password: hashedPassword,
-                role
+                role,
+                otp,
+                otpExpires,
+                isVerified: false
             });
 
-            await userModel.insertOne(newUser);
-            res.status(201).json({ message: "User registered successfully" });
+            // Save the user in unverified state
+            await newUser.save();
+
+            // DEVELOPMENT MODE: Always log OTP for testing
+            console.log(`========= DEV MODE =========`);
+            console.log(`OTP for ${email}: ${otp}`);
+            console.log(`===========================`);
+
+            // Send OTP via email
+            const emailSent = await sendOTPToValidEmail(email, otp);
+            if (!emailSent.success) {
+                return res.status(500).json({message: "Failed to send verification code"});
+            }
+
+            res.status(201).json({
+                message: "Registration initiated. Please verify your email with the OTP sent."
+            });
         } catch (error) {
             console.error("Error registering user:", error);
-            res.status(500).json({ message: "Server error" });
+            res.status(500).json({message: "Server error"});
+        }
+    },
+
+// Simplified verification function
+    verifyRegistration: async (req, res) => {
+        try {
+            const {email, otp} = req.body;
+
+            const user = await userModel.findOne({email});
+            if (!user) {
+                return res.status(404).json({message: "User not found"});
+            }
+
+            if (!user.otp || user.otp !== otp || !user.otpExpires || user.otpExpires < new Date()) {
+                return res.status(400).json({message: "Invalid or expired OTP"});
+            }
+
+            // Mark user as verified and clear OTP data
+            user.isVerified = true;
+            user.otp = null;
+            user.otpExpires = null;
+            await user.save();
+
+            res.status(200).json({message: "Registration completed successfully"});
+        } catch (error) {
+            console.error("Error verifying registration:", error);
+            res.status(500).json({message: "Server error"});
         }
     },
     login: async (req, res) => {
         try {
-            const { email, password } = req.body;
+            const {email, password} = req.body;
 
             // Find the user by email
-            const user = await userModel.findOne({ email });
+            const user = await userModel.findOne({email});
             if (!user) {
-                return res.status(404).json({ message: "email not found" });
+                return res.status(404).json({message: "Email not found"});
             }
 
-            console.log("password: ", user.password);
             // Check if the password is correct
-
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (!passwordMatch) {
-                return res.status(405).json({ message: "incorect password" });
+                return res.status(405).json({message: "Incorrect password"});
             }
 
+            // Check if user has verified their email
+            if (!user.isVerified) {
+                // Generate a new OTP and resend it
+                const otp = Math.floor(100000 + Math.random() * 900000).toString();
+                const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+                user.otp = otp;
+                user.otpExpires = otpExpires;
+                await user.save();
+
+                // DEVELOPMENT MODE: Log OTP for testing
+                console.log(`========= DEV MODE =========`);
+                console.log(`OTP for ${email}: ${otp}`);
+                console.log(`===========================`);
+
+                // Send OTP via email
+                const emailSent = await sendOTPToValidEmail(email, otp);
+
+                if (!emailSent.success) {
+                    return res.status(500).json({
+                        message: "Failed to send verification code. Please try again later."
+                    });
+                }
+                console.log(`OTP sent to ${email}: ${otp}`);
+
+                return res.status(403).json({
+                    message: "Account not verified. A new verification code has been sent to your email.",
+                    requiresVerification: true
+                });
+            }
+
+            // User is verified, proceed with login
             const currentDateTime = new Date();
-            const expiresAt = new Date(+currentDateTime + 1800000); // expire in 3 minutes
+            const expiresAt = new Date(+currentDateTime + 1800000); // expire in 30 minutes
+
             // Generate a JWT token
             const token = jwt.sign(
-                { user: { userId: user._id, role: user.role } },
+                {user: {userId: user._id, role: user.role}},
                 secretKey,
                 {
                     expiresIn: 3 * 60 * 60,
@@ -72,14 +232,14 @@ const UserController = {
                 .cookie("token", token, {
                     expires: expiresAt,
                     httpOnly: true,
-                    secure: true, // if not working on thunder client , remove it
+                    secure: true,
                     SameSite: "none",
                 })
                 .status(200)
-                .json({ message: "login successfully", user });
+                .json({message: "Login successful", user});
         } catch (error) {
             console.error("Error logging in:", error);
-            res.status(500).json({ message: "Server error" });
+            res.status(500).json({message: "Server error"});
         }
     },
     logout: async (req, res) => {
@@ -92,19 +252,21 @@ const UserController = {
                     sameSite: 'none',
                 })
                 .status(200)
-                .json({ message: "Logged out successfully" });
+                .json({message: "Logged out successfully"});
         } catch (error) {
             console.error("Error during logout:", error);
-            res.status(500).json({ message: "Server error" });
+            res.status(500).json({message: "Server error"});
         }
     },
+
+
     forgetPassword: async (req, res) => {
         try {
-            const { email } = req.body;
+            const {email} = req.body;
 
-            const user = await userModel.findOne({ email });
+            const user = await userModel.findOne({email});
             if (!user) {
-                return res.status(404).json({ message: "User not found" });
+                return res.status(404).json({message: "User not found"});
             }
 
             const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
@@ -114,27 +276,39 @@ const UserController = {
             user.otpExpires = otpExpires;
             await user.save();
 
-            // Send OTP via email (mocked for now)
-            console.log(`Send OTP to ${email}: ${otp}`);
+            // DEVELOPMENT MODE: Always log OTP for testing
+            console.log(`========= DEV MODE =========`);
+            console.log(`OTP for ${email}: ${otp}`);
+            console.log(`===========================`);
 
-            res.status(200).json({ message: "OTP sent to your email." });
+            // Send OTP via email
+            const emailResult = await sendOTPEmail(email, otp);
+
+            if (!emailResult.success) {
+                return res.status(500).json({
+                    message: "Failed to send OTP email. Please try again later."
+                });
+            }
+
+            console.log(`OTP sent to ${email}: ${otp}`);
+            res.status(200).json({message: "OTP sent to your email."});
         } catch (error) {
             console.error("Error sending OTP:", error);
-            res.status(500).json({ message: "Server error" });
+            res.status(500).json({message: "Server error"});
         }
     },
 
     verifyOtp: async (req, res) => {
         try {
-            const { email, otp, newPassword } = req.body;
+            const {email, otp, newPassword} = req.body;
 
-            const user = await userModel.findOne({ email });
+            const user = await userModel.findOne({email});
             if (!user) {
-                return res.status(404).json({ message: "User not found" });
+                return res.status(404).json({message: "User not found"});
             }
 
-            if (user.otp !== otp || user.otpExpires < new Date()) {
-                return res.status(400).json({ message: "Invalid or expired OTP" });
+            if (!user.otp || user.otp !== otp || !user.otpExpires || user.otpExpires < new Date()) {
+                return res.status(400).json({message: "Invalid or expired OTP"});
             }
 
             user.password = await bcrypt.hash(newPassword, 10);
@@ -142,11 +316,16 @@ const UserController = {
             user.otpExpires = null;
             await user.save();
 
-            res.status(200).json({ message: "Password reset successfully" });
+            res.status(200).json({message: "Password reset successfully"});
         } catch (error) {
             console.error("Error resetting password:", error);
-            res.status(500).json({ message: "Server error" });
+            res.status(500).json({message: "Server error"});
         }
+    },
+
+    // Route alias to match frontend API call
+    "verify-otp": async (req, res) => {
+        return UserController.verifyOtp(req, res);
     },
 
     async getAllUsers(req, res) {
